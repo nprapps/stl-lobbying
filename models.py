@@ -27,10 +27,12 @@ class Expenditure(Model):
     """
     A project.
     """
-    lobbyist_first_name = CharField()
-    lobbyist_last_name = CharField()
+    lobbyist_name = CharField()
     report_period = DateField()
     recipient = CharField()
+    recipient_type = CharField()
+    recipient_official = CharField()
+    recipient_official_type = CharField()
     event_date = DateField()
     event_type = CharField()
     description =  CharField()
@@ -51,23 +53,39 @@ def load_data():
     i = 0
 
     for row in rows:
-        report_period = datetime.datetime.strptime(row['Report'].strip(), '%b-%y').date()
+        for k, v in row.items():
+            row[k] = v.strip()
 
-        bits = map(int, row['Date'].strip().split('/'))
+        report_period = datetime.datetime.strptime(row['Report'], '%b-%y').date()
+
+        recipient, recipient_type = row['Recipient'].split(' - ')
+
+        if recipient_type in ['Senator', 'Representative']:
+            recipient_official = recipient
+            recipient_official_type = recipient_type
+        else:
+            # TODO
+            recipient_official = ''
+            recipient_official_type = ''
+
+        bits = map(int, row['Date'].split('/'))
         event_date = datetime.date(bits[2], bits[0], bits[1])
 
-        cost = float(row['Cost'].strip('()').strip('$').strip())
+        cost = float(row['Cost'].strip('()').strip('$'))
 
         Expenditure.create(
-            lobbyist_first_name=row['Lob F Name'].strip(),
-            lobbyist_last_name=row['Lob L Name'].strip(),
+            lobbyist_name='%(Lob F Name)s %(Lob L Name)s' % row,
+            lobbyist_last_name=row['Lob L Name'],
             report_period=report_period,
-            recipient=row['Recipient'].strip(),
+            recipient=recipient,
+            recipient_type=recipient_type,
+            recipient_official=recipient_official,
+            recipient_official_type=recipient_official_type,
             event_date=event_date,
-            event_type=row['Type'].strip(),
-            description=row['Description'].strip(),
+            event_type=row['Type'],
+            description=row['Description'],
             cost=cost,
-            principal=row['Principal'].strip()
+            principal=row['Principal']
         )
 
         i += 1
