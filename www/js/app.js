@@ -1,5 +1,5 @@
 $(function() {
-    var context = $.extend(APP_CONFIG, {
+    /*var context = $.extend(APP_CONFIG, {
         'template_path': 'jst/example.html',
         'config': JSON.stringify(APP_CONFIG, null, 4),
         'copy': JSON.stringify(COPY, null, 4)
@@ -7,5 +7,5 @@ $(function() {
 
     var html = JST.example(context);
 
-    $('#template-example').html(html);
+    $('#template-example').html(html);*/
 });

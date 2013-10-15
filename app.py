@@ -9,6 +9,7 @@ from flask import Flask, Markup, abort, render_template
 
 import app_config
 import copytext
+import models
 from render_utils import flatten_app_config, make_context
 
 app = Flask(app_config.PROJECT_NAME)
@@ -19,7 +20,11 @@ def index():
     """
     Example view demonstrating rendering a simple HTML page.
     """
-    return render_template('index.html', **make_context())
+    context = make_context()
+
+    context['expenditures'] = models.Expenditure.select()
+
+    return render_template('index.html', **context)
 
 @app.route('/widget.html')
 def widget():
