@@ -10,6 +10,7 @@ from jinja2 import Template
 import app
 import app_config
 from etc import github
+import models
 
 """
 Base configuration
@@ -444,6 +445,23 @@ def deploy(remote='origin'):
     render()
     _gzip('www', '.gzip')
     _deploy_to_s3()
+
+"""
+Local commands
+"""
+def create_tables():
+    models.create_tables()
+
+def delete_tables():
+    models.delete_tables()
+
+def load_data():
+    models.load_data()
+
+def local_bootstrap():
+    delete_tables()
+    create_tables()
+    load_data()
 
 """
 Cron jobs
