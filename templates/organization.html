@@ -16,7 +16,7 @@
 
 {% block content %}
 <h1>{{ organization.name }}</h1>
-<p>Total spending, ever: ${{ total_spending }}</p>
+<p>Total spending, ever: ${{ comma(total_spending) }}</p>
 {% endblock %}
 
 
@@ -24,7 +24,7 @@
 <div class="row">
     <div class="col-md-12">
         {% for ex in organization.expenditures %}
-        <h2>${{ ex.cost }}</h2>
+        <h2>${{ comma(ex.cost) }}</h2>
         {% if ex.legislator %}<p>Legislator: <a href="{{ ex.legislator.url() }}">{{ ex.legislator.name }}</a></p> {% endif %}
         {% endfor %}
     </div>

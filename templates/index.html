@@ -39,10 +39,10 @@
 
 {% block wide_content %}
 <div class="totals row">
-        <p class="total-spending">Total spending, ever: <strong>${{ total_spending }}</strong></p>
-        <p class="total-gifts">Total expenditures/gifts, ever: <strong>${{ total_expenditures }}</strong></p>
-        <p class="total-orgs">Total organizations lobbying, ever: <strong>{{ total_organizations }}</strong></p>
-        <p class="total-lobbyists">Total lobbyists active, ever: <strong>{{ total_lobbyists }}</strong></p>
+        <p class="total-spending">Total spending, ever: <strong>${{ comma(total_spending) }}</strong></p>
+        <p class="total-gifts">Total expenditures/gifts, ever: <strong>{{ comma(total_expenditures) }}</strong></p>
+        <p class="total-orgs">Total organizations lobbying, ever: <strong>{{ comma(total_organizations) }}</strong></p>
+        <p class="total-lobbyists">Total lobbyists active, ever: <strong>{{ comma(total_lobbyists) }}</strong></p>
 </div>
 <div class="top-entities row">
     <div class="organizations">
@@ -58,7 +58,7 @@
             {% for org in organizations_total_spending %}
             <tr>
                 <td class="organization"><a href="{{ org.url() }}">{{ org.name }}</a></td>
-                <td class="spending"><div class="bar" style="width: {{ org.total_spending / (organizations_total_spending|first).total_spending * 100 }}%">${{ org.total_spending }}</div> </td>
+                <td class="spending"><div class="bar" style="width: {{ org.total_spending / (organizations_total_spending|first).total_spending * 100 }}%">${{ comma(org.total_spending) }}</div> </td>
             </tr>
             {% endfor %}
             </tbody>
@@ -77,7 +77,7 @@
             {% for legislator in legislators_total_spending %}
             <tr>
                 <td class="legislator"><a href="{{ legislator.url() }}">{{ legislator.name }}</a></td>
-                <td class="spending"><div class="bar" style="width: {{ legislator.total_spending / (legislators_total_spending|first).total_spending * 100 }}%">${{ legislator.total_spending }}</div> </td>
+                <td class="spending"><div class="bar" style="width: {{ legislator.total_spending / (legislators_total_spending|first).total_spending * 100 }}%">${{ comma(legislator.total_spending) }}</div> </td>
             </tr>
             {% endfor %}
             </tbody>
@@ -87,7 +87,7 @@
         <h2>Spending by category, ever</h2>
         <ul>
             {% for ex in expenditures_by_category %}
-            <li>{{ ex.category }}</a>: ${{ ex.total_spending }}</li>
+            <li>{{ ex.category }}</a>: ${{ comma(ex.total_spending) }}</li>
             {% endfor %}
         </ul>
     </div>
@@ -95,7 +95,7 @@
 <div class="row">
     <div class="col-md-12">
         {% for ex in expenditures %}
-        <h2>${{ ex.cost }}</h2>
+        <h2>${{ comma(ex.cost) }}</h2>
         {% if ex.legislator %}<p>Legislator: <a href="{{ ex.legislator.url() }}">{{ ex.legislator.name }}</a></p>{% endif %}
         <p>Organization: <a href="{{ ex.organization.url() }}">{{ ex.organization.name }}</a></p>
         {% endfor %}

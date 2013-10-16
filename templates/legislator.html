@@ -16,7 +16,7 @@
 
 {% block content %}
 <h1>{{ legislator.name }}</h1>
-<p>Total spending on this legislator, ever: ${{ total_spending }}</p>
+<p>Total spending on this legislator, ever: ${{ comma(total_spending) }}</p>
 {% endblock %}
 
 
@@ -24,7 +24,7 @@
 <div class="row">
     <div class="col-md-12">
         {% for ex in legislator.expenditures %}
-        <h2>${{ ex.cost }}</h2>
+        <h2>${{ comma(ex.cost) }}</h2>
         <p>Organization: <a href="{{ ex.organization.url() }}">{{ ex.organization.name }}</a></p>
         {% endfor %}
     </div>

@@ -140,6 +140,9 @@ class CSSIncluder(Includer):
 
         return '\n'.join(output)
 
+def comma(f):
+    return "{:,}".format(f)
+
 def flatten_app_config():
     """
     Returns a copy of app_config containing only
@@ -164,6 +167,8 @@ def make_context():
     context['COPY'] = copytext.Copy()
     context['JS'] = JavascriptIncluder()
     context['CSS'] = CSSIncluder()
+
+    context['comma'] = comma
 
     return context
 
