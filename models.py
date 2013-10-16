@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import datetime
+import re
 
 import csvkit
 from peewee import *
@@ -13,6 +14,11 @@ def delete_tables():
     Clear data from sqlite.
     """
     try:
+        Legislator.drop_table()
+    except:
+        pass
+
+    try:
         Expenditure.drop_table()
     except:
         pass
@@ -21,18 +27,63 @@ def create_tables():
     """
     Create database tables for each model.
     """
+    Legislator.create_table()
     Expenditure.create_table()
+
+class Legislator(Model):
+    """
+    A legislator.
+    """
+    slug = CharField()
+    name = CharField()
+    office = CharField()
+    district = CharField()
+
+    def save(self, *args, **kwargs):
+        """
+        Slugify before saving!
+        """
+        if not self.slug:
+            self.slugify()
+
+        super(Legislator, self).save(*args, **kwargs)
+
+    def slugify(self):
+        """
+        Generate a slug.
+        """
+        bits = []
+
+        for field in ['name']:
+            attr = getattr(self, field)
+
+            if attr:
+                attr = attr.lower()
+                attr = re.sub(r"[^\w\s]", '', attr)
+                attr = re.sub(r"\s+", '-', attr)
+
+                bits.append(attr)
+
+        base_slug = '-'.join(bits)
+
+        slug = base_slug
+        i = 1
+
+        while Legislator.select().where(Legislator.slug == slug).count():
+            i += 1
+            slug = '%s-%i' % (base_slug, i)
+
+        self.slug = slug
 
 class Expenditure(Model):
     """
-    A project.
+    An expenditure.
     """
     lobbyist_name = CharField()
     report_period = DateField()
     recipient = CharField()
     recipient_type = CharField()
-    recipient_official = CharField()
-    recipient_official_type = CharField()
+    legislator = ForeignKeyField(Legislator, related_name='expenditures', null=True)
     event_date = DateField()
     event_type = CharField()
     description =  CharField()
@@ -41,6 +92,22 @@ class Expenditure(Model):
     
     class Meta:
         database = database
+
+def load_legislator(name, office):
+    try:
+        return False, Legislator.get(Legislator.name==name, Legislator.office==office)
+    except Legislator.DoesNotExist:
+        pass
+
+    legislator = Legislator(
+        name=name,
+        office=office,
+        district='' #TODO
+    )
+
+    legislator.save()
+
+    return True, legislator
 
 def load_data():
     """
@@ -56,6 +123,7 @@ def load_data():
     expenditures = []
     warnings = []
     errors = []
+    legislators_created = 0
 
     for row in rows:
         i+=1
@@ -67,19 +135,23 @@ def load_data():
 
         recipient, recipient_type = row['Recipient'].split(' - ')
 
+        legislator = None
+        created = False
+
         if recipient_type in ['Senator', 'Representative']:
-            recipient_official = recipient
-            recipient_official_type = recipient_type
+            created, legislator = load_legislator(recipient, recipient_type)
         elif recipient_type in ['Employee or Staff', 'Spouse or Child']:
             # TODO
-            recipient_official = ''
-            recipient_official_type = ''
+            pass
         elif recipient_type in SKIP_TYPES:
             warnings.append('%05i -- Skipping %s: %s' % (i, recipient_type, recipient))
             continue
         else:
             errors.append('%05i -- Unknown recipient type, "%s": %s' % (i, recipient_type, recipient))
             continue
+
+        if created:
+            legislators_created += 1
 
         bits = map(int, row['Date'].split('/'))
         event_date = datetime.date(bits[2], bits[0], bits[1])
@@ -92,8 +164,7 @@ def load_data():
             report_period=report_period,
             recipient=recipient,
             recipient_type=recipient_type,
-            recipient_official=recipient_official,
-            recipient_official_type=recipient_official_type,
+            legislator=legislator,
             event_date=event_date,
             event_type=row['Type'],
             description=row['Description'],
@@ -127,3 +198,4 @@ def load_data():
 
     print 'Processed %i rows' % i
     print 'Imported %i expenditures' % len(expenditures)
+    print 'Created %i legislators' % legislators_created

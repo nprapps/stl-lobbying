@@ -31,6 +31,7 @@
     <div class="col-md-12">
         {% for ex in expenditures %}
         <h2>{{ ex.description }}</h2>
+        <p>{{ ex.legislator.name }}</p>
         {% endfor %}
     </div>
 </div>
