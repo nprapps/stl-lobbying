@@ -86,7 +86,9 @@ body > header {
 		.make-md-column(8);	
 
 		h1 {
-			font-size: @font-size-base * 6;
+			@media screen and (min-width: @screen-md) {
+				font-size: @font-size-base * 6;
+			}
 		}
 		.story-meta {
 
@@ -99,7 +101,71 @@ body > header {
 
 		+ .bigbox {
 			.make-md-column(4);
+
+			.sponsor300 {
+				margin: 0 auto;
+				width: 300px;
+			}
+
+			@media screen and (max-width: @screen-xs-max){
+				margin-left: -5px;
+			}
 		}
 	}
 	
+}
+
+#content {
+	.totals {
+		&:before,
+		&:after {
+			display: block;
+			width: auto;
+			height: 3px;
+			margin: @line-height-computed / 2 @grid-gutter-width / 2;
+			background: @gray;
+			content: ' ';
+		}
+		.total-spending,
+		.total-gifts,
+		.total-orgs,
+		.total-lobbyists {
+			text-transform: uppercase;
+			font-size: 12px;
+			border-left: 1px solid @gray-light;
+
+			strong {
+				display: block;
+				font-size: 42px;
+			}
+
+			&:first-child {
+				border-left: none;
+			}
+		}
+
+		.total-spending {
+			.make-xs-column(12);
+		}
+
+		.total-gifts {
+			.make-xs-column(6);
+
+		}
+
+		.total-orgs {
+			.make-xs-column(6);
+		}
+
+		.total-lobbyists {
+			.make-xs-column(6);
+		}
+
+		.total-spending,
+		.total-gifts,
+		.total-orgs,
+		.total-lobbyists {
+			.make-md-column(3);
+		}
+	}
 }

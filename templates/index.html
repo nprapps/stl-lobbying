@@ -38,12 +38,11 @@
 
 
 {% block wide_content %}
-<div class="row">
-    <div class="col-md-12">
-        <p>Total spending, ever: {{ total_spending }}</p>
-        <p>Total expenditures/gifts, ever: {{ total_expenditures }}</p>
-        <p>Total organizations lobbying, ever: {{ total_organizations }}</p>
-        <p>Total lobbyists active, ever: {{ total_lobbyists }}</p>
+<div class="totals row">
+        <p class="total-spending">Total spending, ever: <strong>${{ total_spending }}</strong></p>
+        <p class="total-gifts">Total expenditures/gifts, ever: <strong>${{ total_expenditures }}</strong></p>
+        <p class="total-orgs">Total organizations lobbying, ever: <strong>{{ total_organizations }}</strong></p>
+        <p class="total-lobbyists">Total lobbyists active, ever: <strong>{{ total_lobbyists }}</strong></p>
     </div>
 </div>
 <div class="row">
