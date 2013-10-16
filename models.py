@@ -62,6 +62,7 @@ class Legislator(SlugModel):
     name = CharField()
     office = CharField()
     district = CharField()
+    party = CharField()
 
 class Organization(SlugModel):
     slug_fields = ['name']
@@ -115,7 +116,8 @@ def load_legislator(name, office):
     legislator = Legislator(
         name=name,
         office=office,
-        district='' #TODO
+        district='', #TODO
+        party=''     #TODO
     )
 
     legislator.save()
