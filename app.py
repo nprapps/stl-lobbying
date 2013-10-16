@@ -9,7 +9,7 @@ from flask import Flask, Markup, abort, render_template
 
 import app_config
 import copytext
-from models import Expenditure, Legislator, Organization
+from models import Expenditure, Legislator, Lobbyist, Organization
 from render_utils import flatten_app_config, make_context
 
 app = Flask(app_config.PROJECT_NAME)
@@ -22,7 +22,13 @@ def index():
     """
     context = make_context()
 
-    context['expenditures'] = Expenditure.select()
+    expenditures = list(Expenditure.select())
+
+    context['expenditures'] = expenditures
+    context['total_spending'] = sum([e.cost for e in expenditures]) 
+    context['total_expenditures'] = len(expenditures) 
+    context['total_organizations'] = Organization.select().count()
+    context['total_lobbyists'] = Lobbyist.select().count()
 
     return render_template('index.html', **context)
 

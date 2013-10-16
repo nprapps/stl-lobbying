@@ -55,6 +55,14 @@ class SlugModel(Model):
 
         self.slug = slug
 
+class Lobbyist(SlugModel):
+    """
+    A lobbyist.
+    """
+    slug_fields = ['name']
+
+    name = CharField()
+
 class Legislator(SlugModel):
     """
     A legislator.
@@ -81,7 +89,7 @@ class Expenditure(Model):
     """
     An expenditure.
     """
-    lobbyist_name = CharField()
+    lobbyist = ForeignKeyField(Lobbyist, related_name='expenditures')
     report_period = DateField()
     recipient = CharField()
     recipient_type = CharField()
@@ -99,7 +107,7 @@ def delete_tables():
     """
     Clear data from sqlite.
     """
-    for cls in [Legislator, Organization, Expenditure]:
+    for cls in [Lobbyist, Legislator, Organization, Expenditure]:
         try:
             cls.drop_table()
         except:
@@ -109,8 +117,26 @@ def create_tables():
     """
     Create database tables for each model.
     """
-    for cls in [Legislator, Organization, Expenditure]:
+    for cls in [Lobbyist, Legislator, Organization, Expenditure]:
         cls.create_table()
+
+def load_lobbyist(name):
+    """
+    Get or create a lobbyist.
+    """
+    try:
+        return False, Lobbyist.get(Lobbyist.name==name)
+    except Lobbyist.DoesNotExist:
+        pass
+
+    lobbyist = Lobbyist(
+        name=name
+    )
+
+    lobbyist.save()
+
+    return True, lobbyist 
+
 
 def load_legislator(name, office):
     """
@@ -163,6 +189,7 @@ def load_expenditures():
     expenditures = []
     warnings = []
     errors = []
+    lobbyists_created = 0
     legislators_created = 0
     organizations_created = 0
 
@@ -172,6 +199,12 @@ def load_expenditures():
         # Strip whitespace
         for k, v in row.items():
             row[k] = v.strip()
+
+        # Lobbyist
+        created, lobbyist = load_lobbyist('%s %s' % (row['Lob F Name'], row['Lob L Name']))
+
+        if created:
+            lobbyists_created += 1 
 
         # Report period
         report_period = datetime.datetime.strptime(row['Report'], '%b-%y').date()
@@ -213,8 +246,7 @@ def load_expenditures():
 
         # Create it!
         expenditures.append(Expenditure(
-            lobbyist_name='%(Lob F Name)s %(Lob L Name)s' % row,
-            lobbyist_last_name=row['Lob L Name'],
+            lobbyist=lobbyist,
             report_period=report_period,
             recipient=recipient,
             recipient_type=recipient_type,
@@ -252,5 +284,6 @@ def load_expenditures():
 
     print 'Processed %i rows' % i
     print 'Imported %i expenditures' % len(expenditures)
+    print 'Created %i lobbyists' % lobbyists_created
     print 'Created %i legislators' % legislators_created
     print 'Created %i organizations' % organizations_created
