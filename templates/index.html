@@ -26,6 +26,12 @@
     <p>Total expenditures/gifts, ever: {{ total_expenditures }}</p>
     <p>Total organizations lobbying, ever: {{ total_organizations }}</p>
     <p>Total lobbyists active, ever: {{ total_lobbyists }}</p>
+    <p>Orgs with highest spending, ever:</p>
+    <ul>
+        {% for org in organizations_total_spending %}
+        <li><a href="{{ org.url() }}">{{ org.name }}</a>: ${{ org.total_spending }}</li>
+        {% endfor %}
+    </ul>
 </div>
 {% endblock %}
 
