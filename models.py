@@ -9,6 +9,78 @@ from playhouse.sqlite_ext import SqliteExtDatabase
 
 database = SqliteExtDatabase('stl-lobbying.db')
 
+class SlugModel(Model):
+    """
+    A legislator.
+    """
+    slug_fields = []
+
+    slug = CharField()
+
+    def save(self, *args, **kwargs):
+        """
+        Slugify before saving!
+        """
+        if not self.slug:
+            self.slugify()
+
+        super(SlugModel, self).save(*args, **kwargs)
+
+    def slugify(self):
+        """
+        Generate a slug.
+        """
+        bits = []
+
+        for field in self.slug_fields:
+            attr = getattr(self, field)
+
+            if attr:
+                attr = attr.lower()
+                attr = re.sub(r"[^\w\s]", '', attr)
+                attr = re.sub(r"\s+", '-', attr)
+
+                bits.append(attr)
+
+        base_slug = '-'.join(bits)
+
+        slug = base_slug
+        i = 1
+
+        while Legislator.select().where(Legislator.slug == slug).count():
+            i += 1
+            slug = '%s-%i' % (base_slug, i)
+
+        self.slug = slug
+
+class Legislator(SlugModel):
+    """
+    A legislator.
+    """
+    slug_fields = ['name']
+
+    name = CharField()
+    office = CharField()
+    district = CharField()
+
+class Expenditure(Model):
+    """
+    An expenditure.
+    """
+    lobbyist_name = CharField()
+    report_period = DateField()
+    recipient = CharField()
+    recipient_type = CharField()
+    legislator = ForeignKeyField(Legislator, related_name='expenditures', null=True)
+    event_date = DateField()
+    event_type = CharField()
+    description =  CharField()
+    cost = FloatField()
+    principal = CharField()
+    
+    class Meta:
+        database = database
+
 def delete_tables():
     """
     Clear data from sqlite.
@@ -30,70 +102,10 @@ def create_tables():
     Legislator.create_table()
     Expenditure.create_table()
 
-class Legislator(Model):
-    """
-    A legislator.
-    """
-    slug = CharField()
-    name = CharField()
-    office = CharField()
-    district = CharField()
-
-    def save(self, *args, **kwargs):
-        """
-        Slugify before saving!
-        """
-        if not self.slug:
-            self.slugify()
-
-        super(Legislator, self).save(*args, **kwargs)
-
-    def slugify(self):
-        """
-        Generate a slug.
-        """
-        bits = []
-
-        for field in ['name']:
-            attr = getattr(self, field)
-
-            if attr:
-                attr = attr.lower()
-                attr = re.sub(r"[^\w\s]", '', attr)
-                attr = re.sub(r"\s+", '-', attr)
-
-                bits.append(attr)
-
-        base_slug = '-'.join(bits)
-
-        slug = base_slug
-        i = 1
-
-        while Legislator.select().where(Legislator.slug == slug).count():
-            i += 1
-            slug = '%s-%i' % (base_slug, i)
-
-        self.slug = slug
-
-class Expenditure(Model):
-    """
-    An expenditure.
-    """
-    lobbyist_name = CharField()
-    report_period = DateField()
-    recipient = CharField()
-    recipient_type = CharField()
-    legislator = ForeignKeyField(Legislator, related_name='expenditures', null=True)
-    event_date = DateField()
-    event_type = CharField()
-    description =  CharField()
-    cost = FloatField()
-    principal = CharField()
-    
-    class Meta:
-        database = database
-
 def load_legislator(name, office):
+    """
+    Get or create a legislator.
+    """
     try:
         return False, Legislator.get(Legislator.name==name, Legislator.office==office)
     except Legislator.DoesNotExist:
@@ -126,7 +138,7 @@ def load_data():
     legislators_created = 0
 
     for row in rows:
-        i+=1
+        i += 1
 
         for k, v in row.items():
             row[k] = v.strip()
