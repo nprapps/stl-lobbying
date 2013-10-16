@@ -56,7 +56,12 @@
             <li><a href="{{ legislator.url() }}">{{ legislator.name }}</a>: ${{ legislator.total_spending }}</li>
             {% endfor %}
         </ul>
-
+        <p>Spending by category, ever:</p>
+        <ul>
+            {% for ex in expenditures_by_category %}
+            <li>{{ ex.category }}</a>: ${{ ex.total_spending }}</li>
+            {% endfor %}
+        </ul>
     </div>
 </div>
 <div class="row">

@@ -6,7 +6,7 @@ import urllib
 
 import envoy
 from flask import Flask, Markup, abort, render_template
-from peewee import fn
+from peewee import fn, R
 
 import app_config
 import copytext
@@ -38,6 +38,8 @@ def index():
 
     organizations_total_spending = sorted(organizations, key=lambda o: o.total_spending, reverse=True)[:10]
 
+    expenditures_by_category = Expenditure.select(Expenditure.category, fn.Sum(Expenditure.cost).alias('total_spending')).group_by(Expenditure.category).order_by(R('total_spending desc'))
+
     context['expenditures'] = expenditures
     context['total_spending'] = expenditures.aggregate(fn.Sum(Expenditure.cost)) 
     context['total_expenditures'] = expenditures.count()
@@ -45,6 +47,7 @@ def index():
     context['total_lobbyists'] = lobbyists.count()
     context['organizations_total_spending'] = organizations_total_spending
     context['legislators_total_spending'] = legislators_total_spending
+    context['expenditures_by_category'] = expenditures_by_category
 
     return render_template('index.html', **context)
 
