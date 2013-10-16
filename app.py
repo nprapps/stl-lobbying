@@ -26,6 +26,12 @@ def index():
     expenditures = Expenditure.select()
     organizations = Organization.select()
     lobbyists = Lobbyist.select()
+    legislators = Legislator.select()
+
+    for legislator in legislators:
+        legislator.total_spending = sum([e.cost for e in legislator.expenditures])
+
+    legislators_total_spending = sorted(legislators, key=lambda l: l.total_spending, reverse=True)[:10]
 
     for org in organizations:
         org.total_spending = sum([e.cost for e in org.expenditures])
@@ -38,6 +44,7 @@ def index():
     context['total_organizations'] = organizations.count()
     context['total_lobbyists'] = lobbyists.count()
     context['organizations_total_spending'] = organizations_total_spending
+    context['legislators_total_spending'] = legislators_total_spending
 
     return render_template('index.html', **context)
 
