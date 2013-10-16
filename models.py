@@ -63,6 +63,11 @@ class Legislator(SlugModel):
     office = CharField()
     district = CharField()
 
+class Organization(SlugModel):
+    slug_fields = ['name']
+
+    name = CharField()
+
 class Expenditure(Model):
     """
     An expenditure.
@@ -76,7 +81,7 @@ class Expenditure(Model):
     event_type = CharField()
     description =  CharField()
     cost = FloatField()
-    principal = CharField()
+    organization = ForeignKeyField(Organization, related_name='expenditures')
     
     class Meta:
         database = database
@@ -85,22 +90,18 @@ def delete_tables():
     """
     Clear data from sqlite.
     """
-    try:
-        Legislator.drop_table()
-    except:
-        pass
-
-    try:
-        Expenditure.drop_table()
-    except:
-        pass
+    for cls in [Legislator, Organization, Expenditure]:
+        try:
+            cls.drop_table()
+        except:
+            continue
 
 def create_tables():
     """
     Create database tables for each model.
     """
-    Legislator.create_table()
-    Expenditure.create_table()
+    for cls in [Legislator, Organization, Expenditure]:
+        cls.create_table()
 
 def load_legislator(name, office):
     """
@@ -121,7 +122,24 @@ def load_legislator(name, office):
 
     return True, legislator
 
-def load_data():
+def load_organization(name):
+    """
+    Get or create an organization.
+    """
+    try:
+        return False, Organization.get(Organization.name==name)
+    except Organization.DoesNotExist:
+        pass
+
+    organization = Organization(
+        name=name
+    )
+
+    organization.save()
+
+    return True, organization
+
+def load_expenditures():
     """
     Load database tables from files.
     """
@@ -136,17 +154,22 @@ def load_data():
     warnings = []
     errors = []
     legislators_created = 0
+    organizations_created = 0
 
     for row in rows:
         i += 1
 
+        # Strip whitespace
         for k, v in row.items():
             row[k] = v.strip()
 
+        # Report period
         report_period = datetime.datetime.strptime(row['Report'], '%b-%y').date()
 
+        # Recipient
         recipient, recipient_type = row['Recipient'].split(' - ')
 
+        # Legislator
         legislator = None
         created = False
 
@@ -165,11 +188,20 @@ def load_data():
         if created:
             legislators_created += 1
 
+        # Event date
         bits = map(int, row['Date'].split('/'))
         event_date = datetime.date(bits[2], bits[0], bits[1])
 
+        # Cost
         cost = float(row['Cost'].strip('()').strip('$'))
 
+        # Organization
+        created, organization = load_organization(row['Principal'])
+
+        if created:
+            organizations_created += 1
+
+        # Create it!
         expenditures.append(Expenditure(
             lobbyist_name='%(Lob F Name)s %(Lob L Name)s' % row,
             lobbyist_last_name=row['Lob L Name'],
@@ -181,7 +213,7 @@ def load_data():
             event_type=row['Type'],
             description=row['Description'],
             cost=cost,
-            principal=row['Principal']
+            organization=organization
         ))
 
     if warnings:
@@ -211,3 +243,4 @@ def load_data():
     print 'Processed %i rows' % i
     print 'Imported %i expenditures' % len(expenditures)
     print 'Created %i legislators' % legislators_created
+    print 'Created %i organizations' % organizations_created

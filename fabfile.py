@@ -456,7 +456,7 @@ def delete_tables():
     models.delete_tables()
 
 def load_data():
-    models.load_data()
+    models.load_expenditures()
 
 def local_bootstrap():
     delete_tables()
