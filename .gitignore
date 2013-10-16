@@ -41,3 +41,5 @@ confs/rendered/*
 data/copy.xls
 tumblr-theme.html
 stl-lobbying.db
+.pages_html
+www/js/copy.js
