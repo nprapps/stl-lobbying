@@ -15,24 +15,16 @@
 
 
 {% block content %}
-<h1>{{ PROJECT_NAME }}</h1>
-<div id="story-meta">
-    <p class="byline">by <span>{{ COPY.attribution.byline }}</span></p>
-    <p class="dateblock">
-        <span class="date">{{ COPY.attribution.pubdate }}</span>
-        <span class="time"> {{ COPY.attribution.pubtime }}</span>
-    </p>
-</div>
+<h1>{{ organization.name }}</h1>
 {% endblock %}
 
 
 {% block wide_content %}
 <div class="row">
     <div class="col-md-12">
-        {% for ex in expenditures %}
+        {% for ex in organization.expenditures %}
         <h2>${{ ex.cost }}</h2>
         <p>Legislator: <a href="legislator/{{ ex.legislator.slug }}/">{{ ex.legislator.name }}</a></p>
-                <p>Organization: <a href="organization/{{ ex.organization.slug }}/">{{ ex.organization.name }}</a></p>
         {% endfor %}
     </div>
 </div>

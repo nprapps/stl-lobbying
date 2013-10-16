@@ -1,0 +1,31 @@
+{% extends '_base.html' %}
+
+{% block header_content %}
+<header>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h1>{{ COPY.content.header_title }}</h1>
+                <h2>{{ COPY.content.lorem_ipsum }}</h2>
+            </div>
+        </div>
+    </div>
+</header>
+{% endblock %}
+
+
+{% block content %}
+<h1>{{ legislator.name }}</h1>
+{% endblock %}
+
+
+{% block wide_content %}
+<div class="row">
+    <div class="col-md-12">
+        {% for ex in legislator.expenditures %}
+        <h2>${{ ex.cost }}</h2>
+        <p>Organization: <a href="organization/{{ ex.organization.slug }}/">{{ ex.organization.name }}</a></p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

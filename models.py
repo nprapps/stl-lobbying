@@ -169,7 +169,7 @@ def load_expenditures():
         report_period = datetime.datetime.strptime(row['Report'], '%b-%y').date()
 
         # Recipient
-        recipient, recipient_type = row['Recipient'].split(' - ')
+        recipient, recipient_type = map(unicode.strip, row['Recipient'].split(' - '))
 
         # Legislator
         legislator = None

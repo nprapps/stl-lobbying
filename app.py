@@ -9,7 +9,7 @@ from flask import Flask, Markup, abort, render_template
 
 import app_config
 import copytext
-import models
+from models import Expenditure, Legislator, Organization
 from render_utils import flatten_app_config, make_context
 
 app = Flask(app_config.PROJECT_NAME)
@@ -22,9 +22,31 @@ def index():
     """
     context = make_context()
 
-    context['expenditures'] = models.Expenditure.select()
+    context['expenditures'] = Expenditure.select()
 
     return render_template('index.html', **context)
+
+@app.route('/legislator/<string:slug>/')
+def _legislator(slug):
+    """
+    Legislator detail page.
+    """
+    context = make_context()
+    
+    context['legislator'] = Legislator.get(Legislator.slug==slug)
+
+    return render_template('legislator.html', **context)
+
+@app.route('/organization/<string:slug>/')
+def _organization(slug):
+    """
+    Organization detail page.
+    """
+    context = make_context()
+    
+    context['organization'] = Organization.get(Organization.slug==slug)
+
+    return render_template('organization.html', **context)
 
 @app.route('/widget.html')
 def widget():
