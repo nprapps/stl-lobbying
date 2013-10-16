@@ -7,6 +7,8 @@ import csvkit
 from peewee import *
 from playhouse.sqlite_ext import SqliteExtDatabase
 
+import app_config
+
 database = SqliteExtDatabase('stl-lobbying.db')
 
 class SlugModel(Model):
@@ -64,10 +66,16 @@ class Legislator(SlugModel):
     district = CharField()
     party = CharField()
 
+    def url(self):
+        return '%s/legislator/%s/' % (app_config.S3_BASE_URL, self.slug)
+
 class Organization(SlugModel):
     slug_fields = ['name']
 
     name = CharField()
+
+    def url(self):
+        return '%s/organization/%s/' % (app_config.S3_BASE_URL, self.slug)
 
 class Expenditure(Model):
     """

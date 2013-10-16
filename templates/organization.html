@@ -24,7 +24,7 @@
     <div class="col-md-12">
         {% for ex in organization.expenditures %}
         <h2>${{ ex.cost }}</h2>
-        <p>Legislator: <a href="legislator/{{ ex.legislator.slug }}/">{{ ex.legislator.name }}</a></p>
+        {% if ex.legislator %}<p>Legislator: <a href="{{ ex.legislator.url() }}">{{ ex.legislator.name }}</a></p> {% endif %}
         {% endfor %}
     </div>
 </div>
