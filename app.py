@@ -29,12 +29,12 @@ def index():
     legislators = Legislator.select()
 
     for legislator in legislators:
-        legislator.total_spending = sum([e.cost for e in legislator.expenditures])
+        legislator.total_spending = legislator.expenditures.aggregate(fn.Sum(Expenditure.cost))
 
     legislators_total_spending = sorted(legislators, key=lambda l: l.total_spending, reverse=True)[:10]
 
     for org in organizations:
-        org.total_spending = sum([e.cost for e in org.expenditures])
+        org.total_spending = org.expenditures.aggregate(fn.Sum(Expenditure.cost))
 
     organizations_total_spending = sorted(organizations, key=lambda o: o.total_spending, reverse=True)[:10]
 
