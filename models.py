@@ -95,7 +95,7 @@ class Expenditure(Model):
     recipient_type = CharField()
     legislator = ForeignKeyField(Legislator, related_name='expenditures', null=True)
     event_date = DateField()
-    event_type = CharField()
+    category = CharField()
     description =  CharField()
     cost = FloatField()
     organization = ForeignKeyField(Organization, related_name='expenditures')
@@ -252,7 +252,7 @@ def load_expenditures():
             recipient_type=recipient_type,
             legislator=legislator,
             event_date=event_date,
-            event_type=row['Type'],
+            category=row['Type'],
             description=row['Description'],
             cost=cost,
             organization=organization

@@ -65,7 +65,7 @@
         </table>
     </div>
     <div class="legislators">
-        <h2>Legislators with highest spending on them, ever:</h2>
+        <h2>Legislators with highest spending on them, ever</h2>
         <table>
             <thead>
                 <tr>
@@ -82,6 +82,14 @@
             {% endfor %}
             </tbody>
         </table>
+    </div>
+    <div class="categories">
+        <h2>Spending by category, ever</h2>
+        <ul>
+            {% for ex in expenditures_by_category %}
+            <li>{{ ex.category }}</a>: ${{ ex.total_spending }}</li>
+            {% endfor %}
+        </ul>
     </div>
 </div>
 <div class="row">
