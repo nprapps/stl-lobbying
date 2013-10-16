@@ -196,6 +196,71 @@ def render():
         with open(filename, 'w') as f:
             f.write(content.encode('utf-8'))
 
+def _render_slug_pages(models, view_name, output_path, compiled_includes):
+    """
+    Render pages for SlugModels.
+    """
+    from flask import g, url_for
+
+    for model in models:
+        slug = model.slug
+
+        # Silly fix because url_for require a context
+        with app.app.test_request_context():
+            path = url_for(view_name, slug=slug)
+
+        with app.app.test_request_context(path=path):
+            print 'Rendering %s' % path
+
+            g.compile_includes = True
+            g.compiled_includes = compiled_includes
+
+            view = app.__dict__[view_name]
+            content = view(slug)
+
+            compiled_includes = g.compiled_includes
+
+        path = '%s%sindex.html' % (output_path, path)
+
+        # Ensure path exists
+        head = os.path.split(path)[0]
+
+        try:
+            os.makedirs(head)
+        except OSError:
+            pass
+
+        with open(path, 'w') as f:
+            f.write(content.encode('utf-8'))
+
+    return compiled_includes 
+
+def render_pages(legislators=None, organizations=None):
+    """
+    Render the legislator and organization pages.
+    """
+    os.system('rm -rf .pages_html')
+    os.system('rm -rf .pages_gzip')
+
+    update_copy()
+    less()
+    jst()
+
+    app_config_js()
+    copy_js()
+
+    compiled_includes = []
+
+    if not legislators:
+        legislators = models.Legislator.select()
+
+    compiled_includes = _render_slug_pages(legislators, '_legislator', '.pages_html', compiled_includes)
+
+    if not organizations:
+        organizations = models.Organization.select()
+
+    compiled_includes = _render_slug_pages(organizations, '_organization', '.pages_html', compiled_includes)
+
 def tests():
     """
     Run Python unit tests.
@@ -443,6 +508,20 @@ def deploy(remote='origin'):
             deploy_confs()
 
     render()
+    _gzip('www', '.gzip')
+    _deploy_to_s3()
+
+def deploy_pages():
+    require('settings', provided_by=[production, staging])
+
+    if (env.settings == 'production' and env.branch != 'stable'):
+        _confirm("You are trying to deploy the '%(branch)s' branch to production.\nYou should really only deploy a stable branch.\nDo you know what you're doing?" % env)
+
+    render_pages()
+    _gzip('.pages_html', '.pages_gzip')
+    _deploy_to_s3('.pages_gzip')
+
+    # Ensure assets are updated
     _gzip('www', '.gzip')
     _deploy_to_s3()
 
