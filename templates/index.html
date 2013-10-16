@@ -43,6 +43,26 @@
         <p class="total-gifts">Total expenditures/gifts, ever: <strong>${{ total_expenditures }}</strong></p>
         <p class="total-orgs">Total organizations lobbying, ever: <strong>{{ total_organizations }}</strong></p>
         <p class="total-lobbyists">Total lobbyists active, ever: <strong>{{ total_lobbyists }}</strong></p>
+</div>
+<div class="top-orgs row">
+    <div class="col-md-12">
+        <h2>Organizations with highest spending, ever</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th class="organization">Organization</th>
+                    <th class="spending">Spending</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for org in organizations_total_spending %}
+            <tr>
+                <td class="organization"><a href="{{ org.url() }}">{{ org.name }}</a></td>
+                <td class="spending"><div class="bar" style="width: {{ org.total_spending / (organizations_total_spending|first).total_spending * 100 }}%">${{ org.total_spending }}</div> </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
     </div>
 </div>
 <div class="row">

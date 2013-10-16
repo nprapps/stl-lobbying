@@ -24,11 +24,23 @@ def index():
 
     expenditures = list(Expenditure.select())
 
+
+    #top = Organization.select(Organization, fn.Sum(Expenditure.cost).alias('total_cost')).join(Expenditure).order_by(R('total_cost')).limit(10)
+    #print [t for t in top]
+
+    organizations = Organization.select()
+
+    for org in organizations:
+        org.total_spending = sum([e.cost for e in org.expenditures])
+
+    organizations_total_spending = sorted(organizations, key=lambda o: o.total_spending, reverse=True)[:10]
+
     context['expenditures'] = expenditures
     context['total_spending'] = sum([e.cost for e in expenditures]) 
     context['total_expenditures'] = len(expenditures) 
     context['total_organizations'] = Organization.select().count()
     context['total_lobbyists'] = Lobbyist.select().count()
+    context['organizations_total_spending'] = organizations_total_spending
 
     return render_template('index.html', **context)
 
@@ -38,8 +50,11 @@ def _legislator(slug):
     Legislator detail page.
     """
     context = make_context()
-    
-    context['legislator'] = Legislator.get(Legislator.slug==slug)
+
+    legislator = Legislator.get(Legislator.slug==slug)
+
+    context['legislator'] = legislator
+    context['total_spending'] = sum([e.cost for e in legislator.expenditures]) 
 
     return render_template('legislator.html', **context)
 
@@ -50,7 +65,10 @@ def _organization(slug):
     """
     context = make_context()
     
-    context['organization'] = Organization.get(Organization.slug==slug)
+    organization = Organization.get(Organization.slug==slug)
+
+    context['organization'] = organization
+    context['total_spending'] = sum([e.cost for e in organization.expenditures]) 
 
     return render_template('organization.html', **context)
 
