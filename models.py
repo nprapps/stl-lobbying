@@ -58,6 +58,8 @@ def load_data():
     errors = []
 
     for row in rows:
+        i+=1
+
         for k, v in row.items():
             row[k] = v.strip()
 
@@ -73,10 +75,10 @@ def load_data():
             recipient_official = ''
             recipient_official_type = ''
         elif recipient_type in SKIP_TYPES:
-            warnings.append('%i -- Skipping %s: %s' % (i, recipient_type, recipient))
+            warnings.append('%05i -- Skipping %s: %s' % (i, recipient_type, recipient))
             continue
         else:
-            errors.append('%i -- Unknown recipient type, "%s": %s' % (i, recipient_type, recipient))
+            errors.append('%05i -- Unknown recipient type, "%s": %s' % (i, recipient_type, recipient))
             continue
 
         bits = map(int, row['Date'].split('/'))
@@ -99,14 +101,14 @@ def load_data():
             principal=row['Principal']
         ))
 
-        i += 1
-
     if warnings:
         print 'WARNINGS'
         print '--------'
 
         for warning in warnings:
             print warning
+
+        print ''
 
     if errors:
         print 'ERRORS'
@@ -120,4 +122,8 @@ def load_data():
     for expenditure in expenditures:
         expenditure.save()
 
-    print 'Imported %i expenditures' % i
+    print 'SUMMARY'
+    print '-------'
+
+    print 'Processed %i rows' % i
+    print 'Imported %i expenditures' % len(expenditures)
