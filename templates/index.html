@@ -1,32 +1,50 @@
 {% extends '_base.html' %}
 
 {% block header_content %}
-<header>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <h1>{{ COPY.content.header_title }}</h1>
-                <h2>{{ COPY.content.lorem_ipsum }}</h2>
-            </div>
+<div class="header-wrapper">
+    <div class="project-header">
+        <h1>{{ PROJECT_NAME }}</h1>
+        <div class="story-meta">
+            <p class="byline">by <span>{{ COPY.attribution.byline }}</span></p>
+            <p class="dateblock">
+                <span class="date">{{ COPY.attribution.pubdate }}</span>
+            </p>
+            <p class="intro">{{ COPY.content.lorem_ipsum }}</p>
         </div>
     </div>
-</header>
-{% endblock %}
-
-
-{% block content %}
-<h1>{{ PROJECT_NAME }}</h1>
-<div id="story-meta">
-    <p class="byline">by <span>{{ COPY.attribution.byline }}</span></p>
-    <p class="dateblock">
-        <span class="date">{{ COPY.attribution.pubdate }}</span>
-        <span class="time"> {{ COPY.attribution.pubtime }}</span>
-    </p>
+    <div class="bigbox">
+            {# 300x250 ad #}
+            <div class="adwrapper">
+                    <div class="sponsor300">
+                            <script type="text/javascript">
+                            <!--
+                            if (DFP.shouldRenderForDevice('desktop')) {
+                                    googletag.cmd.push(function() { googletag.display('ad-desktop'); });
+                            }
+                            // -->
+                            </script>
+                            <img src="http://placehold.it/300x250">
+                    </div>
+                    <p class="pull-left">NPR thanks our sponsors</p>
+                    <p class="pull-right"><a href="http://www.npr.org/about/place/corpsupport/">Become an NPR sponsor</a></p>
+            </div>
+    </div>
 </div>
 {% endblock %}
 
 
+{% block content %}
+
+{% endblock %}
+
+
 {% block wide_content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2>Organizations</h2>
+        <h1>{{ organization }}</h1>
+    </div>
+</div>
 <div class="row">
     <div class="col-md-12">
         {% for ex in expenditures %}

@@ -14,7 +14,7 @@ import os
 NAMES
 """
 # Project name used for display
-PROJECT_NAME = 'stl-lobbying'
+PROJECT_NAME = 'Capitol Spending'
 
 # Project name in urls
 # Use dashes, not underscores!
