@@ -178,7 +178,7 @@ body > header {
 		}
 	}
 
-	.top-orgs {
+	.top-entities {
 		table {
 			width: 100%;
 			th,
@@ -186,8 +186,9 @@ body > header {
 				line-height: 1;
 				padding: 1px 5px;
 
-				&.organization {
-					width: 33.33333%;
+				&.organization,
+				&.legislator {
+					width: 40%;
 					text-align: right;
 				}
 			}
@@ -195,6 +196,18 @@ body > header {
 			th {
 				padding: 5px;
 			}
+
+			td {
+				&.organization,
+				&.legislator {
+					font-size: 12px;
+				}
+			}
 		}
+	}
+
+	.organizations,
+	.legislators {
+		.make-md-column(6);
 	}
 }

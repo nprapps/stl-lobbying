@@ -44,8 +44,8 @@
         <p class="total-orgs">Total organizations lobbying, ever: <strong>{{ total_organizations }}</strong></p>
         <p class="total-lobbyists">Total lobbyists active, ever: <strong>{{ total_lobbyists }}</strong></p>
 </div>
-<div class="top-orgs row">
-    <div class="col-md-12">
+<div class="top-entities row">
+    <div class="organizations">
         <h2>Organizations with highest spending, ever</h2>
         <table>
             <thead>
@@ -59,6 +59,25 @@
             <tr>
                 <td class="organization"><a href="{{ org.url() }}">{{ org.name }}</a></td>
                 <td class="spending"><div class="bar" style="width: {{ org.total_spending / (organizations_total_spending|first).total_spending * 100 }}%">${{ org.total_spending }}</div> </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="legislators">
+        <h2>Legislators with highest spending on them, ever:</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th class="legislator">Legislator</th>
+                    <th class="spending">Spending</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for legislator in legislators_total_spending %}
+            <tr>
+                <td class="legislator"><a href="{{ legislator.url() }}">{{ legislator.name }}</a></td>
+                <td class="spending"><div class="bar" style="width: {{ legislator.total_spending / (legislators_total_spending|first).total_spending * 100 }}%">${{ legislator.total_spending }}</div> </td>
             </tr>
             {% endfor %}
             </tbody>
