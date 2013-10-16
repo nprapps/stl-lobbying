@@ -22,7 +22,12 @@ def index():
     """
     context = make_context()
 
-    context['expenditures'] = Expenditure.select()
+    expenditures = list(Expenditure.select())
+
+    context['expenditures'] = expenditures
+    context['total_spending'] = sum([e.cost for e in expenditures]) 
+    context['total_expenditures'] = len(expenditures) 
+    context['total_organizations'] = Organization.select().count()
 
     return render_template('index.html', **context)
 
