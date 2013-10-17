@@ -76,6 +76,7 @@ class Legislator(SlugModel):
     office = CharField()
     district = CharField()
     party = CharField()
+    ethics_name = CharField(null=True)
     
     class Meta:
         database = database
@@ -161,6 +162,7 @@ class LobbyLoader:
     groups_created = 0
 
     def __init__(self):
+        self.legislators_demographics_filename = 'data/legislator_demographics.csv'
         self.party_lookup_filename = 'data/party_lookup.csv'
         self.organization_name_lookup_filename = 'data/organization_name_lookup.csv'
         self.individual_data_filename = 'data/sample_data.csv'
@@ -220,27 +222,6 @@ class LobbyLoader:
 
         return True, lobbyist 
 
-
-    def load_legislator(self, name, office, party):
-        """
-        Get or create a legislator.
-        """
-        try:
-            return False, Legislator.get(Legislator.name==name, Legislator.office==office)
-        except Legislator.DoesNotExist:
-            pass
-
-        legislator = Legislator(
-            name=name,
-            office=office,
-            district='', #TODO
-            party=party
-        )
-
-        legislator.save()
-
-        return True, legislator
-
     def load_organization(self, name):
         """
         Get or create an organization.
@@ -283,6 +264,39 @@ class LobbyLoader:
 
         return True, group
 
+    def load_legislators(self):
+        """
+        Load legislator demographics.
+        """
+        with open(self.legislators_demographics_filename) as f:
+            reader = csvkit.CSVKitDictReader(f)
+            rows = list(reader)
+
+        i = 0
+
+        for row in rows:
+            i += 1
+
+            for k in row:
+                row[k] = row[k].strip()
+
+            party = self.party_lookup.get((row['ethics_name'], row['office']), '')
+
+            if not party:
+                self.error('%05i -- No matching party affiliation for "%s": "%s"' % (i, row['office'], row['ethics_name']))
+
+            legislator = Legislator(
+                name='%(first_name)s %(last_name)s' % row,
+                office=row['office'],
+                district=row['district'],
+                party=party,
+                ethics_name=row['ethics_name']
+            )
+
+            legislator.save()
+
+            self.legislators_created += 1
+
     def load_individual_expenditures(self):
         """
         Load individual expenditures from files.
@@ -321,15 +335,13 @@ class LobbyLoader:
 
             # Legislator
             legislator = None
-            created = False
 
             if recipient_type in ['Senator', 'Representative']:
-                party = self.party_lookup.get((recipient, recipient_type), '')
-
-                if not party:
-                    self.error('%05i -- No matching party affiliation for "%s": "%s"' % (i, recipient_type, recipient))
-
-                created, legislator = self.load_legislator(recipient, recipient_type, party)
+                try:
+                    legislator = Legislator.get(Legislator.ethics_name==recipient, Legislator.office==recipient_type)
+                except Legislator.DoesNotExist:
+                    self.error('%05i -- No matching legislator for "%s": "%s"' % (i, recipient_type, recipient))
+                    continue
             elif recipient_type in ['Employee or Staff', 'Spouse or Child']:
                 legislator_name, legislator_type = map(unicode.strip, row['Pub Off'].rsplit(' - ', 1))
                 legislator_name = self.strip_nicknames(legislator_name)
@@ -338,21 +350,17 @@ class LobbyLoader:
                     #self.warn('%05i -- Skipping "%s": "%s" for "%s": "%s"' % (i, recipient_type, recipient, legislator_type, legislator_name))
                     continue
 
-                party = self.party_lookup.get((legislator_name, legislator_type), '')
-
-                if not party:
-                    self.error('%05i -- No matching party affiliation for "%s": "%s"' % (i, legislator_name, legislator_type))
-
-                created, legislator = self.load_legislator(legislator_name, legislator_type, party)
+                try:
+                    legislator = Legislator.get(Legislator.ethics_name==legislator_name, Legislator.office==legislator_type)
+                except Legislator.DoesNotExist:
+                    self.error('%05i -- No matching legislator for "%s": "%s"' % (i, legislator_type, legislator_name))
+                    continue
             elif recipient_type in self.SKIP_TYPES:
                 #self.warn('%05i -- Skipping "%s": "%s"' % (i, recipient_type, recipient))
                 continue
             else:
                 self.error('%05i -- Unknown recipient type, "%s": "%s"' % (i, recipient_type, recipient))
                 continue
-
-            if created:
-                self.legislators_created += 1
 
             # Event date
             bits = map(int, row['Date'].split('/'))
@@ -480,6 +488,7 @@ class LobbyLoader:
         """
         self.load_party_lookup()
         self.load_organization_name_lookup()
+        self.load_legislators()
         self.load_individual_expenditures()
         self.load_group_expenditures()
 
