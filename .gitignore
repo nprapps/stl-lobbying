@@ -47,3 +47,4 @@ www/test/test.html
 peewee.db
 data/party_lookup.csv
 data/organization_name_lookup.csv
+data/legislator_name_lookup.csv
