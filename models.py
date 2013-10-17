@@ -180,7 +180,7 @@ def load_expenditures():
     Load database tables from files.
     """
     # These offices will be skipped
-    SKIP_TYPES = ['Local Government Official', 'Public Official', 'ATTORNEY GENERAL', 'STATE TREASURER', 'GOVERNOR', 'STATE AUDITOR', 'LIEUTENANT GOVERNOR']
+    SKIP_TYPES = ['Local Government Official', 'Public Official', 'ATTORNEY GENERAL', 'STATE TREASURER', 'GOVERNOR', 'STATE AUDITOR', 'LIEUTENANT GOVERNOR', 'SECRETARY OF STATE', 'JUDGE']
 
     # Load parties
     party_lookup = {}
@@ -237,8 +237,18 @@ def load_expenditures():
 
             created, legislator = load_legislator(recipient, recipient_type, party)
         elif recipient_type in ['Employee or Staff', 'Spouse or Child']:
-            # TODO -- get legislator from lookup and assign
-            pass
+            legislator_name, legislator_type = map(unicode.strip, row['Pub Off'].rsplit(' - ', 1))
+
+            if legislator_type in SKIP_TYPES:
+                warnings.append('%05i -- Skipping "%s": "%s" for "%s": "%s"' % (i, recipient_type, recipient, legislator_type, legislator_name))
+                continue
+
+            party = party_lookup.get((legislator_name, legislator_type), '')
+
+            if not party:
+                errors.append('%05i -- No matching party affiliation for "%s": "%s"' % (i, legislator_name, legislator_type))
+
+            created, legislator = load_legislator(legislator_name, legislator_type, party)
         elif recipient_type in SKIP_TYPES:
             warnings.append('%05i -- Skipping "%s": "%s"' % (i, recipient_type, recipient))
             continue
