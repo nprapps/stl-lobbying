@@ -62,6 +62,9 @@ class Lobbyist(SlugModel):
     slug_fields = ['name']
 
     name = CharField()
+    
+    class Meta:
+        database = database
 
 class Legislator(SlugModel):
     """
@@ -73,6 +76,9 @@ class Legislator(SlugModel):
     office = CharField()
     district = CharField()
     party = CharField()
+    
+    class Meta:
+        database = database
 
     def url(self):
         return '%s/legislator/%s/' % (app_config.S3_BASE_URL, self.slug)
@@ -81,11 +87,17 @@ class Group(SlugModel):
     slug_fields = ['name']
 
     name = CharField()
+    
+    class Meta:
+        database = database
 
 class Organization(SlugModel):
     slug_fields = ['name']
 
     name = CharField()
+    
+    class Meta:
+        database = database
 
     def url(self):
         return '%s/organization/%s/' % (app_config.S3_BASE_URL, self.slug)
