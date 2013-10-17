@@ -16,10 +16,13 @@
 
 .bar {
 	background: lighten(@brand-red, 7%);
-	color: #000;
-	height: 30px;
+	color: #fff;
+	font-weight: bold;
+	height: 36px;
+	line-height: 26px;
 	text-align: right;
 	padding: 5px;
+	-webkit-font-smoothing: antialiased;
 }
 
 .rule-3px {
@@ -109,19 +112,27 @@ nav {
 	.project-header {
 		.make-md-column(8);	
 
+		@media screen and (max-width: @screen-sm-max){
+			&:after {
+				.rule-3px;
+				margin: @line-height-computed /2 0;
+			}
+		}
+
 		h1 {
-			@media screen and (min-width: @screen-md) {
-				font-size: @font-size-base * 6;
-				font-weight: 700;
+			font-weight: 700;
 
-				.detail & {
-					font-size: @font-size-base * 3;
-
-					a {
-						color: @text-color;
-					}
+			.detail & {
+				font-size: @font-size-base * 3;
+				a {
+					color: @text-color;
 				}
 			}
+
+			@media screen and (min-width: @screen-md) {
+				font-size: @font-size-base * 6;
+			}
+
 		}
 		.story-meta {
 
@@ -143,6 +154,10 @@ nav {
 
 			@media screen and (max-width: @screen-xs-max){
 				margin-left: -5px;
+			}
+
+			@media screen and (min-width: @screen-md){
+				border-left: 1px solid @gray-light;
 			}
 		}
 	}
@@ -174,20 +189,57 @@ nav {
 			}
 		}
 
-		.total-spending {
-			.make-xs-column(12);
-		}
-		.total-gifts,
-		.total-orgs,
-		.total-lobbyists {
-			.make-xs-column(4);
+		@media screen and (max-width: @screen-sm-max){
 
-			@media screen and (max-width: @screen-xs-max){
+			.total-spending,
+			.total-gifts {
+				.make-xs-column(12);
+				.make-sm-column(6);
+					strong {
+						font-size: 32px;
+					}
+			}
+
+			.total-spending,
+			.total-gifts {
+				&:after {
+					display: block;
+					content: ' ';
+					border-bottom: 1px solid @gray-light;
+					position: relative;
+					bottom: -5px;
+				}
+			}
+
+			.total-orgs,
+			.total-lobbyists {
+				.make-xs-column(6);
+				.make-sm-column(6);
+				border-left: none;
+
 				strong {
 					font-size: 24px;
 				}
 			}
+
+			.total-orgs {
+				border-right: 1px solid @gray-light;
+			}
 		}
+
+		@media screen and (max-width: @screen-xs-max){
+			.total-spending,
+			.total-gifts {
+				border-left: none;
+
+				&:after {
+					display: block;
+					content: '';
+					border-bottom: 1px solid @gray-light;
+				}
+			}
+		}
+
 
 		.total-spending,
 		.total-gifts,
@@ -200,6 +252,7 @@ nav {
 	.top-entities {
 		table {
 			width: 100%;
+
 			th,
 			td {
 				line-height: 1;
@@ -236,9 +289,12 @@ nav {
 
 			td {
 				&.organization,
-				&.legislator,
+				&.legislator {
+					font-size: 11px;
+				}
+
 				&.spending {
-					font-size: 12px;
+					font-size: 13px;
 				}
 			}
 		}
@@ -259,10 +315,22 @@ nav {
 
 .detail {
 	.gift-table {
+		th {
+			border-bottom: none;
+		}
+
 		th,
 		td {
 			&.expenditure {
 				text-align: right;
+			}
+
+			&.date {
+				white-space: nowrap;
+			}
+
+			&.description {
+				width: 33.33333%
 			}
 		}
 	}
