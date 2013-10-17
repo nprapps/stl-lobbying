@@ -264,7 +264,13 @@ def load_expenditures():
         event_date = datetime.date(bits[2], bits[0], bits[1])
 
         # Cost
-        cost = float(row['Cost'].strip('()').strip('$').replace(',', ''))
+        cost = row['Cost'].strip('$').replace(',', '')
+
+        if '(' in cost or '-' in cost:
+            errors.append('%05i -- Negative cost!' % i)
+            continue
+
+        cost = float(cost)
 
         # Organization
         created, organization = load_organization(row['Principal'])
@@ -302,7 +308,7 @@ def load_expenditures():
         for error in errors:
             print error
 
-        return
+        # return
 
     for expenditure in expenditures:
         expenditure.save()
