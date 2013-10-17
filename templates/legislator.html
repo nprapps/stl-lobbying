@@ -14,7 +14,7 @@
 {% block content %}
 <h1>{{ legislator.office }} {{ legislator.name }}</h1>
 <h2>{{ legislator.party|replace("Republican", "R"|replace("Democrat", "D")) }} &ndash; {{ legislator.district }}</h2>
-<p>Total spending on this legislator, ever: ${{ comma(total_spending) }}</p>
+<p>Total received, all time: ${{ comma(total_spending) }}</p>
 {% endblock %}
 
 
@@ -27,14 +27,18 @@
                     <th class="date">Date</th>
                     <th class="recipient">Organization</th>
                     <th class="expenditure">Expenditure</th>
+                    <th class="description">Description</th>
+                    <th class="category">Category</th>
                 </tr>
             </thead>
             <tbody>
             {% for ex in legislator.expenditures %}
                 <tr>
-                    <td class="date">{{ ex.event_date }}</td>
+                    <td class="date">{{ ex.event_date.strftime('%B %e, %Y') }}</td>
                     <td class="recipient">{% if ex.organization %}<a href="{{ ex.organization.url() }}">{{ ex.organization.name }}</a>{% endif %}</td>
                     <td class="expenditure">${{ comma(ex.cost) }}</td>
+                    <td class="description">{{ ex.description }}</td>
+                    <td class="category">{{ ex.category }}</td>
                 </tr>
             {% endfor %}
             </tbody>
