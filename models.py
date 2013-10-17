@@ -179,10 +179,10 @@ def load_expenditures():
     """
     Load database tables from files.
     """
-    SKIP_TYPES = ['Local Government Official', 'Public Official', 'ATTORNEY GENERAL', 'STATE TREASURER']
+    SKIP_TYPES = ['Local Government Official', 'Public Official', 'ATTORNEY GENERAL', 'STATE TREASURER', 'GOVERNOR', 'STATE AUDITOR', 'LIEUTENANT GOVERNOR']
 
-    with open('data/sample_data.csv') as f:
-        reader = csvkit.CSVKitDictReader(f)
+    with open('data/sample_data_unprocessed.csv') as f:
+        reader = csvkit.CSVKitDictReader(f, encoding='latin1')
         rows = list(reader)
 
     i = 0
@@ -210,7 +210,7 @@ def load_expenditures():
         report_period = datetime.datetime.strptime(row['Report'], '%b-%y').date()
 
         # Recipient
-        recipient, recipient_type = map(unicode.strip, row['Recipient'].split(' - '))
+        recipient, recipient_type = map(unicode.strip, row['Recipient'].rsplit(' - ', 1))
 
         # Legislator
         legislator = None
@@ -236,7 +236,7 @@ def load_expenditures():
         event_date = datetime.date(bits[2], bits[0], bits[1])
 
         # Cost
-        cost = float(row['Cost'].strip('()').strip('$'))
+        cost = float(row['Cost'].strip('()').strip('$').replace(',', ''))
 
         # Organization
         created, organization = load_organization(row['Principal'])

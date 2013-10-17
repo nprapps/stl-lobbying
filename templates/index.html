@@ -92,13 +92,4 @@
         </ul>
     </div>
 </div>
-<div class="row">
-    <div class="col-md-12">
-        {% for ex in expenditures %}
-        <h2>${{ comma(ex.cost) }}</h2>
-        {% if ex.legislator %}<p>Legislator: <a href="{{ ex.legislator.url() }}">{{ ex.legislator.name }}</a></p>{% endif %}
-        <p>Organization: <a href="{{ ex.organization.url() }}">{{ ex.organization.name }}</a></p>
-        {% endfor %}
-    </div>
-</div>
 {% endblock %}
