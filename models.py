@@ -39,8 +39,8 @@ class SlugModel(Model):
 
             if attr:
                 attr = attr.lower()
-                attr = re.sub(r"[^\w\s]", '', attr)
-                attr = re.sub(r"\s+", '-', attr)
+                attr = re.sub(r'[^\w\s]', '', attr)
+                attr = re.sub(r'\s+', '-', attr)
 
                 bits.append(attr)
 
@@ -168,17 +168,25 @@ class LobbyLoader:
     def error(self, msg):
         self.errors.append(msg)
 
+    def strip_nicknames(self, name):
+        if '(' in name:
+            return name.split('(')[0].strip()
+
+        return name
+
     def load_party_lookup(self):
         """
         Load lobbyist->party mapping from file.
         """
         with open(self.party_lookup_filename) as f:
             reader = csvkit.CSVKitReader(f, encoding='latin1')
+            reader.next()
             
             for row in reader:
-                recipient = tuple(map(unicode.strip, row[0].rsplit(' - ', 1)))
+                recipient, recipient_type = map(unicode.strip, row[0].rsplit(' - ', 1))
+                recipient = self.strip_nicknames(recipient)
 
-                self.party_lookup[recipient] = row[1]
+                self.party_lookup[(recipient, recipient_type)] = row[1]
 
     def load_lobbyist(self, name):
         """
@@ -281,6 +289,7 @@ class LobbyLoader:
 
             # Recipient
             recipient, recipient_type = map(unicode.strip, row['Recipient'].rsplit(' - ', 1))
+            recipient = self.strip_nicknames(recipient)
 
             # Legislator
             legislator = None
@@ -295,6 +304,7 @@ class LobbyLoader:
                 created, legislator = self.load_legislator(recipient, recipient_type, party)
             elif recipient_type in ['Employee or Staff', 'Spouse or Child']:
                 legislator_name, legislator_type = map(unicode.strip, row['Pub Off'].rsplit(' - ', 1))
+                legislator_name = self.strip_nicknames(legislator_name)
 
                 if legislator_type in self.SKIP_TYPES:
                     self.warn('%05i -- Skipping "%s": "%s" for "%s": "%s"' % (i, recipient_type, recipient, legislator_type, legislator_name))
@@ -444,6 +454,8 @@ class LobbyLoader:
 
             for error in self.errors:
                 print error
+
+            print ''
 
             # return
 
