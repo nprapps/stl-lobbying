@@ -143,6 +143,8 @@ class LobbyLoader:
     Load expenditures from files.
     """
     SKIP_TYPES = ['Local Government Official', 'Public Official', 'ATTORNEY GENERAL', 'STATE TREASURER', 'GOVERNOR', 'STATE AUDITOR', 'LIEUTENANT GOVERNOR', 'SECRETARY OF STATE', 'JUDGE']
+    ERROR_DATE_MIN = datetime.date(2010, 1, 1)
+    ERROR_DATE_MAX = datetime.date(2020, 1, 1)
 
     party_lookup = {}
     expenditures = []
@@ -287,6 +289,11 @@ class LobbyLoader:
             # Report period
             report_period = datetime.datetime.strptime(row['Report'], '%b-%y').date()
 
+            if report_period < self.ERROR_DATE_MIN:
+                self.error('%05i -- Report date too old: %s' % (i, row['Report']))
+            elif report_period > self.ERROR_DATE_MAX:
+                self.error('%05i -- Report date too new: %s' % (i, row['Report']))
+
             # Recipient
             recipient, recipient_type = map(unicode.strip, row['Recipient'].rsplit(' - ', 1))
             recipient = self.strip_nicknames(recipient)
@@ -329,6 +336,11 @@ class LobbyLoader:
             # Event date
             bits = map(int, row['Date'].split('/'))
             event_date = datetime.date(bits[2], bits[0], bits[1])
+
+            if event_date < self.ERROR_DATE_MIN:
+                self.error('%05i -- Event date too old: %s' % (i, row['Date']))
+            elif event_date > self.ERROR_DATE_MAX:
+                self.error('%05i -- Event date too new: %s' % (i, row['Date']))
 
             # Cost
             cost = row['Cost'].strip('$').replace(',', '')
@@ -389,6 +401,11 @@ class LobbyLoader:
             # Report period
             report_period = datetime.datetime.strptime(row['Report'], '%b-%y').date()
 
+            if report_period < self.ERROR_DATE_MIN:
+                self.error('%05i -- Report date too old: %s' % (i, row['Report']))
+            elif report_period > self.ERROR_DATE_MAX:
+                self.error('%05i -- Report date too new: %s' % (i, row['Report']))
+
             # Group
             created, group = self.load_group(row['Group'])
 
@@ -398,6 +415,11 @@ class LobbyLoader:
             # Event date
             bits = map(int, row['Date'].split('/'))
             event_date = datetime.date(bits[2], bits[0], bits[1])
+
+            if event_date < self.ERROR_DATE_MIN:
+                self.error('%05i -- Event date too old: %s' % (i, row['Date']))
+            elif event_date > self.ERROR_DATE_MAX:
+                self.error('%05i -- Event date too new: %s' % (i, row['Date']))
 
             # Cost
             cost = row['Cost'].strip('$').replace(',', '')

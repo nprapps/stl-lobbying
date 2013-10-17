@@ -108,7 +108,14 @@ def jst():
     """
     local('node_modules/bin/jst --template underscore jst www/js/templates.js')
 
-def download_copy():
+def _download_google_doc(key, data_format, path):
+    """
+    Download a spreadsheet from Google.
+    """
+    url = 'https://docs.google.com/spreadsheet/pub?key=%s&output=%s' % (key, data_format)
+    local('curl -o %s "%s"' % (path, url))
+
+def _download_copy():
     """
     Downloads a Google Doc as an .xls file.
     """
@@ -120,7 +127,14 @@ def update_copy():
     """
     Fetches the latest Google Doc and updates local JSON.
     """
-    download_copy()
+    _download_google_doc(app_config.COPY_GOOGLE_DOC_KEY, 'xls', 'data/copy.xls')
+
+def update_lookup_tables():
+    """
+    Download the party lookup table as a CSV.
+    """
+    _download_google_doc(app_config.PARTY_LOOKUP_DOC_KEY, 'csv', 'data/party_lookup.csv')
+    _download_google_doc(app_config.ORGANIZATION_NAME_LOOKUP_DOC_KEY, 'csv', 'data/organization_name_lookup.csv')
 
 def app_config_js():
     """
@@ -153,6 +167,7 @@ def render():
     from flask import g
 
     update_copy()
+    update_lookup_tables()
     less()
     jst()
 
@@ -243,6 +258,7 @@ def render_pages(legislators=None, organizations=None):
     os.system('rm -rf .pages_gzip')
 
     update_copy()
+    update_lookup_tables()
     less()
     jst()
 
@@ -539,6 +555,8 @@ def load_data():
     loader.run()
 
 def local_bootstrap():
+    update_copy()
+    update_lookup_tables()
     delete_tables()
     create_tables()
     load_data()
@@ -614,36 +632,3 @@ def shiva_the_destroyer():
 
             if app_config.DEPLOY_SERVICES:
                 nuke_confs()
-
-"""
-App-template specific setup. Not relevant after the project is running.
-"""
-def app_template_bootstrap(project_name=None, repository_name=None):
-    """
-    Execute the bootstrap tasks for a new project.
-    """
-    config_files = ' '.join(['PROJECT_README.md', 'app_config.py'])
-
-    config = {}
-    config['$NEW_PROJECT_SLUG'] = os.getcwd().split('/')[-1]
-    config['$NEW_PROJECT_NAME'] = project_name or config['$NEW_PROJECT_SLUG'] 
-    config['$NEW_REPOSITORY_NAME'] = repository_name or config['$NEW_PROJECT_SLUG'] 
-    config['$NEW_PROJECT_FILENAME'] = config['$NEW_PROJECT_SLUG'].replace('-', '_')
-
-    _confirm("Have you created a Github repository named \"%s\"?" % config['$NEW_REPOSITORY_NAME'])
-
-    for k, v in config.items():
-        local('sed -i "" \'s|%s|%s|g\' %s' % (k, v, config_files))
-
-    local('rm -rf .git')
-    local('git init')
-    local('mv PROJECT_README.md README.md')
-    local('rm *.pyc')
-    local('git add * .gitignore')
-    local('git commit -am "Initial import from app-template."')
-    local('git remote add origin https://github.com/nprapps/%s.git' % config['$NEW_REPOSITORY_NAME'])
-    local('git push -u origin master')
-
-    local('npm install less universal-jst -g --prefix node_modules')
-
-    update_copy()
