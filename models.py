@@ -39,8 +39,8 @@ class SlugModel(Model):
 
             if attr:
                 attr = attr.lower()
-                attr = re.sub(r"[^\w\s]", '', attr)
-                attr = re.sub(r"\s+", '-', attr)
+                attr = re.sub(r'[^\w\s]', '', attr)
+                attr = re.sub(r'\s+', '-', attr)
 
                 bits.append(attr)
 
@@ -143,6 +143,8 @@ class LobbyLoader:
     Load expenditures from files.
     """
     SKIP_TYPES = ['Local Government Official', 'Public Official', 'ATTORNEY GENERAL', 'STATE TREASURER', 'GOVERNOR', 'STATE AUDITOR', 'LIEUTENANT GOVERNOR', 'SECRETARY OF STATE', 'JUDGE']
+    ERROR_DATE_MIN = datetime.date(2010, 1, 1)
+    ERROR_DATE_MAX = datetime.date(2020, 1, 1)
 
     party_lookup = {}
     expenditures = []
@@ -168,17 +170,25 @@ class LobbyLoader:
     def error(self, msg):
         self.errors.append(msg)
 
+    def strip_nicknames(self, name):
+        if '(' in name:
+            return name.split('(')[0].strip()
+
+        return name
+
     def load_party_lookup(self):
         """
         Load lobbyist->party mapping from file.
         """
         with open(self.party_lookup_filename) as f:
             reader = csvkit.CSVKitReader(f, encoding='latin1')
+            reader.next()
             
             for row in reader:
-                recipient = tuple(map(unicode.strip, row[0].rsplit(' - ', 1)))
+                recipient, recipient_type = map(unicode.strip, row[0].rsplit(' - ', 1))
+                recipient = self.strip_nicknames(recipient)
 
-                self.party_lookup[recipient] = row[1]
+                self.party_lookup[(recipient, recipient_type)] = row[1]
 
     def load_lobbyist(self, name):
         """
@@ -279,8 +289,14 @@ class LobbyLoader:
             # Report period
             report_period = datetime.datetime.strptime(row['Report'], '%b-%y').date()
 
+            if report_period < self.ERROR_DATE_MIN:
+                self.error('%05i -- Report date too old: %s' % (i, row['Report']))
+            elif report_period > self.ERROR_DATE_MAX:
+                self.error('%05i -- Report date too new: %s' % (i, row['Report']))
+
             # Recipient
             recipient, recipient_type = map(unicode.strip, row['Recipient'].rsplit(' - ', 1))
+            recipient = self.strip_nicknames(recipient)
 
             # Legislator
             legislator = None
@@ -295,6 +311,7 @@ class LobbyLoader:
                 created, legislator = self.load_legislator(recipient, recipient_type, party)
             elif recipient_type in ['Employee or Staff', 'Spouse or Child']:
                 legislator_name, legislator_type = map(unicode.strip, row['Pub Off'].rsplit(' - ', 1))
+                legislator_name = self.strip_nicknames(legislator_name)
 
                 if legislator_type in self.SKIP_TYPES:
                     self.warn('%05i -- Skipping "%s": "%s" for "%s": "%s"' % (i, recipient_type, recipient, legislator_type, legislator_name))
@@ -319,6 +336,11 @@ class LobbyLoader:
             # Event date
             bits = map(int, row['Date'].split('/'))
             event_date = datetime.date(bits[2], bits[0], bits[1])
+
+            if event_date < self.ERROR_DATE_MIN:
+                self.error('%05i -- Event date too old: %s' % (i, row['Date']))
+            elif event_date > self.ERROR_DATE_MAX:
+                self.error('%05i -- Event date too new: %s' % (i, row['Date']))
 
             # Cost
             cost = row['Cost'].strip('$').replace(',', '')
@@ -379,6 +401,11 @@ class LobbyLoader:
             # Report period
             report_period = datetime.datetime.strptime(row['Report'], '%b-%y').date()
 
+            if report_period < self.ERROR_DATE_MIN:
+                self.error('%05i -- Report date too old: %s' % (i, row['Report']))
+            elif report_period > self.ERROR_DATE_MAX:
+                self.error('%05i -- Report date too new: %s' % (i, row['Report']))
+
             # Group
             created, group = self.load_group(row['Group'])
 
@@ -388,6 +415,11 @@ class LobbyLoader:
             # Event date
             bits = map(int, row['Date'].split('/'))
             event_date = datetime.date(bits[2], bits[0], bits[1])
+
+            if event_date < self.ERROR_DATE_MIN:
+                self.error('%05i -- Event date too old: %s' % (i, row['Date']))
+            elif event_date > self.ERROR_DATE_MAX:
+                self.error('%05i -- Event date too new: %s' % (i, row['Date']))
 
             # Cost
             cost = row['Cost'].strip('$').replace(',', '')
@@ -444,6 +476,8 @@ class LobbyLoader:
 
             for error in self.errors:
                 print error
+
+            print ''
 
             # return
 

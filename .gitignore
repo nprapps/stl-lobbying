@@ -45,3 +45,5 @@ stl-lobbying.db
 www/js/copy.js
 www/test/test.html
 peewee.db
+data/party_lookup.csv
+data/organization_name_lookup.csv
