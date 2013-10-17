@@ -129,13 +129,13 @@ def update_copy():
     """
     _download_google_doc(app_config.COPY_GOOGLE_DOC_KEY, 'xls', 'data/copy.xls')
 
-def update_lookup_tables():
+def update_data_files():
     """
     Download the party lookup table as a CSV.
     """
     _download_google_doc(app_config.PARTY_LOOKUP_DOC_KEY, 'csv', 'data/party_lookup.csv')
     _download_google_doc(app_config.ORGANIZATION_NAME_LOOKUP_DOC_KEY, 'csv', 'data/organization_name_lookup.csv')
-    _download_google_doc(app_config.LEGISLATOR_NAME_LOOKUP_DOC_KEY, 'csv', 'data/legislator_name_lookup.csv')
+    _download_google_doc(app_config.LEGISLATOR_DEMOGRAPHICS_DOC_KEY, 'csv', 'data/legislator_demographics.csv')
 
 def app_config_js():
     """
@@ -168,7 +168,7 @@ def render():
     from flask import g
 
     update_copy()
-    update_lookup_tables()
+    update_data_files()
     less()
     jst()
 
@@ -259,7 +259,7 @@ def render_pages(legislators=None, organizations=None):
     os.system('rm -rf .pages_gzip')
 
     update_copy()
-    update_lookup_tables()
+    update_data_files()
     less()
     jst()
 
@@ -557,7 +557,7 @@ def load_data():
 
 def local_bootstrap():
     update_copy()
-    update_lookup_tables()
+    update_data_files()
     delete_tables()
     create_tables()
     load_data()
