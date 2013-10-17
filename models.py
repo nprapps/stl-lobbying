@@ -138,7 +138,7 @@ def load_lobbyist(name):
     return True, lobbyist 
 
 
-def load_legislator(name, office):
+def load_legislator(name, office, party):
     """
     Get or create a legislator.
     """
@@ -151,7 +151,7 @@ def load_legislator(name, office):
         name=name,
         office=office,
         district='', #TODO
-        party=''     #TODO
+        party=party
     )
 
     legislator.save()
@@ -179,9 +179,22 @@ def load_expenditures():
     """
     Load database tables from files.
     """
+    # These offices will be skipped
     SKIP_TYPES = ['Local Government Official', 'Public Official', 'ATTORNEY GENERAL', 'STATE TREASURER', 'GOVERNOR', 'STATE AUDITOR', 'LIEUTENANT GOVERNOR']
 
-    with open('data/sample_data_unprocessed.csv') as f:
+    # Load parties
+    party_lookup = {}
+
+    with open('data/party_lookup.csv') as f:
+        reader = csvkit.CSVKitReader(f, encoding='latin1')
+        
+        for row in reader:
+            recipient = tuple(map(unicode.strip, row[0].rsplit(' - ', 1)))
+
+            party_lookup[recipient] = row[1]
+
+    # Load data
+    with open('data/sample_data.csv') as f:
         reader = csvkit.CSVKitDictReader(f, encoding='latin1')
         rows = list(reader)
 
@@ -217,15 +230,20 @@ def load_expenditures():
         created = False
 
         if recipient_type in ['Senator', 'Representative']:
-            created, legislator = load_legislator(recipient, recipient_type)
+            party = party_lookup.get((recipient, recipient_type), '')
+
+            if not party:
+                errors.append('%05i -- No matching party affiliation for "%s": "%s"' % (i, recipient_type, recipient))
+
+            created, legislator = load_legislator(recipient, recipient_type, party)
         elif recipient_type in ['Employee or Staff', 'Spouse or Child']:
-            # TODO
+            # TODO -- get legislator from lookup and assign
             pass
         elif recipient_type in SKIP_TYPES:
-            warnings.append('%05i -- Skipping %s: %s' % (i, recipient_type, recipient))
+            warnings.append('%05i -- Skipping "%s": "%s"' % (i, recipient_type, recipient))
             continue
         else:
-            errors.append('%05i -- Unknown recipient type, "%s": %s' % (i, recipient_type, recipient))
+            errors.append('%05i -- Unknown recipient type, "%s": "%s"' % (i, recipient_type, recipient))
             continue
 
         if created:
