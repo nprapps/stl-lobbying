@@ -1,5 +1,7 @@
 {% extends '_base.html' %}
 
+{% block body_class %}homepage{% endblock body_class %}
+
 {% block header_content %}
 <div class="header-wrapper">
     <div class="project-header">
@@ -46,7 +48,7 @@
 </div>
 <div class="top-entities row">
     <div class="organizations">
-        <h2>Organizations with highest spending, ever</h2>
+        <h3>Organizations with highest spending, ever</h3>
         <table>
             <thead>
                 <tr>
@@ -65,7 +67,7 @@
         </table>
     </div>
     <div class="legislators">
-        <h2>Legislators with highest spending on them, ever</h2>
+        <h3>Legislators with highest spending on them, ever</h3>
         <table>
             <thead>
                 <tr>
@@ -84,8 +86,8 @@
         </table>
     </div>
     <div class="categories">
-        <h2>Spending by category, ever</h2>
-        <ul>
+        <h3>Spending by category, ever</h3>
+        <ul class="">
             {% for ex in expenditures_by_category %}
             <li>{{ ex.category }}</a>: ${{ comma(ex.total_spending) }}</li>
             {% endfor %}

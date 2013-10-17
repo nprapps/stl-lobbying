@@ -15,11 +15,20 @@
 }
 
 .bar {
-	background: @brand-red;
-	color: #fff;
+	background: lighten(@brand-red, 7%);
+	color: #000;
 	height: 30px;
 	text-align: right;
 	padding: 5px;
+}
+
+.rule-3px {
+	display: block;
+	width: auto;
+	height: 3px;
+	margin: @line-height-computed / 2 @grid-gutter-width / 2;
+	background: @gray;
+	content: ' ';
 }
 
 
@@ -86,9 +95,15 @@ nav {
 	}
 }
 
-body > header {
+.main-header {
 	.header-wrapper {
 		.make-row();
+
+		.detail & {
+			&:after {
+				.rule-3px;
+			}
+		}
 	}
 
 	.project-header {
@@ -97,6 +112,15 @@ body > header {
 		h1 {
 			@media screen and (min-width: @screen-md) {
 				font-size: @font-size-base * 6;
+				font-weight: 700;
+
+				.detail & {
+					font-size: @font-size-base * 3;
+
+					a {
+						color: @text-color;
+					}
+				}
 			}
 		}
 		.story-meta {
@@ -110,6 +134,7 @@ body > header {
 
 		+ .bigbox {
 			.make-md-column(4);
+			font-size: 12px;
 
 			.sponsor300 {
 				margin: 0 auto;
@@ -124,16 +149,13 @@ body > header {
 	
 }
 
-#content {
+/* Homepage styles
+=================================================*/
+.homepage {
 	.totals {
 		&:before,
 		&:after {
-			display: block;
-			width: auto;
-			height: 3px;
-			margin: @line-height-computed / 2 @grid-gutter-width / 2;
-			background: @gray;
-			content: ' ';
+			.rule-3px;
 		}
 		.total-spending,
 		.total-gifts,
@@ -147,7 +169,6 @@ body > header {
 				display: block;
 				font-size: 42px;
 			}
-
 			&:first-child {
 				border-left: none;
 			}
@@ -156,18 +177,16 @@ body > header {
 		.total-spending {
 			.make-xs-column(12);
 		}
-
-		.total-gifts {
-			.make-xs-column(6);
-
-		}
-
-		.total-orgs {
-			.make-xs-column(6);
-		}
-
+		.total-gifts,
+		.total-orgs,
 		.total-lobbyists {
-			.make-xs-column(6);
+			.make-xs-column(4);
+
+			@media screen and (max-width: @screen-xs-max){
+				strong {
+					font-size: 24px;
+				}
+			}
 		}
 
 		.total-spending,
@@ -191,15 +210,34 @@ body > header {
 					width: 40%;
 					text-align: right;
 				}
+
+				@media screen and (max-width: @screen-xs-max){
+					display: block;
+
+					&.organization,
+					&.legislator {
+						width: auto;
+						text-align: left;
+					}
+
+					&.spending {
+						margin-bottom: @line-height-computed / 2;
+					}
+				}
 			}
 
 			th {
 				padding: 5px;
+
+				@media screen and (max-width: @screen-xs-max){
+					display: none;
+				}
 			}
 
 			td {
 				&.organization,
-				&.legislator {
+				&.legislator,
+				&.spending {
 					font-size: 12px;
 				}
 			}
@@ -213,5 +251,19 @@ body > header {
 
 	.categories {
 		.make-md-column(12);
+	}
+}
+
+/* Detail page styles
+=================================================*/
+
+.detail {
+	.gift-table {
+		th,
+		td {
+			&.expenditure {
+				text-align: right;
+			}
+		}
 	}
 }

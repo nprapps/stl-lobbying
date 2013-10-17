@@ -1,21 +1,19 @@
 {% extends '_base.html' %}
 
+{% block body_class %}legislator-detail detail{% endblock body_class %}
+
 {% block header_content %}
-<header>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <h1>{{ COPY.content.header_title }}</h1>
-                <h2>{{ COPY.content.lorem_ipsum }}</h2>
-            </div>
-        </div>
+<div class="header-wrapper">
+    <div class="project-header">
+        <h1><a href="/">{{ PROJECT_NAME }}</a></h1>
     </div>
-</header>
+</div>
 {% endblock %}
 
 
 {% block content %}
-<h1>{{ legislator.name }}</h1>
+<h1>{{ legislator.office }} {{ legislator.name }}</h1>
+<h2>{{ legislator.party|replace("Republican", "R"|replace("Democrat", "D")) }} &ndash; {{ legislator.district }}</h2>
 <p>Total spending on this legislator, ever: ${{ comma(total_spending) }}</p>
 {% endblock %}
 
@@ -23,10 +21,24 @@
 {% block wide_content %}
 <div class="row">
     <div class="col-md-12">
-        {% for ex in legislator.expenditures %}
-        <h2>${{ comma(ex.cost) }}</h2>
-        <p>Organization: <a href="{{ ex.organization.url() }}">{{ ex.organization.name }}</a></p>
-        {% endfor %}
+        <table class="table table-striped gift-table">
+            <thead>
+                <tr>
+                    <th class="date">Date</th>
+                    <th class="recipient">Organization</th>
+                    <th class="expenditure">Expenditure</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for ex in legislator.expenditures %}
+                <tr>
+                    <td class="date">{{ ex.event_date }}</td>
+                    <td class="recipient">{% if ex.organization %}<a href="{{ ex.organization.url() }}">{{ ex.organization.name }}</a>{% endif %}</td>
+                    <td class="expenditure">${{ comma(ex.cost) }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
     </div>
 </div>
 {% endblock %}

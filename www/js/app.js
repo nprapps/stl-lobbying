@@ -8,4 +8,5 @@ $(function() {
     var html = JST.example(context);
 
     $('#template-example').html(html);*/
+    console.log('hi');
 });
