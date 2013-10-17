@@ -135,6 +135,7 @@ def update_lookup_tables():
     """
     _download_google_doc(app_config.PARTY_LOOKUP_DOC_KEY, 'csv', 'data/party_lookup.csv')
     _download_google_doc(app_config.ORGANIZATION_NAME_LOOKUP_DOC_KEY, 'csv', 'data/organization_name_lookup.csv')
+    _download_google_doc(app_config.LEGISLATOR_NAME_LOOKUP_DOC_KEY, 'csv', 'data/legislator_name_lookup.csv')
 
 def app_config_js():
     """
