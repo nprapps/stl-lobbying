@@ -147,6 +147,7 @@ class LobbyLoader:
     ERROR_DATE_MAX = datetime.date(2020, 1, 1)
 
     party_lookup = {}
+    organization_name_lookup = {}
     expenditures = []
 
     warnings = []
@@ -161,6 +162,7 @@ class LobbyLoader:
 
     def __init__(self):
         self.party_lookup_filename = 'data/party_lookup.csv'
+        self.organization_name_lookup_filename = 'data/organization_name_lookup.csv'
         self.individual_data_filename = 'data/sample_data.csv'
         self.group_data_filename = 'data/sample_group_data.csv'
 
@@ -181,7 +183,7 @@ class LobbyLoader:
         Load lobbyist->party mapping from file.
         """
         with open(self.party_lookup_filename) as f:
-            reader = csvkit.CSVKitReader(f, encoding='latin1')
+            reader = csvkit.CSVKitReader(f)
             reader.next()
             
             for row in reader:
@@ -189,6 +191,17 @@ class LobbyLoader:
                 recipient = self.strip_nicknames(recipient)
 
                 self.party_lookup[(recipient, recipient_type)] = row[1]
+
+    def load_organization_name_lookup(self):
+        """
+        Load organiation name standardization mapping.
+        """
+        with open(self.organization_name_lookup_filename) as f:
+            reader = csvkit.CSVKitReader(f)
+            reader.next()
+
+            for row in reader:
+                self.organization_name_lookup[row[0].strip()] = row[1].strip()
 
     def load_lobbyist(self, name):
         """
@@ -232,6 +245,14 @@ class LobbyLoader:
         """
         Get or create an organization.
         """
+        if name not in self.organization_name_lookup:
+            self.warn('Organization name "%s" not in lookup table' % name)
+
+        lookup = self.organization_name_lookup[name]
+
+        if lookup:
+            name = lookup
+
         try:
             return False, Organization.get(Organization.name==name)
         except Organization.DoesNotExist:
@@ -314,7 +335,7 @@ class LobbyLoader:
                 legislator_name = self.strip_nicknames(legislator_name)
 
                 if legislator_type in self.SKIP_TYPES:
-                    self.warn('%05i -- Skipping "%s": "%s" for "%s": "%s"' % (i, recipient_type, recipient, legislator_type, legislator_name))
+                    #self.warn('%05i -- Skipping "%s": "%s" for "%s": "%s"' % (i, recipient_type, recipient, legislator_type, legislator_name))
                     continue
 
                 party = self.party_lookup.get((legislator_name, legislator_type), '')
@@ -324,7 +345,7 @@ class LobbyLoader:
 
                 created, legislator = self.load_legislator(legislator_name, legislator_type, party)
             elif recipient_type in self.SKIP_TYPES:
-                self.warn('%05i -- Skipping "%s": "%s"' % (i, recipient_type, recipient))
+                #self.warn('%05i -- Skipping "%s": "%s"' % (i, recipient_type, recipient))
                 continue
             else:
                 self.error('%05i -- Unknown recipient type, "%s": "%s"' % (i, recipient_type, recipient))
@@ -458,6 +479,7 @@ class LobbyLoader:
         Run the loader and output summary.
         """
         self.load_party_lookup()
+        self.load_organization_name_lookup()
         self.load_individual_expenditures()
         self.load_group_expenditures()
 
