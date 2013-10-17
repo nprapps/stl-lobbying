@@ -62,6 +62,9 @@ class Lobbyist(SlugModel):
     slug_fields = ['name']
 
     name = CharField()
+    
+    class Meta:
+        database = database
 
 class Legislator(SlugModel):
     """
@@ -73,14 +76,28 @@ class Legislator(SlugModel):
     office = CharField()
     district = CharField()
     party = CharField()
+    
+    class Meta:
+        database = database
 
     def url(self):
         return '%s/legislator/%s/' % (app_config.S3_BASE_URL, self.slug)
+
+class Group(SlugModel):
+    slug_fields = ['name']
+
+    name = CharField()
+    
+    class Meta:
+        database = database
 
 class Organization(SlugModel):
     slug_fields = ['name']
 
     name = CharField()
+    
+    class Meta:
+        database = database
 
     def url(self):
         return '%s/organization/%s/' % (app_config.S3_BASE_URL, self.slug)
@@ -99,6 +116,7 @@ class Expenditure(Model):
     description =  CharField()
     cost = FloatField()
     organization = ForeignKeyField(Organization, related_name='expenditures')
+    group = ForeignKeyField(Group, related_name='expenditures', null=True)
     
     class Meta:
         database = database
@@ -107,7 +125,7 @@ def delete_tables():
     """
     Clear data from sqlite.
     """
-    for cls in [Lobbyist, Legislator, Organization, Expenditure]:
+    for cls in [Group, Lobbyist, Legislator, Organization, Expenditure]:
         try:
             cls.drop_table()
         except:
@@ -117,207 +135,328 @@ def create_tables():
     """
     Create database tables for each model.
     """
-    for cls in [Lobbyist, Legislator, Organization, Expenditure]:
+    for cls in [Group, Lobbyist, Legislator, Organization, Expenditure]:
         cls.create_table()
 
-def load_lobbyist(name):
+class LobbyLoader:
     """
-    Get or create a lobbyist.
+    Load expenditures from files.
     """
-    try:
-        return False, Lobbyist.get(Lobbyist.name==name)
-    except Lobbyist.DoesNotExist:
-        pass
-
-    lobbyist = Lobbyist(
-        name=name
-    )
-
-    lobbyist.save()
-
-    return True, lobbyist 
-
-
-def load_legislator(name, office, party):
-    """
-    Get or create a legislator.
-    """
-    try:
-        return False, Legislator.get(Legislator.name==name, Legislator.office==office)
-    except Legislator.DoesNotExist:
-        pass
-
-    legislator = Legislator(
-        name=name,
-        office=office,
-        district='', #TODO
-        party=party
-    )
-
-    legislator.save()
-
-    return True, legislator
-
-def load_organization(name):
-    """
-    Get or create an organization.
-    """
-    try:
-        return False, Organization.get(Organization.name==name)
-    except Organization.DoesNotExist:
-        pass
-
-    organization = Organization(
-        name=name
-    )
-
-    organization.save()
-
-    return True, organization
-
-def load_expenditures():
-    """
-    Load database tables from files.
-    """
-    # These offices will be skipped
     SKIP_TYPES = ['Local Government Official', 'Public Official', 'ATTORNEY GENERAL', 'STATE TREASURER', 'GOVERNOR', 'STATE AUDITOR', 'LIEUTENANT GOVERNOR', 'SECRETARY OF STATE', 'JUDGE']
 
-    # Load parties
     party_lookup = {}
-
-    with open('data/party_lookup.csv') as f:
-        reader = csvkit.CSVKitReader(f, encoding='latin1')
-        
-        for row in reader:
-            recipient = tuple(map(unicode.strip, row[0].rsplit(' - ', 1)))
-
-            party_lookup[recipient] = row[1]
-
-    # Load data
-    with open('data/sample_data.csv') as f:
-        reader = csvkit.CSVKitDictReader(f, encoding='latin1')
-        rows = list(reader)
-
-    i = 0
     expenditures = []
+
     warnings = []
     errors = []
+
+    individual_rows = 0
+    group_rows = 0
     lobbyists_created = 0
     legislators_created = 0
     organizations_created = 0
+    groups_created = 0
 
-    for row in rows:
-        i += 1
+    def __init__(self):
+        self.party_lookup_filename = 'data/party_lookup.csv'
+        self.individual_data_filename = 'data/sample_data.csv'
+        self.group_data_filename = 'data/sample_group_data.csv'
 
-        # Strip whitespace
-        for k, v in row.items():
-            row[k] = v.strip()
+    def warn(self, msg):
+        self.warnings.append(msg)
 
-        # Lobbyist
-        created, lobbyist = load_lobbyist('%s %s' % (row['Lob F Name'], row['Lob L Name']))
+    def error(self, msg):
+        self.errors.append(msg)
 
-        if created:
-            lobbyists_created += 1 
+    def load_party_lookup(self):
+        """
+        Load lobbyist->party mapping from file.
+        """
+        with open(self.party_lookup_filename) as f:
+            reader = csvkit.CSVKitReader(f, encoding='latin1')
+            
+            for row in reader:
+                recipient = tuple(map(unicode.strip, row[0].rsplit(' - ', 1)))
 
-        # Report period
-        report_period = datetime.datetime.strptime(row['Report'], '%b-%y').date()
+                self.party_lookup[recipient] = row[1]
 
-        # Recipient
-        recipient, recipient_type = map(unicode.strip, row['Recipient'].rsplit(' - ', 1))
+    def load_lobbyist(self, name):
+        """
+        Get or create a lobbyist.
+        """
+        try:
+            return False, Lobbyist.get(Lobbyist.name==name)
+        except Lobbyist.DoesNotExist:
+            pass
 
-        # Legislator
-        legislator = None
-        created = False
+        lobbyist = Lobbyist(
+            name=name
+        )
 
-        if recipient_type in ['Senator', 'Representative']:
-            party = party_lookup.get((recipient, recipient_type), '')
+        lobbyist.save()
 
-            if not party:
-                errors.append('%05i -- No matching party affiliation for "%s": "%s"' % (i, recipient_type, recipient))
+        return True, lobbyist 
 
-            created, legislator = load_legislator(recipient, recipient_type, party)
-        elif recipient_type in ['Employee or Staff', 'Spouse or Child']:
-            legislator_name, legislator_type = map(unicode.strip, row['Pub Off'].rsplit(' - ', 1))
 
-            if legislator_type in SKIP_TYPES:
-                warnings.append('%05i -- Skipping "%s": "%s" for "%s": "%s"' % (i, recipient_type, recipient, legislator_type, legislator_name))
+    def load_legislator(self, name, office, party):
+        """
+        Get or create a legislator.
+        """
+        try:
+            return False, Legislator.get(Legislator.name==name, Legislator.office==office)
+        except Legislator.DoesNotExist:
+            pass
+
+        legislator = Legislator(
+            name=name,
+            office=office,
+            district='', #TODO
+            party=party
+        )
+
+        legislator.save()
+
+        return True, legislator
+
+    def load_organization(self, name):
+        """
+        Get or create an organization.
+        """
+        try:
+            return False, Organization.get(Organization.name==name)
+        except Organization.DoesNotExist:
+            pass
+
+        organization = Organization(
+            name=name
+        )
+
+        organization.save()
+
+        return True, organization
+
+    def load_group(self, name):
+        """
+        Get or create a group.
+        """
+        try:
+            return False, Group.get(Group.name==name)
+        except Group.DoesNotExist:
+            pass
+
+        group = Group(
+            name=name
+        )
+
+        group.save()
+
+        return True, group
+
+    def load_individual_expenditures(self):
+        """
+        Load individual expenditures from files.
+        """
+        # Load data
+        with open(self.individual_data_filename) as f:
+            reader = csvkit.CSVKitDictReader(f)
+            rows = list(reader)
+
+        i = 0
+
+        for row in rows:
+            i += 1
+
+            # Strip whitespace
+            for k, v in row.items():
+                row[k] = v.strip()
+
+            # Lobbyist
+            created, lobbyist = self.load_lobbyist('%s %s' % (row['Lob F Name'], row['Lob L Name']))
+
+            if created:
+                self.lobbyists_created += 1 
+
+            # Report period
+            report_period = datetime.datetime.strptime(row['Report'], '%b-%y').date()
+
+            # Recipient
+            recipient, recipient_type = map(unicode.strip, row['Recipient'].rsplit(' - ', 1))
+
+            # Legislator
+            legislator = None
+            created = False
+
+            if recipient_type in ['Senator', 'Representative']:
+                party = self.party_lookup.get((recipient, recipient_type), '')
+
+                if not party:
+                    self.error('%05i -- No matching party affiliation for "%s": "%s"' % (i, recipient_type, recipient))
+
+                created, legislator = self.load_legislator(recipient, recipient_type, party)
+            elif recipient_type in ['Employee or Staff', 'Spouse or Child']:
+                legislator_name, legislator_type = map(unicode.strip, row['Pub Off'].rsplit(' - ', 1))
+
+                if legislator_type in self.SKIP_TYPES:
+                    self.warn('%05i -- Skipping "%s": "%s" for "%s": "%s"' % (i, recipient_type, recipient, legislator_type, legislator_name))
+                    continue
+
+                party = self.party_lookup.get((legislator_name, legislator_type), '')
+
+                if not party:
+                    self.error('%05i -- No matching party affiliation for "%s": "%s"' % (i, legislator_name, legislator_type))
+
+                created, legislator = self.load_legislator(legislator_name, legislator_type, party)
+            elif recipient_type in self.SKIP_TYPES:
+                self.warn('%05i -- Skipping "%s": "%s"' % (i, recipient_type, recipient))
+                continue
+            else:
+                self.error('%05i -- Unknown recipient type, "%s": "%s"' % (i, recipient_type, recipient))
                 continue
 
-            party = party_lookup.get((legislator_name, legislator_type), '')
+            if created:
+                self.legislators_created += 1
 
-            if not party:
-                errors.append('%05i -- No matching party affiliation for "%s": "%s"' % (i, legislator_name, legislator_type))
+            # Event date
+            bits = map(int, row['Date'].split('/'))
+            event_date = datetime.date(bits[2], bits[0], bits[1])
 
-            created, legislator = load_legislator(legislator_name, legislator_type, party)
-        elif recipient_type in SKIP_TYPES:
-            warnings.append('%05i -- Skipping "%s": "%s"' % (i, recipient_type, recipient))
-            continue
-        else:
-            errors.append('%05i -- Unknown recipient type, "%s": "%s"' % (i, recipient_type, recipient))
-            continue
+            # Cost
+            cost = row['Cost'].strip('$').replace(',', '')
 
-        if created:
-            legislators_created += 1
+            if '(' in cost or '-' in cost:
+                self.error('%05i -- Negative cost!' % i)
+                continue
 
-        # Event date
-        bits = map(int, row['Date'].split('/'))
-        event_date = datetime.date(bits[2], bits[0], bits[1])
+            cost = float(cost)
 
-        # Cost
-        cost = row['Cost'].strip('$').replace(',', '')
+            # Organization
+            created, organization = self.load_organization(row['Principal'])
 
-        if '(' in cost or '-' in cost:
-            errors.append('%05i -- Negative cost!' % i)
-            continue
+            if created:
+                self.organizations_created += 1
 
-        cost = float(cost)
+            # Create it!
+            self.expenditures.append(Expenditure(
+                lobbyist=lobbyist,
+                report_period=report_period,
+                recipient=recipient,
+                recipient_type=recipient_type,
+                legislator=legislator,
+                event_date=event_date,
+                category=row['Type'],
+                description=row['Description'],
+                cost=cost,
+                organization=organization,
+                group=None
+            ))
 
-        # Organization
-        created, organization = load_organization(row['Principal'])
+        self.individual_rows = i 
 
-        if created:
-            organizations_created += 1
+    def load_group_expenditures(self):
+        """
+        Load group expenditures from files.
+        """
+        # Load data
+        with open(self.group_data_filename) as f:
+            reader = csvkit.CSVKitDictReader(f)
+            rows = list(reader)
 
-        # Create it!
-        expenditures.append(Expenditure(
-            lobbyist=lobbyist,
-            report_period=report_period,
-            recipient=recipient,
-            recipient_type=recipient_type,
-            legislator=legislator,
-            event_date=event_date,
-            category=row['Type'],
-            description=row['Description'],
-            cost=cost,
-            organization=organization
-        ))
+        i = 0
 
-    if warnings:
-        print 'WARNINGS'
-        print '--------'
+        for row in rows:
+            i += 1
 
-        for warning in warnings:
-            print warning
+            # Strip whitespace
+            for k, v in row.items():
+                row[k] = v.strip()
 
-        print ''
+            # Lobbyist
+            created, lobbyist = self.load_lobbyist('%s %s' % (row['Lob F Name'], row['Lob L Name']))
 
-    if errors:
-        print 'ERRORS'
-        print '------'
+            if created:
+                self.lobbyists_created += 1 
 
-        for error in errors:
-            print error
+            # Report period
+            report_period = datetime.datetime.strptime(row['Report'], '%b-%y').date()
 
-        # return
+            # Group
+            created, group = self.load_group(row['Group'])
 
-    for expenditure in expenditures:
-        expenditure.save()
+            if created:
+                self.groups_created += 1
 
-    print 'SUMMARY'
-    print '-------'
+            # Event date
+            bits = map(int, row['Date'].split('/'))
+            event_date = datetime.date(bits[2], bits[0], bits[1])
 
-    print 'Processed %i rows' % i
-    print 'Imported %i expenditures' % len(expenditures)
-    print 'Created %i lobbyists' % lobbyists_created
-    print 'Created %i legislators' % legislators_created
-    print 'Created %i organizations' % organizations_created
+            # Cost
+            cost = row['Cost'].strip('$').replace(',', '')
+
+            if '(' in cost or '-' in cost:
+                self.error('%05i -- Negative cost!' % i)
+                continue
+
+            cost = float(cost)
+
+            # Organization
+            created, organization = self.load_organization(row['Principal'])
+
+            if created:
+                self.organizations_created += 1
+
+            # Create it!
+            self.expenditures.append(Expenditure(
+                lobbyist=lobbyist,
+                report_period=report_period,
+                recipient='',
+                recipient_type='',
+                legislator=None,
+                event_date=event_date,
+                category=row['Type'],
+                description=row['Description'],
+                cost=cost,
+                organization=organization,
+                group=group
+            ))
+
+        self.group_rows = i
+
+    def run(self):
+        """
+        Run the loader and output summary.
+        """
+        self.load_party_lookup()
+        self.load_individual_expenditures()
+        self.load_group_expenditures()
+
+        if self.warnings:
+            print 'WARNINGS'
+            print '--------'
+
+            for warning in self.warnings:
+                print warning
+
+            print ''
+
+        if self.errors:
+            print 'ERRORS'
+            print '------'
+
+            for error in self.errors:
+                print error
+
+            # return
+
+
+        for expenditure in self.expenditures:
+            expenditure.save()
+
+        print 'SUMMARY'
+        print '-------'
+
+        print 'Processed %i individual rows' % self.individual_rows
+        print 'Processed %i group rows' % self.group_rows 
+        print 'Imported %i expenditures' % len(self.expenditures)
+        print 'Created %i lobbyists' % self.lobbyists_created
+        print 'Created %i legislators' % self.legislators_created
+        print 'Created %i organizations' % self.organizations_created

@@ -13,31 +13,37 @@
 
 {% block content %}
 <h1>{{ organization.name }}</h1>
-<p>Total spending, ever: ${{ comma(total_spending) }}</p>
+<p>All time spending: ${{ comma(total_spending) }}</p>
 {% endblock %}
 
 
 {% block wide_content %}
 <div class="row">
     <div class="col-md-12">
+        <div class="table-responsive">
         <table class="table table-striped gift-table">
             <thead>
                 <tr>
                     <th class="date">Date</th>
-                    <th class="recipient">Recipient</th>
+                    <th class="contributor">Recipient</th>
                     <th class="expenditure">Expenditure</th>
+                    <th class="description">Description</th>
+                    <th class="category">Category</th>
                 </tr>
             </thead>
             <tbody>
             {% for ex in organization.expenditures %}
                 <tr>
-                    <td class="date">{{ ex.event_date }}</td>
-                    <td class="recipient">{% if ex.legislator %}<a href="{{ ex.legislator.url() }}">{{ ex.legislator.name }}</a>{% endif %}</td>
+                    <td class="date">{{ ex.event_date.strftime('%B %e, %Y') }}</td>
+                    <td class="contributor">{% if ex.group %}{{ ex.group.name }}{% else %}<a href="{{ ex.legislator.url() }}">{{ ex.legislator.name }}</a>{% endif %}</td>
                     <td class="expenditure">${{ comma(ex.cost) }}</td>
+                    <td class="description">{{ ex.description }}</td>
+                    <td class="category">{{ ex.category }}</td>
                 </tr>
             {% endfor %}
             </tbody>
         </table>
+    </div>
     </div>
 </div>
 {% endblock %}

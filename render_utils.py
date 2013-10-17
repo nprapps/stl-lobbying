@@ -141,6 +141,9 @@ class CSSIncluder(Includer):
         return '\n'.join(output)
 
 def comma(f):
+    if not f:
+        return ''
+
     return "{:,}".format(f)
 
 def flatten_app_config():
