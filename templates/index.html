@@ -50,12 +50,12 @@
     <div class="organizations">
         <h3>Organizations with highest spending, ever</h3>
         <table>
-            <thead>
+            <!-- <thead>
                 <tr>
                     <th class="organization">Organization</th>
                     <th class="spending">Spending</th>
                 </tr>
-            </thead>
+            </thead> -->
             <tbody>
             {% for org in organizations_total_spending %}
             <tr>
@@ -69,12 +69,12 @@
     <div class="legislators">
         <h3>Legislators with highest spending on them, ever</h3>
         <table>
-            <thead>
+            <!-- <thead>
                 <tr>
                     <th class="legislator">Legislator</th>
                     <th class="spending">Spending</th>
                 </tr>
-            </thead>
+            </thead> -->
             <tbody>
             {% for legislator in legislators_total_spending %}
             <tr>
@@ -87,10 +87,10 @@
     </div>
     <div class="categories">
         <h3>Spending by category, ever</h3>
-        <ul class="">
-            {% for ex in expenditures_by_category %}
-            <li>{{ ex.category }}</a>: ${{ comma(ex.total_spending) }}</li>
-            {% endfor %}
+        <ul class="list-unstyled">
+        {% for ex in expenditures_by_category %}
+            <li>{{ ex.category }}: <strong>${{ comma(ex.total_spending) }}</strong></li>
+        {% endfor %}
         </ul>
     </div>
 </div>

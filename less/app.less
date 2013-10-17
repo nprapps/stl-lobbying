@@ -250,6 +250,10 @@ nav {
 	}
 
 	.top-entities {
+
+		h3 {
+			margin-top: @line-height-computed / 2;
+		}
 		table {
 			width: 100%;
 
@@ -260,12 +264,13 @@ nav {
 
 				&.organization,
 				&.legislator {
-					width: 40%;
+					width: 33.33333%;
 					text-align: right;
 				}
 
 				@media screen and (max-width: @screen-xs-max){
 					display: block;
+					padding: 0;
 
 					&.organization,
 					&.legislator {
@@ -305,8 +310,75 @@ nav {
 		.make-md-column(6);
 	}
 
+	.legislators {
+		@media screen and (min-width: @screen-md){
+			border-left: 1px solid @gray-light;
+		}
+	}
+
 	.categories {
 		.make-md-column(12);
+
+		h3 {
+			border-bottom: 1px solid @gray-light;
+			padding-bottom: @line-height-computed / 2;
+			&:before {
+				.rule-3px;
+				margin: @line-height-computed 0;
+			}
+		}
+
+
+		ul {
+			.make-row();
+			text-transform: uppercase;
+			font-size: 12px;
+
+			strong {
+				display: block;
+				font-size: @font-size-base * 2;
+
+			}
+
+			li {
+				.make-xs-column(6);
+				.make-sm-column(4);
+				.make-md-column(3);
+
+				border-left: 1px solid @gray-light;
+				margin-bottom: @line-height-computed / 2;
+
+				@media screen and (max-width: @screen-xs-max){
+					strong {
+						font-size: @font-size-base * 1.3;
+					}
+
+					&:nth-child(odd){
+						clear: left;
+					}
+				}
+
+				@media screen and (max-width: @screen-xs-max){
+					&:nth-child(odd){
+						border-left: none;
+					}
+				}
+
+				@media screen and (min-width: @screen-sm) and (max-width: @screen-sm-max){
+					&:nth-child(3n+1){
+						border-left: none;
+					}
+				}
+
+				@media screen and (min-width: @screen-md){
+					&:nth-child(4n+1){
+						border-left: none;
+					}
+				}
+			}
+
+			
+		}
 	}
 }
 
