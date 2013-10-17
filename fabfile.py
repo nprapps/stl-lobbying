@@ -535,7 +535,8 @@ def delete_tables():
     models.delete_tables()
 
 def load_data():
-    models.load_expenditures()
+    loader = models.LobbyLoader()
+    loader.run()
 
 def local_bootstrap():
     delete_tables()
