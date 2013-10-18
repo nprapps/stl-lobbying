@@ -157,6 +157,7 @@ class LobbyLoader:
     """
     Load expenditures from files.
     """
+    SKIP_LEGISLATORS = ['BARNITZ, FRANK']
     SKIP_TYPES = ['Local Government Official', 'Public Official', 'ATTORNEY GENERAL', 'STATE TREASURER', 'GOVERNOR', 'STATE AUDITOR', 'LIEUTENANT GOVERNOR', 'SECRETARY OF STATE', 'JUDGE']
     ERROR_DATE_MIN = datetime.date(2010, 1, 1)
     ERROR_DATE_MAX = datetime.date(2020, 1, 1)
@@ -179,6 +180,9 @@ class LobbyLoader:
         self.organization_name_lookup_filename = 'data/organization_name_lookup.csv'
         self.individual_data_filename = 'data/sample_data.csv'
         self.group_data_filename = 'data/sample_group_data.csv'
+
+    def info(self, msg):
+        pass
 
     def warn(self, msg):
         self.warnings.append(msg)
@@ -353,6 +357,10 @@ class LobbyLoader:
             recipient, recipient_type = map(unicode.strip, row['Recipient'].rsplit(' - ', 1))
             recipient = self.strip_nicknames(recipient)
 
+            if recipient in self.SKIP_LEGISLATORS:
+                self.info('%05i -- Skipping "%s": "%s" for "%s": "%s"' % (i, recipient_type, recipient, legislator_type, legislator_name))
+                continue
+
             # Legislator
             legislator = None
 
@@ -366,8 +374,12 @@ class LobbyLoader:
                 legislator_name, legislator_type = map(unicode.strip, row['Pub Off'].rsplit(' - ', 1))
                 legislator_name = self.strip_nicknames(legislator_name)
 
+                if legislator_name in self.SKIP_LEGISLATORS:
+                    self.info('%05i -- Skipping "%s": "%s" for "%s": "%s"' % (i, recipient_type, recipient, legislator_type, legislator_name))
+                    continue
+
                 if legislator_type in self.SKIP_TYPES:
-                    #self.warn('%05i -- Skipping "%s": "%s" for "%s": "%s"' % (i, recipient_type, recipient, legislator_type, legislator_name))
+                    self.info('%05i -- Skipping "%s": "%s" for "%s": "%s"' % (i, recipient_type, recipient, legislator_type, legislator_name))
                     continue
 
                 try:
@@ -376,7 +388,7 @@ class LobbyLoader:
                     self.error('%05i -- No matching legislator for "%s": "%s"' % (i, legislator_type, legislator_name))
                     continue
             elif recipient_type in self.SKIP_TYPES:
-                #self.warn('%05i -- Skipping "%s": "%s"' % (i, recipient_type, recipient))
+                self.info('%05i -- Skipping "%s": "%s"' % (i, recipient_type, recipient))
                 continue
             else:
                 self.error('%05i -- Unknown recipient type, "%s": "%s"' % (i, recipient_type, recipient))
