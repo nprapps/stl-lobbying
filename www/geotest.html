@@ -1,0 +1,43 @@
+<html>
+<head>
+</head>
+<body>
+    Test
+
+    <script type="text/javascript" src="js/lib/jquery-1.8.3.js"></script>
+    <script type="text/javascript" src="js/lib/underscore.js"></script>
+    <script type="text/javascript" src="js/lib/geojson-utils.js"></script>
+    <script type="text/javascript">
+        $(function() {
+            var senate;
+
+            function find_senate_district(lat, lng) {
+                var point = { 'type': 'Point', 'coordinates': [lng, lat] };
+                var count = senate.features.length;
+
+                for (var i = 0; i < count; i++) {
+                    var feature = senate.features[i];
+                    var polygon = { 'type': 'Polygon', 'coordinates': feature.geometry.coordinates };
+
+                    if (gju.pointInPolygon(point, polygon) !== false) {
+                        return feature.properties.DISTRICT;
+                    }
+                };
+
+                return null;
+            }
+
+            $.getJSON('live-data/senate_simplified_1000.geojson', function(data) {
+                senate = data;
+
+                console.log('Columbia', find_senate_district(38.83, -92.22));
+                console.log('West Plains', find_senate_district(36.88, -91.9));
+                console.log('Tulsa, OK', find_senate_district(36.2, -95.88));
+                console.log('Lebanon, MO', find_senate_district(38.11, -92.55));
+                console.log('Overland Park, KS', find_senate_district(38.85, -94.74));
+                console.log('Caruthersville, MO', find_senate_district(36.19 -89.68));
+            });
+        })
+    </script>
+</body>
+</html>
