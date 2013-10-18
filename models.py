@@ -160,7 +160,7 @@ class LobbyLoader:
     Load expenditures from files.
     """
     # Folks we have data for, but predate our period of interest
-    SKIP_LEGISLATORS = ['BARNITZ, FRANK', 'HOSKINS, THEODORE (TED)', 'SCHAD, RODNEY', 'PURGASON, CHUCK']
+    SKIP_LEGISLATORS = ['PURGASON, CHUCK']
     SKIP_TYPES = ['Local Government Official', 'Public Official', 'ATTORNEY GENERAL', 'STATE TREASURER', 'GOVERNOR', 'STATE AUDITOR', 'LIEUTENANT GOVERNOR', 'SECRETARY OF STATE', 'JUDGE']
     ERROR_DATE_MIN = datetime.date(2012, 1, 1)
     ERROR_DATE_MAX = datetime.datetime.today().date()
@@ -228,7 +228,10 @@ class LobbyLoader:
         Get or create an organization.
         """
         if name in self.organization_name_lookup:
-            name = self.organization_name_lookup[name]
+            lookup = self.organization_name_lookup[name]
+
+            if lookup:
+                name = lookup
         else:
             self.warn('Organization name "%s" not in lookup table' % name)
 
