@@ -158,10 +158,10 @@ class LobbyLoader:
     Load expenditures from files.
     """
     # Folks we have data for, but predate our period of interest
-    SKIP_LEGISLATORS = ['BARNITZ, FRANK', 'HOSKINS, THEODORE (TED)']
+    SKIP_LEGISLATORS = ['BARNITZ, FRANK', 'HOSKINS, THEODORE (TED)', 'SCHAD, RODNEY']
     SKIP_TYPES = ['Local Government Official', 'Public Official', 'ATTORNEY GENERAL', 'STATE TREASURER', 'GOVERNOR', 'STATE AUDITOR', 'LIEUTENANT GOVERNOR', 'SECRETARY OF STATE', 'JUDGE']
-    ERROR_DATE_MIN = datetime.date(2010, 1, 1)
-    ERROR_DATE_MAX = datetime.today()
+    ERROR_DATE_MIN = datetime.date(2012, 1, 1)
+    ERROR_DATE_MAX = datetime.datetime.today().date()
 
     organization_name_lookup = {}
     expenditures = []
