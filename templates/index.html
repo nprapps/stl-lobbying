@@ -27,8 +27,6 @@
                             </script>
                             <img src="http://placehold.it/300x250">
                     </div>
-                    <p class="pull-left">NPR thanks our sponsors</p>
-                    <p class="pull-right"><a href="http://www.npr.org/about/place/corpsupport/">Become an NPR sponsor</a></p>
             </div>
     </div>
 </div>
@@ -78,7 +76,7 @@
             <tbody>
             {% for legislator in legislators_total_spending %}
             <tr>
-                <td class="legislator"><a href="{{ legislator.url() }}">{{ legislator.office|replace("Representative", "Rep.") }} {{ legislator.name }}</a></td>
+                <td class="legislator"><a href="{{ legislator.url() }}">{{ legislator.office|replace("Representative", "Rep.")|replace("Senator", "Sen.") }} {{ legislator.name }}</a></td>
                 <td class="spending"><div class="bar" style="width: {{ legislator.total_spending / (legislators_total_spending|first).total_spending * 100 }}%">${{ comma(legislator.total_spending) }}</div> </td>
             </tr>
             {% endfor %}
