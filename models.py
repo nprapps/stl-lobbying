@@ -179,8 +179,9 @@ class LobbyLoader:
     def __init__(self):
         self.legislators_demographics_filename = 'data/legislator_demographics.csv'
         self.organization_name_lookup_filename = 'data/organization_name_lookup.csv'
-        self.individual_data_filename = 'data/sample_data.csv'
-        self.group_data_filename = 'data/sample_group_data.csv'
+        self.individual_data_filename = 'data/individual_expenditures.csv'
+        self.soliciations_data_filename = 'data/solication_expenditures.csv'
+        self.group_data_filename = 'data/group_expenditures.csv'
 
     def info(self, msg):
         pass
