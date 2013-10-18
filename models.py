@@ -147,7 +147,6 @@ class LobbyLoader:
     ERROR_DATE_MIN = datetime.date(2010, 1, 1)
     ERROR_DATE_MAX = datetime.date(2020, 1, 1)
 
-    party_lookup = {}
     organization_name_lookup = {}
     expenditures = []
 
@@ -163,7 +162,6 @@ class LobbyLoader:
 
     def __init__(self):
         self.legislators_demographics_filename = 'data/legislator_demographics.csv'
-        self.party_lookup_filename = 'data/party_lookup.csv'
         self.organization_name_lookup_filename = 'data/organization_name_lookup.csv'
         self.individual_data_filename = 'data/sample_data.csv'
         self.group_data_filename = 'data/sample_group_data.csv'
@@ -179,20 +177,6 @@ class LobbyLoader:
             return name.split('(')[0].strip()
 
         return name
-
-    def load_party_lookup(self):
-        """
-        Load lobbyist->party mapping from file.
-        """
-        with open(self.party_lookup_filename) as f:
-            reader = csvkit.CSVKitReader(f)
-            reader.next()
-            
-            for row in reader:
-                recipient, recipient_type = map(unicode.strip, row[0].rsplit(' - ', 1))
-                recipient = self.strip_nicknames(recipient)
-
-                self.party_lookup[(recipient, recipient_type)] = row[1]
 
     def load_organization_name_lookup(self):
         """
@@ -280,16 +264,14 @@ class LobbyLoader:
             for k in row:
                 row[k] = row[k].strip()
 
-            party = self.party_lookup.get((row['ethics_name'], row['office']), '')
-
-            if not party:
-                self.error('%05i -- No matching party affiliation for "%s": "%s"' % (i, row['office'], row['ethics_name']))
+            if not row['party']:
+                self.error('%05i -- No party affiliation for "%s": "%s"' % (i, row['office'], row['ethics_name']))
 
             legislator = Legislator(
                 name='%(first_name)s %(last_name)s' % row,
                 office=row['office'],
                 district=row['district'],
-                party=party,
+                party=row['party'],
                 ethics_name=row['ethics_name']
             )
 
@@ -486,7 +468,6 @@ class LobbyLoader:
         """
         Run the loader and output summary.
         """
-        self.load_party_lookup()
         self.load_organization_name_lookup()
         self.load_legislators()
         self.load_individual_expenditures()
