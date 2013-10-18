@@ -13,48 +13,56 @@
 
 {% block content %}
 <h1>{{ legislator.display_name() }}</h1>
-<h2>{{ legislator.party|replace("Republican", "R")|replace("Democratic", "D") }} &ndash; {{ legislator.district }}</h2>
-{% if legislator.phone %}<p>{{ legislator.phone }}</p>{% endif %}
-{% if legislator.hometown %}<p>{{ legislator.hometown }}</p>{% endif %}
-<p>Elected in {{ legislator.year_elected }}</p>
-
-<p>Legislator rank: {{ ordinal(legislator_rank) }}</p>
-<p>Total received, all time: ${{ comma(total_spending) }}</p>
-<p>Total gifts received: {{ comma(total_expenditures) }}</p>
-<h3>Organizations giving the most to this legislator:</h3>
-<ul>
-    {% for org in top_organizations %}
-    <li>{{ org.name }}: ${{ org.total_spending }}</li>
-    {% endfor %}
+<ul class="list-unstyled info">
+    <li>{{ legislator.party|replace("Republican", "R")|replace("Democratic", "D") }} &ndash; {{ legislator.district }}</li>
+    {% if legislator.hometown %}<li>{{ legislator.hometown }}</li>{% endif %}
+    <li>Elected in {{ legislator.year_elected }}</li>
+    {% if legislator.phone %}<li>{{ legislator.phone }}</li>{% endif %}
 </ul>
+
 {% endblock %}
 
 
 {% block wide_content %}
 <div class="row">
-    <div class="col-md-12">
-        <table class="table table-striped gift-table">
-            <thead>
-                <tr>
-                    <th class="date">Date</th>
-                    <th class="recipient">Organization</th>
-                    <th class="expenditure">Expenditure</th>
-                    <th class="description">Description</th>
-                    <th class="category">Category</th>
-                </tr>
-            </thead>
-            <tbody>
-            {% for ex in legislator.expenditures %}
-                <tr>
-                    <td class="date">{{ ex.event_date.strftime('%B %e, %Y') }}</td>
-                    <td class="recipient">{% if ex.organization %}<a href="{{ ex.organization.url() }}">{{ ex.organization.name }}</a>{% endif %}</td>
-                    <td class="expenditure">${{ comma(ex.cost) }}</td>
-                    <td class="description">{{ ex.description }}</td>
-                    <td class="category">{{ ex.category }}</td>
-                </tr>
+    <ul class="list-unstyled stats">
+        <li class="total-amount">Total received, all time: <strong>${{ comma(total_spending) }}</strong></li>
+        <li class="gift-count">Total gifts received: <strong>{{ comma(total_expenditures) }}</strong></li>
+        <li class="rank">Legislator rank: <strong>{{ ordinal(legislator_rank) }}</strong></li>
+    </ul>
+    <div class="top-organizations">
+        <h3>Top organizations</h3>
+        <table>
+            {% for org in top_organizations %}
+            <tr>
+                <td class="organization"><a href="{{ org.url() }}">{{ org.name }}</a></td>
+                <td class="spending"><div class="bar" style="width: {{ org.total_spending / (top_organizations|first).total_spending * 100 }}%">${{ org.total_spending }}</div></td>
+            </tr>
             {% endfor %}
-            </tbody>
         </table>
     </div>
+    <div class="table-responsive gift-table">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th class="date">Date</th>
+                <th class="recipient">Organization</th>
+                <th class="expenditure">Expenditure</th>
+                <th class="description">Description</th>
+                <th class="category">Category</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for ex in legislator.expenditures %}
+            <tr>
+                <td class="date">{{ ex.event_date.strftime('%B %e, %Y') }}</td>
+                <td class="recipient">{% if ex.organization %}<a href="{{ ex.organization.url() }}">{{ ex.organization.name }}</a>{% endif %}</td>
+                <td class="expenditure">${{ comma(ex.cost) }}</td>
+                <td class="description">{{ ex.description }}</td>
+                <td class="category">{{ ex.category }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 </div>
 {% endblock %}
