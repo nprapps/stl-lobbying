@@ -180,7 +180,7 @@ class LobbyLoader:
         self.legislators_demographics_filename = 'data/legislator_demographics.csv'
         self.organization_name_lookup_filename = 'data/organization_name_lookup.csv'
         self.individual_data_filename = 'data/individual_expenditures.csv'
-        self.soliciations_data_filename = 'data/solication_expenditures.csv'
+        self.solicitation_data_filename = 'data/solicitation_expenditures.csv'
         self.group_data_filename = 'data/group_expenditures.csv'
 
     def info(self, msg):
@@ -224,13 +224,10 @@ class LobbyLoader:
         """
         Get or create an organization.
         """
-        if name not in self.organization_name_lookup:
+        if name in self.organization_name_lookup:
+            name = self.organization_name_lookup[name]
+        else:
             self.warn('Organization name "%s" not in lookup table' % name)
-
-        lookup = self.organization_name_lookup[name]
-
-        if lookup:
-            name = lookup
 
         try:
             return False, Organization.get(Organization.name==name)
@@ -317,12 +314,12 @@ class LobbyLoader:
 
             self.legislators_created += 1
 
-    def load_individual_expenditures(self):
+    def load_individual_expenditures(self, filename, solicitations=False):
         """
         Load individual expenditures from files.
         """
         # Load data
-        with open(self.individual_data_filename) as f:
+        with open(filename) as f:
             reader = csvkit.CSVKitDictReader(f)
             rows = list(reader)
 
@@ -522,7 +519,8 @@ class LobbyLoader:
         """
         self.load_organization_name_lookup()
         self.load_legislators()
-        self.load_individual_expenditures()
+        self.load_individual_expenditures(self.individual_data_filename, False)
+        self.load_individual_expenditures(self.solicitation_data_filename, True)
         self.load_group_expenditures()
 
         if self.warnings:
