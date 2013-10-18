@@ -252,6 +252,9 @@ class LobbyLoader:
         """
         Load legislator demographics.
         """
+        VALID_OFFICES = ['Representative', 'Senator']
+        VALID_PARTIES = ['Republican', 'Democratic']
+
         with open(self.legislators_demographics_filename) as f:
             reader = csvkit.CSVKitDictReader(f)
             rows = list(reader)
@@ -263,15 +266,24 @@ class LobbyLoader:
 
             for k in row:
                 row[k] = row[k].strip()
+            
+            office = row['office']
 
-            if not row['party']:
-                self.error('%05i -- No party affiliation for "%s": "%s"' % (i, row['office'], row['ethics_name']))
+            if office not in VALID_OFFICES:
+                self.warn('%05i -- Not a valid office: "%s"' % (i, office))
+
+            party = row['party']
+
+            if not party:
+                self.error('%05i -- No party affiliation for "%s": "%s"' % (i, office, row['ethics_name']))
+            elif party not in VALID_PARTIES:
+                self.warn('%05i -- Unknown party name: "%s"' % (i, party))
 
             legislator = Legislator(
                 name='%(first_name)s %(last_name)s' % row,
-                office=row['office'],
+                office=office,
                 district=row['district'],
-                party=row['party'],
+                party=party,
                 ethics_name=row['ethics_name']
             )
 
