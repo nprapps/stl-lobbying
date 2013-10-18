@@ -19,7 +19,6 @@
 	background: lighten(@brand-red, 7%);
 	color: #fff;
 	font-weight: bold;
-	font-family: @font-family-condensed;
 	font-size: @font-size-base;
 	height: 36px;
 	line-height: 26px;
@@ -106,8 +105,10 @@ nav {
 		.make-row();
 
 		.detail & {
-			&:after {
-				.rule-3px;
+			@media screen and (min-width: @screen-md){
+				&:after {
+					.rule-3px;
+				}
 			}
 		}
 	}
@@ -124,13 +125,17 @@ nav {
 
 		@media screen and (min-width: @screen-md){
 			border-right: 1px solid @gray-light;
+
+			.detail & {
+				border-right: none;
+			}
 		}
 
 		h1 {
 			font-weight: 700;
 
 			.detail & {
-				font-size: @font-size-base * 3;
+				font-size: @font-size-base * 2;
 				a {
 					color: @text-color;
 				}
@@ -190,7 +195,6 @@ nav {
 			strong {
 				display: block;
 				font-size: 42px;
-				font-family: @font-family-condensed;
 			}
 			&:first-child {
 				border-left: none;
@@ -359,9 +363,7 @@ nav {
 
 			strong {
 				display: block;
-				font-size: @font-size-base * 3;
-				font-family: @font-family-condensed;
-
+				font-size: @font-size-base * 2;
 			}
 
 			li {
@@ -467,6 +469,82 @@ nav {
 
 			&.description {
 				width: 33.33333%
+			}
+		}
+	}
+}
+
+.legislator-detail {
+
+	.info {
+		margin-bottom: @line-height-computed;
+		font-size: 14px;
+		color: @gray-light;
+
+		li {
+			display: inline-block;
+			border-left: 1px solid @gray-light;
+			margin-left: 2px;
+			padding-left: 5px;
+			text-transform: uppercase;
+			line-height: 1;
+
+			&:first-child {
+				border: none;
+				margin-left: 0;
+				padding-left: 0;
+			}
+		}
+	}
+
+	.top-organizations {
+		.make-lg-column(4);
+
+		.organization {
+			font-size: 11px;
+			width: 40%;
+			text-align: right;
+			padding-right: 5px;
+			line-height: 1.1;
+		}
+
+		.spending {
+			.bar {
+				height: 36px;
+			}
+		}
+	}
+	.gift-table {
+		.make-lg-column(8);
+	}
+
+	.stats {
+		&:before,
+		&:after {
+			.rule-3px;
+			height: 1px;
+			margin-bottom: 5px;
+			clear: both;
+		}
+
+		li {
+			.make-sm-column(4);
+
+			font-size: @font-size-base * 0.9;
+			text-transform: uppercase;
+			margin-bottom: 5px;
+
+			&:last-child {
+				border-right: none;
+			}
+
+			@media screen and (min-width: @screen-sm){
+				border-right: 1px solid @gray-light;
+			}
+
+			strong {
+				display: block;
+				font-size: @font-size-base * 2;
 			}
 		}
 	}
