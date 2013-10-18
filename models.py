@@ -91,7 +91,7 @@ class Legislator(SlugModel):
         database = database
 
     def url(self):
-        return '%s/legislator/%s/' % (app_config.S3_BASE_URL, self.slug)
+        return '%s/legislators/%s/' % (app_config.S3_BASE_URL, self.slug)
 
     def display_name(self):
         office = self.OFFICE_SHORT_NAMES[self.office] 

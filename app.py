@@ -51,7 +51,22 @@ def index():
 
     return render_template('index.html', **context)
 
-@app.route('/legislator/<string:slug>/')
+@app.route('/legislators/')
+def _legislators():
+    """
+    Legislator list page.
+    """
+    context = make_context()
+
+    senate_list = Legislator.select().where(Legislator.office == 'Senator')
+    house_list = Legislator.select().where(Legislator.office == 'Representative')
+
+    context['senate_list'] = senate_list
+    context['house_list'] = house_list
+
+    return render_template('legislator_list.html', **context)    
+
+@app.route('/legislators/<string:slug>/')
 def _legislator(slug):
     """
     Legislator detail page.
