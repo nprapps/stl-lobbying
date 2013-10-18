@@ -48,12 +48,6 @@
     <div class="organizations">
         <h3>Top organizations by spending (all time)</h3>
         <table>
-            <!-- <thead>
-                <tr>
-                    <th class="organization">Organization</th>
-                    <th class="spending">Spending</th>
-                </tr>
-            </thead> -->
             <tbody>
             {% for org in organizations_total_spending %}
             <tr>
@@ -67,16 +61,10 @@
     <div class="legislators">
         <h3>Top legislators by amount received (all time)</h3>
         <table>
-            <!-- <thead>
-                <tr>
-                    <th class="legislator">Legislator</th>
-                    <th class="spending">Spending</th>
-                </tr>
-            </thead> -->
             <tbody>
             {% for legislator in legislators_total_spending %}
             <tr>
-                <td class="legislator"><a href="{{ legislator.url() }}">{{ legislator.office|replace("Representative", "Rep.")|replace("Senator", "Sen.") }} {{ legislator.name }}</a></td>
+                <td class="legislator"><a href="{{ legislator.url() }}">{{ legislator.display_name() }}</a></td>
                 <td class="spending"><div class="bar" style="width: {{ legislator.total_spending / (legislators_total_spending|first).total_spending * 100 }}%">${{ comma(legislator.total_spending) }}</div> </td>
             </tr>
             {% endfor %}

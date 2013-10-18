@@ -131,9 +131,8 @@ def update_copy():
 
 def update_data_files():
     """
-    Download the party lookup table as a CSV.
+    Download the data tables as CSVs.
     """
-    _download_google_doc(app_config.PARTY_LOOKUP_DOC_KEY, 'csv', 'data/party_lookup.csv')
     _download_google_doc(app_config.ORGANIZATION_NAME_LOOKUP_DOC_KEY, 'csv', 'data/organization_name_lookup.csv')
     _download_google_doc(app_config.LEGISLATOR_DEMOGRAPHICS_DOC_KEY, 'csv', 'data/legislator_demographics.csv')
 

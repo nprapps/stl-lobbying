@@ -70,19 +70,33 @@ class Legislator(SlugModel):
     """
     A legislator.
     """
-    slug_fields = ['name']
+    OFFICE_SHORT_NAMES = {
+        'Senator': 'Sen.',
+        'Representative': 'Rep.'
+    }
 
-    name = CharField()
+    slug_fields = ['office', 'first_name', 'last_name']
+
+    first_name = CharField()
+    last_name = CharField()
     office = CharField()
     district = CharField()
     party = CharField()
     ethics_name = CharField(null=True)
+    phone = CharField()
+    year_elected = IntegerField(null=True)
+    hometown = CharField()
     
     class Meta:
         database = database
 
     def url(self):
         return '%s/legislator/%s/' % (app_config.S3_BASE_URL, self.slug)
+
+    def display_name(self):
+        office = self.OFFICE_SHORT_NAMES[self.office] 
+
+        return '%s %s %s' % (office, self.first_name, self.last_name)
 
 class Group(SlugModel):
     slug_fields = ['name']
@@ -143,11 +157,12 @@ class LobbyLoader:
     """
     Load expenditures from files.
     """
+    # Folks we have data for, but predate our period of interest
+    SKIP_LEGISLATORS = ['BARNITZ, FRANK', 'HOSKINS, THEODORE (TED)', 'SCHAD, RODNEY']
     SKIP_TYPES = ['Local Government Official', 'Public Official', 'ATTORNEY GENERAL', 'STATE TREASURER', 'GOVERNOR', 'STATE AUDITOR', 'LIEUTENANT GOVERNOR', 'SECRETARY OF STATE', 'JUDGE']
-    ERROR_DATE_MIN = datetime.date(2010, 1, 1)
-    ERROR_DATE_MAX = datetime.date(2020, 1, 1)
+    ERROR_DATE_MIN = datetime.date(2012, 1, 1)
+    ERROR_DATE_MAX = datetime.datetime.today().date()
 
-    party_lookup = {}
     organization_name_lookup = {}
     expenditures = []
 
@@ -163,36 +178,18 @@ class LobbyLoader:
 
     def __init__(self):
         self.legislators_demographics_filename = 'data/legislator_demographics.csv'
-        self.party_lookup_filename = 'data/party_lookup.csv'
         self.organization_name_lookup_filename = 'data/organization_name_lookup.csv'
         self.individual_data_filename = 'data/sample_data.csv'
         self.group_data_filename = 'data/sample_group_data.csv'
+
+    def info(self, msg):
+        pass
 
     def warn(self, msg):
         self.warnings.append(msg)
 
     def error(self, msg):
         self.errors.append(msg)
-
-    def strip_nicknames(self, name):
-        if '(' in name:
-            return name.split('(')[0].strip()
-
-        return name
-
-    def load_party_lookup(self):
-        """
-        Load lobbyist->party mapping from file.
-        """
-        with open(self.party_lookup_filename) as f:
-            reader = csvkit.CSVKitReader(f)
-            reader.next()
-            
-            for row in reader:
-                recipient, recipient_type = map(unicode.strip, row[0].rsplit(' - ', 1))
-                recipient = self.strip_nicknames(recipient)
-
-                self.party_lookup[(recipient, recipient_type)] = row[1]
 
     def load_organization_name_lookup(self):
         """
@@ -268,6 +265,9 @@ class LobbyLoader:
         """
         Load legislator demographics.
         """
+        VALID_OFFICES = ['Representative', 'Senator']
+        VALID_PARTIES = ['Republican', 'Democratic']
+
         with open(self.legislators_demographics_filename) as f:
             reader = csvkit.CSVKitDictReader(f)
             rows = list(reader)
@@ -279,18 +279,37 @@ class LobbyLoader:
 
             for k in row:
                 row[k] = row[k].strip()
+            
+            office = row['office']
 
-            party = self.party_lookup.get((row['ethics_name'], row['office']), '')
+            if office not in VALID_OFFICES:
+                self.warn('%05i -- Not a valid office: "%s"' % (i, office))
+
+            party = row['party']
 
             if not party:
-                self.error('%05i -- No matching party affiliation for "%s": "%s"' % (i, row['office'], row['ethics_name']))
+                self.error('%05i -- No party affiliation for "%s": "%s"' % (i, office, row['ethics_name']))
+            elif party not in VALID_PARTIES:
+                self.warn('%05i -- Unknown party name: "%s"' % (i, party))
+
+            year_elected = row['year_elected']
+
+            if year_elected:
+                year_elected = int(year_elected)
+            else:
+                year_elected = None
+                self.error('%05i -- No year elected for "%s": "%s"' % (i, office, row['ethics_name']))
 
             legislator = Legislator(
-                name='%(first_name)s %(last_name)s' % row,
-                office=row['office'],
+                first_name=row['first_name'],
+                last_name=row['last_name'],
+                office=office,
                 district=row['district'],
                 party=party,
-                ethics_name=row['ethics_name']
+                ethics_name=row['ethics_name'],
+                phone=row['phone'],
+                year_elected=year_elected,
+                hometown=row['hometown']
             )
 
             legislator.save()
@@ -331,7 +350,14 @@ class LobbyLoader:
 
             # Recipient
             recipient, recipient_type = map(unicode.strip, row['Recipient'].rsplit(' - ', 1))
-            recipient = self.strip_nicknames(recipient)
+
+            if recipient in self.SKIP_LEGISLATORS:
+                self.info('%05i -- Skipping "%s": "%s" for "%s": "%s"' % (i, recipient_type, recipient, legislator_type, legislator_name))
+                continue
+
+            # NB: Brute force correction for name mispelling in one state dropdown
+            if recipient == 'CARPENTER, JOHN':
+                recipient = 'CARPENTER, JON'
 
             # Legislator
             legislator = None
@@ -344,10 +370,17 @@ class LobbyLoader:
                     continue
             elif recipient_type in ['Employee or Staff', 'Spouse or Child']:
                 legislator_name, legislator_type = map(unicode.strip, row['Pub Off'].rsplit(' - ', 1))
-                legislator_name = self.strip_nicknames(legislator_name)
+
+                if legislator_name in self.SKIP_LEGISLATORS:
+                    self.info('%05i -- Skipping "%s": "%s" for "%s": "%s"' % (i, recipient_type, recipient, legislator_type, legislator_name))
+                    continue
+
+                # NB: Brute force correction for name mispelling in one state dropdown
+                if legislator_name == 'CARPENTER, JOHN':
+                    legislator_name = 'CARPENTER, JON'
 
                 if legislator_type in self.SKIP_TYPES:
-                    #self.warn('%05i -- Skipping "%s": "%s" for "%s": "%s"' % (i, recipient_type, recipient, legislator_type, legislator_name))
+                    self.info('%05i -- Skipping "%s": "%s" for "%s": "%s"' % (i, recipient_type, recipient, legislator_type, legislator_name))
                     continue
 
                 try:
@@ -356,7 +389,7 @@ class LobbyLoader:
                     self.error('%05i -- No matching legislator for "%s": "%s"' % (i, legislator_type, legislator_name))
                     continue
             elif recipient_type in self.SKIP_TYPES:
-                #self.warn('%05i -- Skipping "%s": "%s"' % (i, recipient_type, recipient))
+                self.info('%05i -- Skipping "%s": "%s"' % (i, recipient_type, recipient))
                 continue
             else:
                 self.error('%05i -- Unknown recipient type, "%s": "%s"' % (i, recipient_type, recipient))
@@ -486,7 +519,6 @@ class LobbyLoader:
         """
         Run the loader and output summary.
         """
-        self.load_party_lookup()
         self.load_organization_name_lookup()
         self.load_legislators()
         self.load_individual_expenditures()

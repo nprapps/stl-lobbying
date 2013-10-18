@@ -35,7 +35,7 @@
             {% for ex in organization.expenditures %}
                 <tr>
                     <td class="date">{{ ex.event_date.strftime('%B %e, %Y') }}</td>
-                    <td class="recipient">{% if ex.group %}{{ ex.group.name }}{% else %}<a href="{{ ex.legislator.url() }}">{{ ex.legislator.office|replace("Representative", "Rep.")|replace("Senator", "Sen.") }} {{ ex.legislator.name }}</a>{% endif %}</td>
+                    <td class="recipient">{% if ex.group %}{{ ex.group.name }}{% else %}<a href="{{ ex.legislator.url() }}">{{ ex.legislator.display_name() }}</a>{% endif %}</td>
                     <td class="expenditure">${{ comma(ex.cost) }}</td>
                     <td class="description">{{ ex.description }}</td>
                     <td class="category">{{ ex.category }}</td>
