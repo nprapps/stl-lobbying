@@ -73,7 +73,19 @@ def _legislator(slug):
     """
     context = make_context()
 
+    legislators = Legislator.select()
     legislator = Legislator.get(Legislator.slug==slug)
+
+    for l in legislators:
+        l.total_spending = l.expenditures.aggregate(fn.Sum(Expenditure.cost))
+
+    legislators_total_spending = sorted(legislators, key=lambda l: l.total_spending, reverse=True)
+    
+    legislator_rank = None
+
+    for i, l in enumerate(legislators_total_spending):
+        if l.id == legislator.id:
+            legislator_rank = i + 1
 
     org_spending = {}
 
@@ -95,6 +107,7 @@ def _legislator(slug):
     context['total_spending'] = sum([e.cost for e in legislator.expenditures]) 
     context['total_expenditures'] = legislator.expenditures.count()
     context['top_organizations'] = top_organizations 
+    context['legislator_rank'] = legislator_rank
 
     return render_template('legislator.html', **context)
 

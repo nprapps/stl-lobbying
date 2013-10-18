@@ -146,6 +146,27 @@ def comma(f):
 
     return "{:,}".format(f)
 
+def ordinal(value):
+    """
+    NB: Loving borrowed from Django.
+
+    https://github.com/django/django/blob/master/django/contrib/humanize/templatetags/humanize.py
+
+    Converts an integer to its ordinal as a string. 1 is '1st', 2 is '2nd',
+    3 is '3rd', etc. Works for any integer.
+    """
+    try:
+        value = int(value)
+    except (TypeError, ValueError):
+        return value
+    
+    suffixes = ('th', 'st', 'nd', 'rd', 'th', 'th', 'th', 'th', 'th', 'th')
+    
+    if value % 100 in (11, 12, 13):  # special case
+        return Markup("%d%s" % (value, suffixes[0]))
+    
+    return Markup("%d%s" % (value, suffixes[value % 10]))
+
 def flatten_app_config():
     """
     Returns a copy of app_config containing only
@@ -172,6 +193,7 @@ def make_context():
     context['CSS'] = CSSIncluder()
 
     context['comma'] = comma
+    context['ordinal'] = ordinal
 
     return context
 
