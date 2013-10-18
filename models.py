@@ -355,6 +355,10 @@ class LobbyLoader:
                 self.info('%05i -- Skipping "%s": "%s" for "%s": "%s"' % (i, recipient_type, recipient, legislator_type, legislator_name))
                 continue
 
+            # NB: Brute force correction for name mispelling in one state dropdown
+            if recipient == 'CARPENTER, JOHN':
+                recipient = 'CARPENTER, JON'
+
             # Legislator
             legislator = None
 
@@ -370,6 +374,10 @@ class LobbyLoader:
                 if legislator_name in self.SKIP_LEGISLATORS:
                     self.info('%05i -- Skipping "%s": "%s" for "%s": "%s"' % (i, recipient_type, recipient, legislator_type, legislator_name))
                     continue
+
+                # NB: Brute force correction for name mispelling in one state dropdown
+                if legislator_name == 'CARPENTER, JOHN':
+                    legislator_name = 'CARPENTER, JON'
 
                 if legislator_type in self.SKIP_TYPES:
                     self.info('%05i -- Skipping "%s": "%s" for "%s": "%s"' % (i, recipient_type, recipient, legislator_type, legislator_name))
