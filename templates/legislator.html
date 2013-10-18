@@ -12,8 +12,8 @@
 
 
 {% block content %}
-<h1>{{ legislator.office }} {{ legislator.name }}</h1>
-<h2>{{ legislator.party|replace("Republican", "R"|replace("Democrat", "D")) }} &ndash; {{ legislator.district }}</h2>
+<h1>{{ legislator.office|replace("Representative", "Rep.")|replace("Senator", "Sen.") }} {{ legislator.name }}</h1>
+<h2>{{ legislator.party|replace("Republican", "R")|replace("Democratic", "D") }} &ndash; {{ legislator.district }}</h2>
 <p>Total received, all time: ${{ comma(total_spending) }}</p>
 {% endblock %}
 

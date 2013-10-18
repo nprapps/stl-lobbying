@@ -41,14 +41,14 @@
 
 {% block wide_content %}
 <div class="totals row">
-        <p class="total-spending">Total spending, ever: <strong>${{ comma(total_spending) }}</strong></p>
-        <p class="total-gifts">Total expenditures/gifts, ever: <strong>{{ comma(total_expenditures) }}</strong></p>
-        <p class="total-orgs">Total organizations lobbying, ever: <strong>{{ comma(total_organizations) }}</strong></p>
-        <p class="total-lobbyists">Total lobbyists active, ever: <strong>{{ comma(total_lobbyists) }}</strong></p>
+        <p class="total-spending">Total spending (all time) <strong>${{ comma(total_spending) }}</strong></p>
+        <p class="total-gifts">Total expenditures/gifts (all time) <strong>{{ comma(total_expenditures) }}</strong></p>
+        <p class="total-orgs">Total organizations lobbying (all time) <strong>{{ comma(total_organizations) }}</strong></p>
+        <p class="total-lobbyists">Total lobbyists active (all time) <strong>{{ comma(total_lobbyists) }}</strong></p>
 </div>
 <div class="top-entities row">
     <div class="organizations">
-        <h3>Organizations with highest spending, ever</h3>
+        <h3>Top organizations by spending (all time)</h3>
         <table>
             <!-- <thead>
                 <tr>
@@ -67,7 +67,7 @@
         </table>
     </div>
     <div class="legislators">
-        <h3>Legislators with highest spending on them, ever</h3>
+        <h3>Top legislators by amount received (all time)</h3>
         <table>
             <!-- <thead>
                 <tr>
@@ -78,7 +78,7 @@
             <tbody>
             {% for legislator in legislators_total_spending %}
             <tr>
-                <td class="legislator"><a href="{{ legislator.url() }}">{{ legislator.name }}</a></td>
+                <td class="legislator"><a href="{{ legislator.url() }}">{{ legislator.office|replace("Representative", "Rep.") }} {{ legislator.name }}</a></td>
                 <td class="spending"><div class="bar" style="width: {{ legislator.total_spending / (legislators_total_spending|first).total_spending * 100 }}%">${{ comma(legislator.total_spending) }}</div> </td>
             </tr>
             {% endfor %}
@@ -86,7 +86,7 @@
         </table>
     </div>
     <div class="categories">
-        <h3>Spending by category, ever</h3>
+        <h3>Spending by category (all time)</h3>
         <ul class="list-unstyled">
         {% for ex in expenditures_by_category %}
             <li>{{ ex.category }}: <strong>${{ comma(ex.total_spending) }}</strong></li>
