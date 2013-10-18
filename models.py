@@ -228,7 +228,10 @@ class LobbyLoader:
         Get or create an organization.
         """
         if name in self.organization_name_lookup:
-            name = self.organization_name_lookup[name]
+            lookup = self.organization_name_lookup[name]
+
+            if lookup:
+                name = lookup
         else:
             self.warn('Organization name "%s" not in lookup table' % name)
 
