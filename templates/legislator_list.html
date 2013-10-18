@@ -1,0 +1,56 @@
+{% extends '_base.html' %}
+
+{% block body_class %}legislator-list detail list{% endblock body_class %}
+
+{% block header_content %}
+<div class="header-wrapper">
+    <div class="project-header">
+        <h1><a href="/">{{ PROJECT_NAME }}</a></h1>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block content %}
+<h1>All Legislators</h1>
+{% endblock %}
+
+
+{% block wide_content %}
+<div class="row">
+    <div class="col-md-6">
+        <h2>House</h2>
+        <table class="table table-striped gift-table">
+            <thead>
+                <tr>
+                    <th class="recipient">Name</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for legislator in house_list %}
+                <tr>
+                    <td class="name"><a href="{{ legislator.url() }}">{{ legislator.display_name() }}</a></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-6">
+        <h2>Senate</h2>
+        <table class="table table-striped gift-table">
+            <thead>
+                <tr>
+                    <th class="recipient">Name</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for legislator in senate_list %}
+                <tr>
+                    <td class="name"><a href="{{ legislator.url() }}">{{ legislator.display_name() }}</a></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
