@@ -132,6 +132,8 @@ class Expenditure(Model):
     cost = FloatField()
     organization = ForeignKeyField(Organization, related_name='expenditures')
     group = ForeignKeyField(Group, related_name='expenditures', null=True)
+    ethics_id = IntegerField()
+    is_solicitation = BooleanField()
     
     class Meta:
         database = database
@@ -171,6 +173,7 @@ class LobbyLoader:
 
     individual_rows = 0
     group_rows = 0
+    amended_rows = 0
     lobbyists_created = 0
     legislators_created = 0
     organizations_created = 0
@@ -332,6 +335,11 @@ class LobbyLoader:
             for k, v in row.items():
                 row[k] = v.strip()
 
+            # Amended?
+            if row['If Amended'] == 'Amended':
+                self.amended_rows += 1
+                continue
+
             # Lobbyist
             created, lobbyist = self.load_lobbyist('%s %s' % (row['Lob F Name'], row['Lob L Name']))
 
@@ -406,7 +414,7 @@ class LobbyLoader:
             cost = row['Cost'].strip('$').replace(',', '')
 
             if '(' in cost or '-' in cost:
-                self.error('%05i -- Negative cost!' % i)
+                self.error('%05i -- Negative cost outside an amendment!' % i)
                 continue
 
             cost = float(cost)
@@ -429,7 +437,9 @@ class LobbyLoader:
                 description=row['Description'],
                 cost=cost,
                 organization=organization,
-                group=None
+                group=None,
+                ethics_id=int(row['Sol ID'] if solicitations else row['Indv ID']),
+                is_solicitation=solicitations
             ))
 
         self.individual_rows = i 
@@ -451,6 +461,11 @@ class LobbyLoader:
             # Strip whitespace
             for k, v in row.items():
                 row[k] = v.strip()
+
+            # Amended?
+            if row['If Amended'] == 'Amended':
+                self.amended_rows += 1
+                continue
 
             # Lobbyist
             created, lobbyist = self.load_lobbyist('%s %s' % (row['Lob F Name'], row['Lob L Name']))
@@ -485,7 +500,7 @@ class LobbyLoader:
             cost = row['Cost'].strip('$').replace(',', '')
 
             if '(' in cost or '-' in cost:
-                self.error('%05i -- Negative cost!' % i)
+                self.error('%05i -- Negative cost outside an amendment!' % i)
                 continue
 
             cost = float(cost)
@@ -508,7 +523,9 @@ class LobbyLoader:
                 description=row['Description'],
                 cost=cost,
                 organization=organization,
-                group=group
+                group=group,
+                ethics_id=int(row['Grp ID']),
+                is_solicitation=False
             ))
 
         self.group_rows = i
@@ -552,6 +569,11 @@ class LobbyLoader:
 
         print 'Processed %i individual rows' % self.individual_rows
         print 'Processed %i group rows' % self.group_rows 
+        print ''
+        print 'Encountered %i warnings' % len(self.warnings)
+        print 'Encountered %i errors' % len(self.errors)
+        print 'Skipped %i amended rows' % self.amended_rows 
+        print ''
         print 'Imported %i expenditures' % len(self.expenditures)
         print 'Created %i lobbyists' % self.lobbyists_created
         print 'Created %i legislators' % self.legislators_created
