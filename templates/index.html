@@ -71,13 +71,5 @@
             </tbody>
         </table>
     </div>
-    <div class="categories">
-        <h3>Spending by category (all time)</h3>
-        <ul class="list-unstyled">
-        {% for ex in expenditures_by_category %}
-            <li>{{ ex.category }}: <strong>${{ comma(ex.total_spending) }}</strong></li>
-        {% endfor %}
-        </ul>
-    </div>
 </div>
 {% endblock %}
