@@ -12,8 +12,12 @@
 
 
 {% block content %}
-<h1>{{ legislator.office|replace("Representative", "Rep.")|replace("Senator", "Sen.") }} {{ legislator.name }}</h1>
+<h1>{{ legislator.display_name() }}</h1>
 <h2>{{ legislator.party|replace("Republican", "R")|replace("Democratic", "D") }} &ndash; {{ legislator.district }}</h2>
+{% if legislator.phone %}<p>{{ legislator.phone }}</p>{% endif %}
+{% if legislator.hometown %}<p>{{ legislator.hometown }}</p>{% endif %}
+<p>Elected in {{ legislator.year_elected }}</p>
+
 <p>Total received, all time: ${{ comma(total_spending) }}</p>
 {% endblock %}
 

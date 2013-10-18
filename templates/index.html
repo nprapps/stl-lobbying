@@ -78,7 +78,7 @@
             <tbody>
             {% for legislator in legislators_total_spending %}
             <tr>
-                <td class="legislator"><a href="{{ legislator.url() }}">{{ legislator.office|replace("Representative", "Rep.") }} {{ legislator.name }}</a></td>
+                <td class="legislator"><a href="{{ legislator.url() }}">{{ legislator.display_name() }}</a></td>
                 <td class="spending"><div class="bar" style="width: {{ legislator.total_spending / (legislators_total_spending|first).total_spending * 100 }}%">${{ comma(legislator.total_spending) }}</div> </td>
             </tr>
             {% endfor %}

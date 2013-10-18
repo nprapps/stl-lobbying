@@ -70,19 +70,33 @@ class Legislator(SlugModel):
     """
     A legislator.
     """
-    slug_fields = ['name']
+    OFFICE_SHORT_NAMES = {
+        'Senator': 'Sen.',
+        'Representative': 'Rep.'
+    }
 
-    name = CharField()
+    slug_fields = ['office', 'first_name', 'last_name']
+
+    first_name = CharField()
+    last_name = CharField()
     office = CharField()
     district = CharField()
     party = CharField()
     ethics_name = CharField(null=True)
+    phone = CharField()
+    year_elected = IntegerField(null=True)
+    hometown = CharField()
     
     class Meta:
         database = database
 
     def url(self):
         return '%s/legislator/%s/' % (app_config.S3_BASE_URL, self.slug)
+
+    def display_name(self):
+        office = self.OFFICE_SHORT_NAMES[self.office] 
+
+        return '%s %s %s' % (office, self.first_name, self.last_name)
 
 class Group(SlugModel):
     slug_fields = ['name']
@@ -279,12 +293,24 @@ class LobbyLoader:
             elif party not in VALID_PARTIES:
                 self.warn('%05i -- Unknown party name: "%s"' % (i, party))
 
+            year_elected = row['year_elected']
+
+            if year_elected:
+                year_elected = int(year_elected)
+            else:
+                year_elected = None
+                self.error('%05i -- No year elected for "%s": "%s"' % (i, office, row['ethics_name']))
+
             legislator = Legislator(
-                name='%(first_name)s %(last_name)s' % row,
+                first_name=row['first_name'],
+                last_name=row['last_name'],
                 office=office,
                 district=row['district'],
                 party=party,
-                ethics_name=row['ethics_name']
+                ethics_name=row['ethics_name'],
+                phone=row['phone'],
+                year_elected=year_elected,
+                hometown=row['hometown']
             )
 
             legislator.save()
