@@ -19,6 +19,13 @@
 <p>Elected in {{ legislator.year_elected }}</p>
 
 <p>Total received, all time: ${{ comma(total_spending) }}</p>
+<p>Total gifts received: {{ comma(total_expenditures) }}</p>
+<h3>Organizations giving the most to this legislator:</h3>
+<ul>
+    {% for org in top_organizations %}
+    <li>{{ org.name }}: ${{ org.total_spending }}</li>
+    {% endfor %}
+</ul>
 {% endblock %}
 
 
