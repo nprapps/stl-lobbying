@@ -157,10 +157,11 @@ class LobbyLoader:
     """
     Load expenditures from files.
     """
-    SKIP_LEGISLATORS = ['BARNITZ, FRANK']
+    # Folks we have data for, but predate our period of interest
+    SKIP_LEGISLATORS = ['BARNITZ, FRANK', 'HOSKINS, THEODORE (TED)']
     SKIP_TYPES = ['Local Government Official', 'Public Official', 'ATTORNEY GENERAL', 'STATE TREASURER', 'GOVERNOR', 'STATE AUDITOR', 'LIEUTENANT GOVERNOR', 'SECRETARY OF STATE', 'JUDGE']
     ERROR_DATE_MIN = datetime.date(2010, 1, 1)
-    ERROR_DATE_MAX = datetime.date(2020, 1, 1)
+    ERROR_DATE_MAX = datetime.today()
 
     organization_name_lookup = {}
     expenditures = []
@@ -189,12 +190,6 @@ class LobbyLoader:
 
     def error(self, msg):
         self.errors.append(msg)
-
-    def strip_nicknames(self, name):
-        if '(' in name:
-            return name.split('(')[0].strip()
-
-        return name
 
     def load_organization_name_lookup(self):
         """
@@ -355,7 +350,6 @@ class LobbyLoader:
 
             # Recipient
             recipient, recipient_type = map(unicode.strip, row['Recipient'].rsplit(' - ', 1))
-            recipient = self.strip_nicknames(recipient)
 
             if recipient in self.SKIP_LEGISLATORS:
                 self.info('%05i -- Skipping "%s": "%s" for "%s": "%s"' % (i, recipient_type, recipient, legislator_type, legislator_name))
@@ -372,7 +366,6 @@ class LobbyLoader:
                     continue
             elif recipient_type in ['Employee or Staff', 'Spouse or Child']:
                 legislator_name, legislator_type = map(unicode.strip, row['Pub Off'].rsplit(' - ', 1))
-                legislator_name = self.strip_nicknames(legislator_name)
 
                 if legislator_name in self.SKIP_LEGISLATORS:
                     self.info('%05i -- Skipping "%s": "%s" for "%s": "%s"' % (i, recipient_type, recipient, legislator_type, legislator_name))
