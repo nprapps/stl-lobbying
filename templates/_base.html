@@ -181,6 +181,7 @@
         {{ JS.push('js/lib/moment.js') }}
         {{ JS.push('js/lib/bootstrap.js') }}
         {{ JS.push('js/lib/geojson-utils.js') }}
+        {{ JS.push('js/lib/topojson.js') }}
         {% block extra_foot_js %}{% endblock extra_foot_js %}
         {{ JS.push('js/templates.js') }}
         {{ JS.push('js/app.js') }}
@@ -188,6 +189,26 @@
 
         {% block extra_foot %}
         {% endblock extra_foot %}
+
+        <script type="text/javascript">
+        window.SENATORS = {
+            {% for senator in senators %}
+            '{{ senator.district }}': {
+                'display_name': '{{ senator.display_name() }}',
+                'slug': '{{ senator.slug }}'
+            }{% if not loop.last %},{% endif %}
+            {% endfor %}
+        };
+
+        window.REPRESENTATIVES = {
+            {% for rep in representatives %}
+            '{{ rep.district }}': {
+                'display_name': '{{ rep.display_name() }}',
+                'slug': '{{ rep.slug }}'
+            }{% if not loop.last %},{% endif %}
+            {% endfor %}
+        };
+        </script>
 
         <!-- GOOGLE ANALYTICS -->
         <script type="text/javascript">

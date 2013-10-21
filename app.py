@@ -40,6 +40,8 @@ def index():
 
     expenditures_by_category = Expenditure.select(Expenditure.category, fn.Sum(Expenditure.cost).alias('total_spending')).group_by(Expenditure.category).order_by(R('total_spending desc'))
 
+    context['senators'] = Legislator.select().where(Legislator.office == 'Senator')
+    context['representatives'] = Legislator.select().where(Legislator.office == 'Representative')
     context['expenditures'] = expenditures
     context['total_spending'] = expenditures.aggregate(fn.Sum(Expenditure.cost)) 
     context['total_expenditures'] = expenditures.count()

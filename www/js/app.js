@@ -9,28 +9,15 @@ var $sen_result = $('.results .sen');
 
 var geocode_xhr = null;
 
-var SENATE_GEOJSON = null;
-var SENATORS = {
-    44: {
-        'display_name': 'Test McTest',
-        'slug': 'senator-ryan-silvey'
-    }
-};
+var SENATE_TOPOJSON = null;
+var HOUSE_TOPOJSON = null;
 
-var HOUSE_GEOJSON = null;
-var REPRESENTATIVES = {
-    44: {
-        'display_name': 'Sir 44',
-        'slug': 'senator-ryan-silvey'
-    }
-};
-
-function lookup_senate_district(lat, lng) {
+function lookup_district(topology, name, lat, lng) {
     var point = { 'type': 'Point', 'coordinates': [lng, lat] };
-    var count = SENATE_GEOJSON.features.length;
+    var count = topology.objects[name].geometries.length;
 
     for (var i = 0; i < count; i++) {
-        var feature = SENATE_GEOJSON.features[i];
+        var feature = topojson.feature(topology, topology.objects[name].geometries[i]);
         var polygon = { 'type': 'Polygon', 'coordinates': feature.geometry.coordinates };
 
         if (gju.pointInPolygon(point, polygon) !== false) {
@@ -39,21 +26,26 @@ function lookup_senate_district(lat, lng) {
     };
 
     return null;
-
 }
 
-function lookup_district(lat, lng) {
+function lookup_legislators(lat, lng) {
     //alert(lat, lng);
    
-    var sen_district = lookup_senate_district(lat, lng);
-    alert(sen_district);
-    //var rep_district = 44;
+    var sen_district = lookup_district(SENATE_TOPOJSON, 'senate', lat, lng);
 
-    //var sen = SENATORS[sen_district];
-    //var rep = REPRESENTATIVES[rep_district];
+    if (sen_district === null) {
+        $not_found.show();
 
-    //$rep_result.html(JST.search_result(rep)); 
-    //$sen_result.html(JST.search_result(sen)); 
+        return;
+    }
+    
+    var rep_district = lookup_district(HOUSE_TOPOJSON, 'house', lat, lng);
+
+    var sen = SENATORS[sen_district];
+    var rep = REPRESENTATIVES[rep_district];
+
+    $rep_result.html(JST.search_result(rep)); 
+    $sen_result.html(JST.search_result(sen)); 
 }
 
 function on_did_you_mean_click() {
@@ -64,7 +56,7 @@ function on_did_you_mean_click() {
 
     $did_you_mean.hide();
 
-    lookup_district(latitude, longitude);
+    lookup_legislators(latitude, longitude);
 
     return false;
 }
@@ -114,7 +106,7 @@ function on_search_submit() {
 
                     var display_name = locale['display_name'].replace(', United States of America', '');
 
-                    lookup_district(locale['lat'], locale['lon']);
+                    lookup_legislators(locale['lat'], locale['lon']);
                 } else {
                     // If there are many results,
                     // show the did-you-mean path.
@@ -140,8 +132,12 @@ function on_search_submit() {
 }
 
 $(function() {
-    $.getJSON('live-data/senate_simplified_1000.geojson', function(data) {
-        SENATE_GEOJSON = data;
+    $.getJSON('live-data/senate_0.2.topojson', function(data) {
+        SENATE_TOPOJSON = data;
+    });
+
+    $.getJSON('live-data/house_0.1.topojson', function(data) {
+        HOUSE_TOPOJSON = data;
     });
 
     $search_form.on('submit', on_search_submit);
