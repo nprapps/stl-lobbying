@@ -38,8 +38,6 @@ def index():
 
     organizations_total_spending = sorted(organizations, key=lambda o: o.total_spending, reverse=True)[:10]
 
-    expenditures_by_category = Expenditure.select(Expenditure.category, fn.Sum(Expenditure.cost).alias('total_spending')).group_by(Expenditure.category).order_by(R('total_spending desc'))
-
     context['senators'] = Legislator.select().where(Legislator.office == 'Senator')
     context['representatives'] = Legislator.select().where(Legislator.office == 'Representative')
     context['expenditures'] = expenditures
@@ -49,7 +47,6 @@ def index():
     context['total_lobbyists'] = lobbyists.count()
     context['organizations_total_spending'] = organizations_total_spending
     context['legislators_total_spending'] = legislators_total_spending
-    context['expenditures_by_category'] = expenditures_by_category
 
     return render_template('index.html', **context)
 
