@@ -4,6 +4,7 @@ var $did_you_mean = $('.search .did-you-mean');
 var $did_you_mean_list = $did_you_mean.find('ul');
 var $not_found = $('.search .not-found');
 var $search_loading = $('.search .loading');
+var $search_results = $('.results');
 var $rep_result = $('.results .rep');
 var $sen_result = $('.results .sen');
 var $search_examples = $('.search .example');
@@ -30,8 +31,6 @@ function lookup_district(topology, name, lat, lng) {
 }
 
 function lookup_legislators(lat, lng) {
-    //alert(lat, lng);
-   
     var sen_district = lookup_district(SENATE_TOPOJSON, 'senate', lat, lng);
 
     if (sen_district === null) {
@@ -47,6 +46,8 @@ function lookup_legislators(lat, lng) {
 
     $rep_result.html(JST.search_result(rep)); 
     $sen_result.html(JST.search_result(sen)); 
+
+    $search_results.show();
 }
 
 function on_example_click() {
@@ -78,6 +79,7 @@ function on_search_submit() {
 
     $did_you_mean.hide();
     $not_found.hide();
+    $search_results.hide();
 
     var address = $search_address.val();
 
