@@ -12,6 +12,8 @@
                 <span class="date">{{ COPY.attribution.pubdate }}</span>
             </p>
             <p class="intro">{{ COPY.content.lorem_ipsum }}</p>
+
+            {% include '_search.html' %}
         </div>
     </div>
     <div class="bigbox">
@@ -31,7 +33,7 @@
     </div>
 </div>
 
-{% include '_search.html' %}
+
 {% endblock %}
 
 

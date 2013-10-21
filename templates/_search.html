@@ -2,22 +2,25 @@
     <form role="form">
         <div class="form-group">
             <label for="address">Search for your address to find your legislators</label>
-            <input type="text" id="address" class="form-control" placeholder="Columbia, MO" />
+            <div class="input-group input-group-lg">
+                <input type="text" id="address" class="form-control" placeholder="Columbia, MO" />
+                <span class="input-group-btn"><button type="submit" class="btn btn-default">Search</button></span>
+            </div>
             <span class="help-block"><a href="#" class="example slpr">3651 Olive St. St. Louis, MO 63108</a></span>
         </div>
-        <button type="submit" class="btn btn-default">Search</button>
+        
     </form>
 
-    <div class="loading">
+    <div class="loading hide">
         Loading...
     </div>
 
-    <div class="did-you-mean">
+    <div class="did-you-mean hide">
         <p>Did you mean...?</p>
         <ul></ul>
     </div>
 
-    <div class="not-found">
+    <div class="not-found hide">
         Not found.
     </div>
 
