@@ -4,11 +4,36 @@ var $did_you_mean = $('.search .did-you-mean');
 var $did_you_mean_list = $did_you_mean.find('ul');
 var $not_found = $('.search .not-found');
 var $search_loading = $('.search .loading');
+var $rep_result = $('.results .rep');
+var $sen_result = $('.results .sen');
 
 var geocode_xhr = null;
 
+var SENATORS = {
+    44: {
+        'display_name': 'Test McTest',
+        'slug': 'senator-ryan-silvey'
+    }
+};
+
+var REPRESENTATIVES = {
+    44: {
+        'display_name': 'Sir 44',
+        'slug': 'senator-ryan-silvey'
+    }
+};
+
 function lookup_district(lat, lng) {
-    alert(lat, lng);
+    //alert(lat, lng);
+   
+    var sen_district = 44;
+    var rep_district = 44;
+
+    var sen = SENATORS[sen_district];
+    var rep = REPRESENTATIVES[rep_district];
+
+    $rep_result.html(JST.search_result(rep)); 
+    $sen_result.html(JST.search_result(sen)); 
 }
 
 function on_did_you_mean_click() {
@@ -69,7 +94,7 @@ function on_search_submit() {
 
                     var display_name = locale['display_name'].replace(', United States of America', '');
 
-                    lookup_district(latitude, longitude);
+                    lookup_district(locale['lat'], locale['lon']);
                 } else {
                     // If there are many results,
                     // show the did-you-mean path.
