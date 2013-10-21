@@ -10,7 +10,7 @@ from peewee import fn, R
 
 import app_config
 import copytext
-from models import Expenditure, Legislator, Lobbyist, Organization
+from models import Expenditure, Legislator, Lobbyist, Group, Organization
 from render_utils import flatten_app_config, make_context
 
 app = Flask(app_config.PROJECT_NAME)
@@ -112,6 +112,52 @@ def _legislator(slug):
     context['legislator_rank'] = legislator_rank
 
     return render_template('legislator.html', **context)
+
+@app.route('/groups/<string:slug>/')
+def _group(slug):
+    """
+    Group detail page.
+    """
+    context = make_context()
+
+    groups = Group.select()
+    group = Group.get(Group.slug==slug)
+
+    for g in groups:
+        g.total_spending = g.expenditures.aggregate(fn.Sum(Expenditure.cost))
+
+    groups_total_spending = sorted(groups, key=lambda l: l.total_spending, reverse=True)
+    
+    group_rank = None
+
+    for i, g in enumerate(groups_total_spending):
+        if g.id == group.id:
+            group_rank = i + 1
+
+    org_spending = {}
+
+    for ex in group.expenditures:
+        if ex.organization in org_spending:
+            org_spending[ex.organization] += ex.cost
+        else:
+            org_spending[ex.organization] = ex.cost
+
+    top_organizations = []
+
+    for org, spending in org_spending.items():
+        org.total_spending = spending
+        top_organizations.append(org)
+
+    top_organizations = sorted(top_organizations, key=lambda o: o.total_spending, reverse=True)[:10]
+
+    context['group'] = group 
+    context['total_spending'] = sum([e.cost for e in group.expenditures]) 
+    context['total_expenditures'] = group.expenditures.count()
+    context['top_organizations'] = top_organizations 
+    context['group_rank'] = group_rank
+
+    return render_template('group.html', **context)
+
 
 @app.route('/organization/<string:slug>/')
 def _organization(slug):

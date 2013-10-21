@@ -250,7 +250,7 @@ def _render_slug_pages(models, view_name, output_path, compiled_includes):
 
     return compiled_includes 
 
-def render_pages(legislators=None, organizations=None):
+def render_pages():
     """
     Render the legislator and organization pages.
     """
@@ -267,15 +267,14 @@ def render_pages(legislators=None, organizations=None):
 
     compiled_includes = []
 
-    if not legislators:
-        legislators = models.Legislator.select()
-
+    legislators = models.Legislator.select()
     compiled_includes = _render_slug_pages(legislators, '_legislator', '.pages_html', compiled_includes)
 
-    if not organizations:
-        organizations = models.Organization.select()
-
+    organizations = models.Organization.select()
     compiled_includes = _render_slug_pages(organizations, '_organization', '.pages_html', compiled_includes)
+
+    groups = models.Group.select()
+    compiled_includes = _render_slug_pages(groups, '_group', '.pages_html', compiled_includes)
 
 def tests():
     """
