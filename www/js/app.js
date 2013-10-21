@@ -6,6 +6,7 @@ var $not_found = $('.search .not-found');
 var $search_loading = $('.search .loading');
 var $rep_result = $('.results .rep');
 var $sen_result = $('.results .sen');
+var $search_examples = $('.search .example');
 
 var geocode_xhr = null;
 
@@ -46,6 +47,15 @@ function lookup_legislators(lat, lng) {
 
     $rep_result.html(JST.search_result(rep)); 
     $sen_result.html(JST.search_result(sen)); 
+}
+
+function on_example_click() {
+    var address = $(this).text();
+    $search_address.val(address);
+
+    $search_form.submit();
+
+    return false;
 }
 
 function on_did_you_mean_click() {
@@ -142,4 +152,5 @@ $(function() {
 
     $search_form.on('submit', on_search_submit);
     $did_you_mean.on('click', 'li', on_did_you_mean_click);
+    $search_examples.on('click', on_example_click);
 });
