@@ -9,6 +9,7 @@ var $sen_result = $('.results .sen');
 
 var geocode_xhr = null;
 
+var SENATE_GEOJSON = null;
 var SENATORS = {
     44: {
         'display_name': 'Test McTest',
@@ -16,6 +17,7 @@ var SENATORS = {
     }
 };
 
+var HOUSE_GEOJSON = null;
 var REPRESENTATIVES = {
     44: {
         'display_name': 'Sir 44',
@@ -23,17 +25,35 @@ var REPRESENTATIVES = {
     }
 };
 
+function lookup_senate_district(lat, lng) {
+    var point = { 'type': 'Point', 'coordinates': [lng, lat] };
+    var count = SENATE_GEOJSON.features.length;
+
+    for (var i = 0; i < count; i++) {
+        var feature = SENATE_GEOJSON.features[i];
+        var polygon = { 'type': 'Polygon', 'coordinates': feature.geometry.coordinates };
+
+        if (gju.pointInPolygon(point, polygon) !== false) {
+            return feature.properties.DISTRICT;
+        }
+    };
+
+    return null;
+
+}
+
 function lookup_district(lat, lng) {
     //alert(lat, lng);
    
-    var sen_district = 44;
-    var rep_district = 44;
+    var sen_district = lookup_senate_district(lat, lng);
+    alert(sen_district);
+    //var rep_district = 44;
 
-    var sen = SENATORS[sen_district];
-    var rep = REPRESENTATIVES[rep_district];
+    //var sen = SENATORS[sen_district];
+    //var rep = REPRESENTATIVES[rep_district];
 
-    $rep_result.html(JST.search_result(rep)); 
-    $sen_result.html(JST.search_result(sen)); 
+    //$rep_result.html(JST.search_result(rep)); 
+    //$sen_result.html(JST.search_result(sen)); 
 }
 
 function on_did_you_mean_click() {
@@ -120,6 +140,10 @@ function on_search_submit() {
 }
 
 $(function() {
+    $.getJSON('live-data/senate_simplified_1000.geojson', function(data) {
+        SENATE_GEOJSON = data;
+    });
+
     $search_form.on('submit', on_search_submit);
     $did_you_mean.on('click', 'li', on_did_you_mean_click);
 });
