@@ -137,7 +137,7 @@ nav {
 			.detail & {
 				font-size: @font-size-base * 2;
 				a {
-					color: @text-color;
+					color: @brand-red;
 				}
 			}
 
@@ -176,7 +176,15 @@ nav {
 	
 }
 
-/* Homepage styles
+/* Global search module
+=================================================*/
+
+.search {
+
+}
+
+
+/* Homepage 
 =================================================*/
 .homepage {
 	.totals {
@@ -448,7 +456,7 @@ nav {
 	}
 }
 
-/* Detail page styles
+/* Detail page 
 =================================================*/
 
 .detail {
@@ -545,6 +553,22 @@ nav {
 			strong {
 				display: block;
 				font-size: @font-size-base * 2;
+				text-transform: none;
+			}
+		}
+	}
+}
+
+/* All legislators page 
+=================================================*/
+
+.legislator-list {
+	.legislator-table {
+		td {
+			small {
+				font-size: @font-size-base;
+				color: @gray-light;
+				margin-left: 5px;
 			}
 		}
 	}
