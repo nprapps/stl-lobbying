@@ -14,11 +14,25 @@
 {% block content %}
 <h1>{{ organization.name }}</h1>
 <p>All time spending: ${{ comma(total_spending) }}</p>
+<p>Total gifts sent: {{ comma(total_expenditures) }}</p>
+<p>Organization rank: {{ ordinal(organization_rank) }}</p>
 {% endblock %}
 
 
 {% block wide_content %}
 <div class="row">
+    <div class="top-legislators">
+        <h3>Top legislators</h3>
+        <table>
+            {% for legislator in top_legislators %}
+            <tr>
+                <td class="legislator"><a href="{{ legislator.url() }}">{{ legislator.display_name() }}</a></td>
+                <td class="spending"><div class="bar" style="width: {{ legislator.total_spending / (top_legislators|first).total_spending * 100 }}%">${{ legislator.total_spending }}</div></td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
     <div class="col-md-12">
         <div class="table-responsive">
         <table class="table table-striped gift-table">

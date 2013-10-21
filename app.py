@@ -164,9 +164,43 @@ def _organization(slug):
     context = make_context()
     
     organization = Organization.get(Organization.slug==slug)
+    organizations = Organization.select()
+
+    for o in organizations:
+        o.total_spending = o.expenditures.aggregate(fn.Sum(Expenditure.cost))
+
+    organizations_total_spending = sorted(organizations, key=lambda o: o.total_spending, reverse=True)
+    
+    organization_rank = None
+
+    for i, o in enumerate(organizations_total_spending):
+        if o.id == organization.id:
+            organization_rank = i + 1
+
+    legislator_spending = {}
+
+    for ex in organization.expenditures:
+        if ex.group:
+            continue
+
+        if ex.organization in legislator_spending:
+            legislator_spending[ex.legislator] += ex.cost
+        else:
+            legislator_spending[ex.legislator] = ex.cost
+
+    top_legislators = []
+
+    for legislator, spending in legislator_spending.items():
+        legislator.total_spending = spending
+        top_legislators.append(legislator)
+
+    top_legislators = sorted(top_legislators, key=lambda o: o.total_spending, reverse=True)[:10]
 
     context['organization'] = organization
     context['total_spending'] = sum([e.cost for e in organization.expenditures]) 
+    context['total_expenditures'] = legislator.expenditures.count()
+    context['top_legislators'] = top_legislators 
+    context['organization_rank'] = organization_rank
 
     return render_template('organization.html', **context)
 
