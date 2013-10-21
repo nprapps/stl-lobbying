@@ -20,7 +20,7 @@
 <div class="row">
     <div class="col-md-6">
         <h2>House</h2>
-        <table class="table table-striped gift-table">
+        <table class="table table-striped legislator-table">
             <thead>
                 <tr>
                     <th class="recipient">Name</th>
@@ -29,7 +29,7 @@
             <tbody>
             {% for legislator in house_list %}
                 <tr>
-                    <td class="name"><a href="{{ legislator.url() }}">{{ legislator.display_name() }}</a></td>
+                    <td class="name"><a href="{{ legislator.url() }}">{{ legislator.display_name() }} <small>{{ legislator.party|replace("Republican", "R")|replace("Democratic", "D") }} &ndash; {{ legislator.district }}</small></a></td>
                 </tr>
             {% endfor %}
             </tbody>
@@ -37,7 +37,7 @@
     </div>
     <div class="col-md-6">
         <h2>Senate</h2>
-        <table class="table table-striped gift-table">
+        <table class="table table-striped legislator-table">
             <thead>
                 <tr>
                     <th class="recipient">Name</th>
@@ -46,7 +46,7 @@
             <tbody>
             {% for legislator in senate_list %}
                 <tr>
-                    <td class="name"><a href="{{ legislator.url() }}">{{ legislator.display_name() }}</a></td>
+                    <td class="name"><a href="{{ legislator.url() }}">{{ legislator.display_name() }} <small>{{ legislator.party|replace("Republican", "R")|replace("Democratic", "D") }} &ndash; {{ legislator.district }}</small></a></td>
                 </tr>
             {% endfor %}
             </tbody>
