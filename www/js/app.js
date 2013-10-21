@@ -7,6 +7,23 @@ var $search_loading = $('.search .loading');
 
 var geocode_xhr = null;
 
+function lookup_district(lat, lng) {
+    alert(lat, lng);
+}
+
+function on_did_you_mean_click() {
+    var $this = $(this);
+    var display_name = $this.data('display-name');
+    var latitude = $this.data('latitude');
+    var longitude = $this.data('longitude');
+
+    $did_you_mean.hide();
+
+    lookup_district(latitude, longitude);
+
+    return false;
+}
+
 function on_search_submit() {
     if ($search_address.val() === '') {
         return false;
@@ -52,19 +69,19 @@ function on_search_submit() {
 
                     var display_name = locale['display_name'].replace(', United States of America', '');
 
-                    alert(display_name);
+                    lookup_district(latitude, longitude);
                 } else {
                     // If there are many results,
                     // show the did-you-mean path.
                     $did_you_mean_list.empty();
 
-                    /*_.each(data, function(locale) {
+                    _.each(data, function(locale) {
                         locale['display_name'] = locale['display_name'].replace(', United States of America', '');
                         var context = $.extend(APP_CONFIG, locale);
-                        var html = JST.did_you_mean_item(context);
+                        var html = JST.did_you_mean(context);
 
                         $did_you_mean_list.append(html);
-                    });*/
+                    });
 
                     $did_you_mean.show();
                 }
@@ -79,4 +96,5 @@ function on_search_submit() {
 
 $(function() {
     $search_form.on('submit', on_search_submit);
+    $did_you_mean.on('click', 'li', on_did_you_mean_click);
 });
