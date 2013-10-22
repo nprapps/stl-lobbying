@@ -273,9 +273,6 @@ def render_pages():
     organizations = models.Organization.select()
     compiled_includes = _render_slug_pages(organizations, '_organization', '.pages_html', compiled_includes)
 
-    groups = models.Group.select()
-    compiled_includes = _render_slug_pages(groups, '_group', '.pages_html', compiled_includes)
-
 def tests():
     """
     Run Python unit tests.

@@ -106,9 +106,6 @@ class Group(SlugModel):
     class Meta:
         database = database
 
-    def url(self):
-        return '%s/groups/%s/' % (app_config.S3_BASE_URL, self.slug)
-
 class Organization(SlugModel):
     slug_fields = ['name']
 
