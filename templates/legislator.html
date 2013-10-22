@@ -41,6 +41,17 @@
             {% endfor %}
         </table>
     </div>
+    <div class="top-categories">
+        <h3>Top categories</h3>
+        <table>
+            {% for category, total_spending in top_categories %}
+            <tr>
+                <td class="category">{{ category }}</td>
+                <td class="spending"><div class="bar" style="width: {{ total_spending / (top_categories|first).1 * 100 }}%">${{ total_spending }}</div></td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
     <div class="table-responsive gift-table">
     <table class="table table-striped">
         <thead>

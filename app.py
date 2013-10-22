@@ -107,18 +107,26 @@ def _legislator(slug):
             org_spending[ex.organization] = ex.cost
 
     top_organizations = []
+    top_categories = {}
 
     for org, spending in org_spending.items():
         org.total_spending = spending
         top_organizations.append(org)
 
+        if org.category in top_categories:
+            top_categories[org.category] += org.total_spending
+        else:
+            top_categories[org.category] = org.total_spending
+
     top_organizations = sorted(top_organizations, key=lambda o: o.total_spending, reverse=True)[:10]
+    top_categories = sorted(top_categories.items(), key=lambda c: c[1], reverse=True)[:10]
 
     context['legislator'] = legislator
     context['total_spending'] = sum([e.cost for e in legislator.expenditures]) 
     context['total_expenditures'] = legislator.expenditures.count()
     context['top_organizations'] = top_organizations 
     context['legislator_rank'] = legislator_rank
+    context['top_categories'] = top_categories
 
     return render_template('legislator.html', **context)
 
