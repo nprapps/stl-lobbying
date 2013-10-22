@@ -18,7 +18,10 @@ from render_utils import flatten_app_config, make_context
 
 app = Flask(app_config.PROJECT_NAME)
 
-# Example application views
+def get_ago():
+    today = datetime.datetime.today()
+    return datetime.date(today.year - 2, today.month + 1, 1)
+
 @app.route('/')
 def index():
     """
@@ -26,8 +29,7 @@ def index():
     """
     context = make_context()
 
-    today = datetime.datetime.today()
-    ago = datetime.date(today.year - 2, today.month + 1, 1)
+    ago = get_ago()
 
     expenditures = Expenditure.select().where(Expenditure.report_period >= ago)
     organizations = Organization.select().join(Expenditure).where(Expenditure.report_period >= ago).distinct()
@@ -150,11 +152,13 @@ def _legislator(slug):
     """
     context = make_context()
 
+    ago = get_ago()
+
     legislators = Legislator.select()
     legislator = Legislator.get(Legislator.slug==slug)
 
     for l in legislators:
-        l.total_spending = l.expenditures.aggregate(fn.Sum(Expenditure.cost))
+        l.total_spending = l.expenditures.where(Expenditure.report_period >= ago).aggregate(fn.Sum(Expenditure.cost))
 
     legislators_total_spending = sorted(legislators, key=lambda l: l.total_spending, reverse=True)
     
@@ -189,7 +193,9 @@ def _legislator(slug):
 
     context['legislator'] = legislator
     context['total_spending'] = sum([e.cost for e in legislator.expenditures]) 
+    context['total_spending_recent'] = sum([e.cost for e in legislator.expenditures.where(Expenditure.report_period >= ago)]) 
     context['total_expenditures'] = legislator.expenditures.count()
+    context['total_expenditures_recent'] = legislator.expenditures.where(Expenditure.report_period >= ago).count()
     context['top_organizations'] = top_organizations 
     context['legislator_rank'] = legislator_rank
     context['top_categories'] = top_categories
@@ -202,12 +208,14 @@ def _organization(slug):
     Organization detail page.
     """
     context = make_context()
+
+    ago = get_ago()
     
     organization = Organization.get(Organization.slug==slug)
     organizations = Organization.select()
 
     for o in organizations:
-        o.total_spending = o.expenditures.aggregate(fn.Sum(Expenditure.cost))
+        o.total_spending = o.expenditures.where(Expenditure.report_period >= ago).aggregate(fn.Sum(Expenditure.cost))
 
     organizations_total_spending = sorted(organizations, key=lambda o: o.total_spending, reverse=True)
     
@@ -238,7 +246,9 @@ def _organization(slug):
 
     context['organization'] = organization
     context['total_spending'] = sum([e.cost for e in organization.expenditures]) 
+    context['total_spending_recent'] = sum([e.cost for e in organization.expenditures.where(Expenditure.report_period >= ago)]) 
     context['total_expenditures'] = organization.expenditures.count()
+    context['total_expenditures_recent'] = organization.expenditures.where(Expenditure.report_period >= ago).count()
     context['top_legislators'] = top_legislators 
     context['organization_rank'] = organization_rank
 

@@ -26,9 +26,11 @@
 {% block wide_content %}
 <div class="row">
     <ul class="list-unstyled stats">
-        <li class="total-amount">Total received, all time: <strong>{{ total_spending|format_currency }}</strong></li>
-        <li class="gift-count">Total gifts received: <strong>{{ comma(total_expenditures) }}</strong></li>
-        <li class="rank">Legislator rank: <strong>{{ ordinal(legislator_rank) }}</strong></li>
+        <li class="total-amount">Total received (all time): <strong>{{ total_spending|format_currency }}</strong></li>
+        <li class="total-amount">Total received (since TKTK): <strong>{{ total_spending_recent|format_currency }}</strong></li>
+        <li class="gift-count">Total gifts received (all_time): <strong>{{ comma(total_expenditures) }}</strong></li>
+        <li class="gift-count">Total gifts received (since TKTK): <strong>{{ comma(total_expenditures_recent) }}</strong></li>
+        <li class="rank">Legislator rank (since TKTK): <strong>{{ ordinal(legislator_rank) }}</strong></li>
     </ul>
     <div class="leaderboard">
         <div class="leaderboard-wrapper">
