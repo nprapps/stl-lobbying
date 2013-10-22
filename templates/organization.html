@@ -20,7 +20,7 @@
 {% block wide_content %}
 <div class="row">
     <ul class="list-unstyled stats">
-        <li>All time spending: <strong>${{ total_spending|format_currency }}</strong></li>
+        <li>All time spending: <strong>{{ total_spending|format_currency }}</strong></li>
         <li>Total gifts sent: <strong>{{ comma(total_expenditures) }}</strong></li>
         <li>Organization rank: <strong>{{ ordinal(organization_rank) }}</strong></li>
     </ul>
