@@ -77,5 +77,21 @@
 
         <p><a href="{{ S3_BASE_URL }}/legislators/">View all legislators &raquo;</a></p>
     </div>
+    <div class="categories">
+        <h3>Top categories by amount spent (all time)</h3>
+        <table>
+            <tbody>
+            {% for category, total_spending in categories_total_spending %}
+            <tr>
+                <td class="category">{{ category }}</td>
+                <td class="spending"><div class="bar" style="width: {{ total_spending / (categories_total_spending|first).1 * 100 }}%">${{ comma(total_spending) }}</div> </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <p><a href="{{ S3_BASE_URL }}/legislators/">View all legislators &raquo;</a></p>
+    </div>
+
 </div>
 {% endblock %}

@@ -113,6 +113,7 @@ class Organization(SlugModel):
     slug_fields = ['name']
 
     name = CharField()
+    category = CharField()
     
     class Meta:
         database = database
@@ -207,7 +208,24 @@ class LobbyLoader:
             reader.next()
 
             for row in reader:
-                self.organization_name_lookup[row[0].strip()] = row[1].strip()
+                row = map(unicode.strip, row)
+
+                ethics_name = row[0]
+                correct_name = row[1]
+                category = row[2]
+
+                if not correct_name:
+                    correct_name = ethics_name
+
+                self.organization_name_lookup[ethics_name] = correct_name
+
+                try:
+                    Organization.get(Organization.name == correct_name)
+                except Organization.DoesNotExist:
+                    Organization.create(
+                        name=correct_name,
+                        category=category
+                    )
 
     def load_lobbyist(self, name):
         """
@@ -235,21 +253,12 @@ class LobbyLoader:
 
             if lookup:
                 name = lookup
+        
+            return Organization.get(Organization.name==name)
         else:
-            self.warn('Organization name "%s" not in lookup table' % name)
+            self.error('Organization name "%s" not in lookup table' % name)
 
-        try:
-            return False, Organization.get(Organization.name==name)
-        except Organization.DoesNotExist:
-            pass
-
-        organization = Organization(
-            name=name
-        )
-
-        organization.save()
-
-        return True, organization
+            return None
 
     def load_group(self, name):
         """
@@ -426,10 +435,10 @@ class LobbyLoader:
             cost = float(cost)
 
             # Organization
-            created, organization = self.load_organization(row['Principal'])
+            organization = self.load_organization(row['Principal'])
 
-            if created:
-                self.organizations_created += 1
+            if not organization:
+                continue
 
             # Create it!
             self.expenditures.append(Expenditure(
@@ -512,10 +521,10 @@ class LobbyLoader:
             cost = float(cost)
 
             # Organization
-            created, organization = self.load_organization(row['Principal'])
+            organization = self.load_organization(row['Principal'])
 
-            if created:
-                self.organizations_created += 1
+            if not organization:
+                continue
 
             # Create it!
             self.expenditures.append(Expenditure(
@@ -583,4 +592,3 @@ class LobbyLoader:
         print 'Imported %i expenditures' % len(self.expenditures)
         print 'Created %i lobbyists' % self.lobbyists_created
         print 'Created %i legislators' % self.legislators_created
-        print 'Created %i organizations' % self.organizations_created

@@ -6,7 +6,7 @@ import urllib
 
 import envoy
 from flask import Flask, Markup, abort, render_template
-from peewee import fn, R
+from peewee import fn
 
 import app_config
 import copytext
@@ -32,11 +32,22 @@ def index():
         legislator.total_spending = legislator.expenditures.aggregate(fn.Sum(Expenditure.cost))
 
     legislators_total_spending = sorted(legislators, key=lambda l: l.total_spending, reverse=True)[:10]
+    
+    categories_total_spending = {}
 
     for org in organizations:
         org.total_spending = org.expenditures.aggregate(fn.Sum(Expenditure.cost))
 
+        if not org.total_spending:
+            continue
+
+        if org.category in categories_total_spending:
+            categories_total_spending[org.category] += org.total_spending
+        else:
+            categories_total_spending[org.category] = org.total_spending
+
     organizations_total_spending = sorted(organizations, key=lambda o: o.total_spending, reverse=True)[:10]
+    categories_total_spending = sorted(categories_total_spending.items(), key=lambda c: c[1], reverse=True)[:10]
 
     context['senators'] = Legislator.select().where(Legislator.office == 'Senator')
     context['representatives'] = Legislator.select().where(Legislator.office == 'Representative')
@@ -47,6 +58,7 @@ def index():
     context['total_lobbyists'] = lobbyists.count()
     context['organizations_total_spending'] = organizations_total_spending
     context['legislators_total_spending'] = legislators_total_spending
+    context['categories_total_spending'] = categories_total_spending
 
     return render_template('index.html', **context)
 
