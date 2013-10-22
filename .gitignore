@@ -50,3 +50,4 @@ peewee.db
 data/party_lookup.csv
 data/organization_name_lookup.csv
 data/legislator_demographics.csv
+www/download
