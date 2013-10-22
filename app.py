@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import cStringIO
+import datetime
 import json
 from mimetypes import guess_type
 import urllib
@@ -25,20 +26,23 @@ def index():
     """
     context = make_context()
 
-    expenditures = Expenditure.select()
-    organizations = Organization.select()
-    lobbyists = Lobbyist.select()
-    legislators = Legislator.select()
+    today = datetime.datetime.today()
+    ago = datetime.date(today.year - 2, today.month + 1, 1)
+
+    expenditures = Expenditure.select().where(Expenditure.report_period >= ago)
+    organizations = Organization.select().join(Expenditure).where(Expenditure.report_period >= ago).distinct()
+    lobbyists = Lobbyist.select().join(Expenditure).where(Expenditure.report_period >= ago).distinct()
+    legislators = Legislator.select().join(Expenditure).where(Expenditure.report_period >= ago).distinct()
 
     for legislator in legislators:
-        legislator.total_spending = legislator.expenditures.aggregate(fn.Sum(Expenditure.cost))
+        legislator.total_spending = legislator.expenditures.where(Expenditure.report_period >= ago).aggregate(fn.Sum(Expenditure.cost))
 
     legislators_total_spending = sorted(legislators, key=lambda l: l.total_spending, reverse=True)[:10]
     
     categories_total_spending = {}
 
     for org in organizations:
-        org.total_spending = org.expenditures.aggregate(fn.Sum(Expenditure.cost))
+        org.total_spending = org.expenditures.where(Expenditure.report_period >= ago).aggregate(fn.Sum(Expenditure.cost))
 
         if not org.total_spending:
             continue

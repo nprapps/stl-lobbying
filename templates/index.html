@@ -43,14 +43,14 @@
 
 {% block wide_content %}
 <div class="totals row">
-        <p class="total-spending">Total spending (all time) <strong>${{ comma(total_spending) }}</strong></p>
-        <p class="total-gifts">Total expenditures/gifts (all time) <strong>{{ comma(total_expenditures) }}</strong></p>
-        <p class="total-orgs">Total organizations lobbying (all time) <strong>{{ comma(total_organizations) }}</strong></p>
-        <p class="total-lobbyists">Total lobbyists active (all time) <strong>{{ comma(total_lobbyists) }}</strong></p>
+        <p class="total-spending">Total spending (Since TKTK) <strong>${{ comma(total_spending) }}</strong></p>
+        <p class="total-gifts">Total gifts (Since TKTK) <strong>{{ comma(total_expenditures) }}</strong></p>
+        <p class="total-orgs">Total lobbying organizations (Since TKTK) <strong>{{ comma(total_organizations) }}</strong></p>
+        <p class="total-lobbyists">Total active lobbyists (Since TKTK) <strong>{{ comma(total_lobbyists) }}</strong></p>
 </div>
 <div class="top-entities row">
     <div class="organizations">
-        <h3>Top organizations by spending (all time)</h3>
+        <h3>Organizations spending the most (Since TKTK)</h3>
         <table>
             <tbody>
             {% for org in organizations_total_spending %}
@@ -63,7 +63,7 @@
         </table>
     </div>
     <div class="legislators">
-        <h3>Top legislators by amount received (all time)</h3>
+        <h3>Legislators receiving the most (Since TKTK)</h3>
         <table>
             <tbody>
             {% for legislator in legislators_total_spending %}
@@ -78,7 +78,7 @@
         <p><a href="{{ S3_BASE_URL }}/legislators/">View all legislators &raquo;</a></p>
     </div>
     <div class="categories">
-        <h3>Top categories by amount spent (all time)</h3>
+        <h3>Industries spending the most (Since TKTK)</h3>
         <table>
             <tbody>
             {% for category, total_spending in categories_total_spending %}
