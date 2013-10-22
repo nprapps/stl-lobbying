@@ -13,30 +13,33 @@
 
 {% block content %}
 <h1>{{ organization.name }}</h1>
-<p>Industry: {{ organization.category }}</p>
-<p>All time spending: ${{ comma(total_spending) }}</p>
-<p>Total gifts sent: {{ comma(total_expenditures) }}</p>
-<p>Organization rank: {{ ordinal(organization_rank) }}</p>
+<p>Industry: <strong>{{ organization.category }}</strong></p>
 {% endblock %}
 
 
 {% block wide_content %}
 <div class="row">
-    <div class="top-legislators">
-        <h3>Top legislators</h3>
-        <table>
-            {% for legislator in top_legislators %}
-            <tr>
-                <td class="legislator"><a href="{{ legislator.url() }}">{{ legislator.display_name() }}</a></td>
-                <td class="spending"><div class="bar" style="width: {{ legislator.total_spending / (top_legislators|first).total_spending * 100 }}%">${{ legislator.total_spending }}</div></td>
-            </tr>
-            {% endfor %}
-        </table>
+    <ul class="list-unstyled stats">
+        <li>All time spending: <strong>${{ comma(total_spending) }}</strong></li>
+        <li>Total gifts sent: <strong>{{ comma(total_expenditures) }}</strong></li>
+        <li>Organization rank: <strong>{{ ordinal(organization_rank) }}</strong></li>
+    </ul>
+    <div class="leaderboard">
+        <div class="top-legislators">
+            <h3>Top legislators</h3>
+            <table>
+                {% for legislator in top_legislators %}
+                <tr>
+                    <td class="legislator"><a href="{{ legislator.url() }}">{{ legislator.display_name() }}</a></td>
+                    <td class="spending"><div class="bar" style="width: {{ legislator.total_spending / (top_legislators|first).total_spending * 100 }}%">${{ legislator.total_spending }}</div></td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
     </div>
 
-    <div class="col-md-12">
-        <div class="table-responsive">
-        <table class="table table-striped gift-table">
+    <div class="table-responsive gift-table">
+        <table class="table table-striped">
             <thead>
                 <tr>
                     <th class="date">Date</th>
@@ -58,7 +61,6 @@
             {% endfor %}
             </tbody>
         </table>
-    </div>
     </div>
 </div>
 {% endblock %}

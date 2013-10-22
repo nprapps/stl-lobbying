@@ -30,50 +30,53 @@
         <li class="gift-count">Total gifts received: <strong>{{ comma(total_expenditures) }}</strong></li>
         <li class="rank">Legislator rank: <strong>{{ ordinal(legislator_rank) }}</strong></li>
     </ul>
-    <div class="top-organizations">
-        <h3>Top organizations</h3>
-        <table>
-            {% for org in top_organizations %}
-            <tr>
-                <td class="organization"><a href="{{ org.url() }}">{{ org.name }}</a></td>
-                <td class="spending"><div class="bar" style="width: {{ org.total_spending / (top_organizations|first).total_spending * 100 }}%">${{ org.total_spending }}</div></td>
-            </tr>
-            {% endfor %}
-        </table>
-    </div>
-    <div class="top-categories">
-        <h3>Top categories</h3>
-        <table>
-            {% for category, total_spending in top_categories %}
-            <tr>
-                <td class="category">{{ category }}</td>
-                <td class="spending"><div class="bar" style="width: {{ total_spending / (top_categories|first).1 * 100 }}%">${{ total_spending }}</div></td>
-            </tr>
-            {% endfor %}
-        </table>
+    <div class="leaderboard">
+        <div class="top-organizations">
+            <h3>Top organizations</h3>
+            <table>
+                {% for org in top_organizations %}
+                <tr>
+                    <td class="organization"><a href="{{ org.url() }}">{{ org.name }}</a></td>
+                    <td class="spending"><div class="bar" style="width: {{ org.total_spending / (top_organizations|first).total_spending * 100 }}%">${{ org.total_spending }}</div></td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+        <div class="top-categories">
+            <h3>Top categories</h3>
+            <table>
+                {% for category, total_spending in top_categories %}
+                <tr>
+                    <td class="category">{{ category }}</td>
+                    <td class="spending"><div class="bar" style="width: {{ total_spending / (top_categories|first).1 * 100 }}%">${{ total_spending }}</div></td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
     </div>
     <div class="table-responsive gift-table">
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th class="date">Date</th>
-                <th class="recipient">Organization</th>
-                <th class="expenditure">Expenditure</th>
-                <th class="description">Description</th>
-                <th class="category">Category</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for ex in legislator.expenditures %}
-            <tr>
-                <td class="date">{{ ex.event_date.strftime('%B %e, %Y') }}</td>
-                <td class="recipient">{% if ex.organization %}<a href="{{ ex.organization.url() }}">{{ ex.organization.name }}</a>{% endif %}</td>
-                <td class="expenditure">${{ comma(ex.cost) }}</td>
-                <td class="description">{{ ex.description }}</td>
-                <td class="category">{{ ex.category }}</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th class="date">Date</th>
+                    <th class="recipient">Organization</th>
+                    <th class="expenditure">Expenditure</th>
+                    <th class="description">Description</th>
+                    <th class="category">Category</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for ex in legislator.expenditures %}
+                <tr>
+                    <td class="date">{{ ex.event_date.strftime('%B %e, %Y') }}</td>
+                    <td class="recipient">{% if ex.organization %}<a href="{{ ex.organization.url() }}">{{ ex.organization.name }}</a>{% endif %}</td>
+                    <td class="expenditure">${{ comma(ex.cost) }}</td>
+                    <td class="description">{{ ex.description }}</td>
+                    <td class="category">{{ ex.category }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 {% endblock %}

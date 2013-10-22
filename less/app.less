@@ -330,6 +330,12 @@ nav {
 				&.organization,
 				&.legislator {
 					font-size: 11px;
+
+					small {
+						display: block;
+						color: @gray-light;
+						font-size: 11px;
+					}
 				}
 
 				&.spending {
@@ -456,33 +462,18 @@ nav {
 	}
 }
 
-/* Detail page 
+/* Detail pages
 =================================================*/
 
 .detail {
-	.gift-table {
-		th {
-			border-bottom: none;
-		}
-
-		th,
-		td {
-			&.expenditure {
-				text-align: right;
-			}
-
-			&.date {
-				white-space: nowrap;
-			}
-
-			&.description {
-				width: 33.33333%
-			}
-		}
+	.leaderboard {
+		.make-lg-column(4);
 	}
-}
 
-.legislator-detail {
+	.gift-table {
+		.make-lg-column(8);
+	}
+
 
 	.info {
 		margin-bottom: @line-height-computed;
@@ -503,27 +494,6 @@ nav {
 				padding-left: 0;
 			}
 		}
-	}
-
-	.top-organizations {
-		.make-lg-column(4);
-
-		.organization {
-			font-size: 11px;
-			width: 40%;
-			text-align: right;
-			padding-right: 5px;
-			line-height: 1.1;
-		}
-
-		.spending {
-			.bar {
-				height: 36px;
-			}
-		}
-	}
-	.gift-table {
-		.make-lg-column(8);
 	}
 
 	.stats {
@@ -557,7 +527,57 @@ nav {
 			}
 		}
 	}
+
+	.top-organizations,
+	.top-legislators,
+	.top-categories {
+		.organization,
+		.legislator,
+		.category {
+			font-size: 11px;
+			width: 40%;
+			text-align: right;
+			padding-right: 5px;
+			line-height: 1.1;
+		}
+	}
+
+	.gift-table {
+		th {
+			border-bottom: none;
+		}
+
+		th,
+		td {
+			&.expenditure {
+				text-align: right;
+			}
+
+			&.date {
+				white-space: nowrap;
+			}
+
+			&.description {
+				width: 33.33333%
+			}
+		}
+	}
 }
+
+.legislator-detail {
+
+	.top-organizations {
+
+		.spending {
+			.bar {
+				height: 36px;
+			}
+		}
+	}
+}
+
+
+
 
 /* All legislators page 
 =================================================*/

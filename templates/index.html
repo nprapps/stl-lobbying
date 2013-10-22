@@ -55,7 +55,7 @@
             <tbody>
             {% for org in organizations_total_spending %}
             <tr>
-                <td class="organization"><a href="{{ org.url() }}">{{ org.name }}</a></td>
+                <td class="organization"><a href="{{ org.url() }}">{{ org.name }} <small>{{ org.category }}</small></a></td>
                 <td class="spending"><div class="bar" style="width: {{ org.total_spending / (organizations_total_spending|first).total_spending * 100 }}%">${{ comma(org.total_spending) }}</div> </td>
             </tr>
             {% endfor %}
