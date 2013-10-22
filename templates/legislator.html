@@ -14,9 +14,10 @@
 {% block content %}
 <h1>{{ legislator.display_name() }}</h1>
 <ul class="list-unstyled info">
-    <li>{{ legislator.party|replace("Republican", "R")|replace("Democratic", "D") }} &ndash; {{ legislator.district }}</li>
-    {% if legislator.hometown %}<li>{{ legislator.hometown }}</li>{% endif %}
+    <li>{{ legislator.party }}</li>
+    <li>{{ ordinal(legislator.district) }} district</li>
     <li>Elected in {{ legislator.year_elected }}</li>
+    {% if legislator.hometown %}<li>{{ legislator.hometown }}</li>{% endif %}
     {% if legislator.phone %}<li>{{ legislator.phone }}</li>{% endif %}
 </ul>
 
