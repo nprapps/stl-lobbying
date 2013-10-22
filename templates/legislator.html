@@ -76,7 +76,7 @@
                     <td class="date">{{ ex.event_date.strftime('%B %e, %Y') }}</td>
                     <td class="recipient">{% if ex.organization %}<a href="{{ ex.organization.url() }}">{{ ex.organization.name }}</a>{% endif %}</td>
                     <td class="expenditure">{{ ex.cost|format_currency }}</td>
-                    <td class="description">{{ ex.description }}</td>
+                    <td class="description">{% if ex.description %}{{ ex.description }}{% else %}<em>Not disclosed</em>{% endif %}</td>
                     <td class="category">{{ ex.category }}</td>
                 </tr>
             {% endfor %}
