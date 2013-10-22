@@ -192,6 +192,7 @@ def _legislator(slug):
     top_categories = sorted(top_categories.items(), key=lambda c: c[1], reverse=True)[:10]
 
     context['legislator'] = legislator
+    context['expenditures'] = legislator.expenditures.order_by(Expenditure.cost.desc())
     context['total_spending'] = sum([e.cost for e in legislator.expenditures]) 
     context['total_spending_recent'] = sum([e.cost for e in legislator.expenditures.where(Expenditure.report_period >= ago)]) 
     context['total_expenditures'] = legislator.expenditures.count()
@@ -245,6 +246,7 @@ def _organization(slug):
     top_legislators = sorted(top_legislators, key=lambda o: o.total_spending, reverse=True)[:10]
 
     context['organization'] = organization
+    context['expenditures'] = organization.expenditures.order_by(Expenditure.cost.desc())
     context['total_spending'] = sum([e.cost for e in organization.expenditures]) 
     context['total_spending_recent'] = sum([e.cost for e in organization.expenditures.where(Expenditure.report_period >= ago)]) 
     context['total_expenditures'] = organization.expenditures.count()

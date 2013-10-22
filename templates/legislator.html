@@ -70,7 +70,7 @@
                 </tr>
             </thead>
             <tbody>
-            {% for ex in legislator.expenditures %}
+            {% for ex in expenditures %}
                 <tr>
                     <td class="date">{{ ex.event_date.strftime('%B %e, %Y') }}</td>
                     <td class="recipient">{% if ex.organization %}<a href="{{ ex.organization.url() }}">{{ ex.organization.name }}</a>{% endif %}</td>
