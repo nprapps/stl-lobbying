@@ -51,7 +51,7 @@ def index():
     return render_template('index.html', **context)
 
 @app.route('/legislators/')
-def _legislators():
+def legislators():
     """
     Legislator list page.
     """
@@ -203,24 +203,6 @@ def _organization(slug):
     context['organization_rank'] = organization_rank
 
     return render_template('organization.html', **context)
-
-@app.route('/widget.html')
-def widget():
-    """
-    Embeddable widget example page.
-    """
-    return render_template('widget.html', **make_context())
-
-@app.route('/test_widget.html')
-def test_widget():
-    """
-    Example page displaying widget at different embed sizes.
-    """
-    return render_template('test_widget.html', **make_context())
-
-@app.route('/test/test.html')
-def test_dir():
-    return render_template('index.html', **make_context())
 
 # Render LESS files on-demand
 @app.route('/less/<string:filename>')

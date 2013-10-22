@@ -29,6 +29,7 @@ pip-log.txt
 
 .DS_store
 .gzip
+.pages_gzip
 
 node_modules
 www/*.html
@@ -44,6 +45,7 @@ stl-lobbying.db
 .pages_html
 www/js/copy.js
 www/test/test.html
+www/legislators
 peewee.db
 data/party_lookup.csv
 data/organization_name_lookup.csv
