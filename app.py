@@ -235,6 +235,10 @@ def urlencode_filter(s):
 
     return Markup(s)
 
+@app.template_filter('format_currency')
+def format_currency(value):
+    return "${:,.2f}".format(value)
+
 if __name__ == '__main__':
     import argparse
 
