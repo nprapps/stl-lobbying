@@ -198,7 +198,7 @@ def _organization(slug):
 
     context['organization'] = organization
     context['total_spending'] = sum([e.cost for e in organization.expenditures]) 
-    context['total_expenditures'] = legislator.expenditures.count()
+    context['total_expenditures'] = organization.expenditures.count()
     context['top_legislators'] = top_legislators 
     context['organization_rank'] = organization_rank
 

@@ -144,11 +144,11 @@ function on_search_submit() {
 }
 
 $(function() {
-    $.getJSON('live-data/senate_0.2.topojson', function(data) {
+    $.getJSON('static-data/senate_0.2.topojson', function(data) {
         SENATE_TOPOJSON = data;
     });
 
-    $.getJSON('live-data/house_0.1.topojson', function(data) {
+    $.getJSON('static-data/house_0.1.topojson', function(data) {
         HOUSE_TOPOJSON = data;
     });
 
