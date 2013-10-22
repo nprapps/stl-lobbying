@@ -59,9 +59,10 @@ class Lobbyist(SlugModel):
     """
     A lobbyist.
     """
-    slug_fields = ['name']
+    slug_fields = ['first_name', 'last_name']
 
-    name = CharField()
+    first_name = CharField()
+    last_name = CharField()
     
     class Meta:
         database = database
@@ -224,17 +225,18 @@ class LobbyLoader:
                         category=category
                     )
 
-    def load_lobbyist(self, name):
+    def load_lobbyist(self, first_name, last_name):
         """
         Get or create a lobbyist.
         """
         try:
-            return False, Lobbyist.get(Lobbyist.name==name)
+            return False, Lobbyist.get(Lobbyist.first_name==first_name, Lobbyist.last_name==last_name)
         except Lobbyist.DoesNotExist:
             pass
 
         lobbyist = Lobbyist(
-            name=name
+            first_name=first_name,
+            last_name=last_name
         )
 
         lobbyist.save()
@@ -353,7 +355,7 @@ class LobbyLoader:
                 continue
 
             # Lobbyist
-            created, lobbyist = self.load_lobbyist('%s %s' % (row['Lob F Name'], row['Lob L Name']))
+            created, lobbyist = self.load_lobbyist(row['Lob F Name'], row['Lob L Name'])
 
             if created:
                 self.lobbyists_created += 1 
@@ -480,7 +482,7 @@ class LobbyLoader:
                 continue
 
             # Lobbyist
-            created, lobbyist = self.load_lobbyist('%s %s' % (row['Lob F Name'], row['Lob L Name']))
+            created, lobbyist = self.load_lobbyist(row['Lob F Name'], row['Lob L Name'])
 
             if created:
                 self.lobbyists_created += 1 

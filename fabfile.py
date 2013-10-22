@@ -186,7 +186,7 @@ def render():
 
         if rule_string.endswith('/'):
             filename = 'www' + rule_string + 'index.html'
-        elif rule_string.endswith('.html'):
+        elif rule_string.endswith('.html') or rule_string.endswith('.csv') or rule_string.endswith('.json'):
             filename = 'www' + rule_string
         else:
             print 'Skipping %s' % name

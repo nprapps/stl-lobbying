@@ -1,16 +1,19 @@
 #!/usr/bin/env python
 
+import cStringIO
+import datetime
 import json
 from mimetypes import guess_type
 import urllib
 
+from  csvkit.unicsv import  UnicodeCSVDictWriter
 import envoy
 from flask import Flask, Markup, abort, render_template
 from peewee import fn
 
 import app_config
 import copytext
-from models import Expenditure, Legislator, Lobbyist, Group, Organization
+from models import Expenditure, Legislator, Lobbyist, Organization
 from render_utils import flatten_app_config, make_context
 
 app = Flask(app_config.PROJECT_NAME)
@@ -23,20 +26,23 @@ def index():
     """
     context = make_context()
 
-    expenditures = Expenditure.select()
-    organizations = Organization.select()
-    lobbyists = Lobbyist.select()
-    legislators = Legislator.select()
+    today = datetime.datetime.today()
+    ago = datetime.date(today.year - 2, today.month + 1, 1)
+
+    expenditures = Expenditure.select().where(Expenditure.report_period >= ago)
+    organizations = Organization.select().join(Expenditure).where(Expenditure.report_period >= ago).distinct()
+    lobbyists = Lobbyist.select().join(Expenditure).where(Expenditure.report_period >= ago).distinct()
+    legislators = Legislator.select().join(Expenditure).where(Expenditure.report_period >= ago).distinct()
 
     for legislator in legislators:
-        legislator.total_spending = legislator.expenditures.aggregate(fn.Sum(Expenditure.cost))
+        legislator.total_spending = legislator.expenditures.where(Expenditure.report_period >= ago).aggregate(fn.Sum(Expenditure.cost))
 
     legislators_total_spending = sorted(legislators, key=lambda l: l.total_spending, reverse=True)[:10]
     
     categories_total_spending = {}
 
     for org in organizations:
-        org.total_spending = org.expenditures.aggregate(fn.Sum(Expenditure.cost))
+        org.total_spending = org.expenditures.where(Expenditure.report_period >= ago).aggregate(fn.Sum(Expenditure.cost))
 
         if not org.total_spending:
             continue
@@ -76,6 +82,66 @@ def legislators():
     context['house_list'] = house_list
 
     return render_template('legislator_list.html', **context)    
+
+@app.route('/download/data.csv')
+def download_csv():
+    """
+    Generate a data download.
+    """
+    f = cStringIO.StringIO()
+
+    writer = UnicodeCSVDictWriter(f, [
+        'lobbyist_first_name',
+        'lobbyist_last_name',
+        'report_period',
+        'recipient_name',
+        'recipient_type',
+        'legislator_first_name',
+        'legislator_last_name',
+        'legislator_office',
+        'legislator_party',
+        'legislator_district',
+        'event_date',
+        'category',
+        'description',
+        'cost',
+        'organization_name',
+        'organization_industry',
+        'group',
+        'ethics_board_id',
+        'is_solicitation'
+    ])
+
+    writer.writeheader()
+
+    expenditures = Expenditure.select()
+
+    for ex in expenditures:
+        row = {
+            'lobbyist_first_name': ex.lobbyist.first_name,
+            'lobbyist_last_name': ex.lobbyist.last_name,
+            'report_period': ex.report_period,
+            'recipient_name': ex.recipient,
+            'recipient_type': ex.recipient_type,
+            'legislator_first_name': ex.legislator.first_name if ex.legislator else None,
+            'legislator_last_name': ex.legislator.last_name if ex.legislator else None,
+            'legislator_office': ex.legislator.office if ex.legislator else None,
+            'legislator_party': ex.legislator.party if ex.legislator else None,
+            'legislator_district': ex.legislator.district if ex.legislator else None,
+            'event_date': ex.event_date,
+            'category': ex.category,
+            'description': ex.description,
+            'cost': ex.cost,
+            'organization_name': ex.organization.name,
+            'organization_industry': ex.organization.category,
+            'group': ex.group.name if ex.group else None,
+            'ethics_board_id': ex.ethics_id,
+            'is_solicitation': ex.is_solicitation
+        }
+
+        writer.writerow(row)
+
+    return f.getvalue().decode('utf-8')
 
 @app.route('/legislators/<string:slug>/')
 def _legislator(slug):
