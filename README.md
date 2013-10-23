@@ -194,7 +194,7 @@ Update the data
 
 Notes on how the data is stored:
 
-* The canonical representation of the legislators is the [legislator demographics Google document](https://docs.google.com/spreadsheet/ccc?key=0AlXMOHKxzQVRdFFQRzBuLUxhN0JubjlvRVA2SlpVVlE&usp=drive_web#gid=0). This document should only ever contain the current legislators.
+* The canonical representation of the legislators is the [legislator demographics Google document](https://docs.google.com/spreadsheet/ccc?key=0AlXMOHKxzQVRdFFQRzBuLUxhN0JubjlvRVA2SlpVVlE&usp=drive_web#gid=0). This document should only ever contain the current legislators. If a district is vacant you should include a row for it with the word `VACANT` in the `last_name` column.
 * The canonical source for company names and industries is the [organization name lookup Google document](https://docs.google.com/spreadsheet/ccc?key=0AlXMOHKxzQVRdFJNMlZTXy1pSFNRUHJIR3RVSWhJSGc&usp=drive_web#gid=0). New organizations/organization misspellings should be added to this document.
 * The data itself lives in three CSVs: `data/individual_expenditures.csv', 'data/group_expenditures.csv', and 'data/solicitation_expenditures'. Each of these documents should be replaced locally before the update process is run.
 
