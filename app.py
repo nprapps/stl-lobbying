@@ -229,7 +229,8 @@ def _organization(slug):
     legislator_spending = {}
 
     for ex in organization.expenditures:
-        if ex.group:
+        # Groups or old/non-attributable expenses
+        if not ex.legislator:
             continue
 
         if ex.organization in legislator_spending:

@@ -267,7 +267,7 @@ def render_pages():
 
     compiled_includes = []
 
-    legislators = models.Legislator.select()
+    legislators = models.Legislator.select().where(models.Legislator.vacant == False)
     compiled_includes = _render_slug_pages(legislators, '_legislator', '.pages_html', compiled_includes)
 
     organizations = models.Organization.select()

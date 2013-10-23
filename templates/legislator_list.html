@@ -29,7 +29,11 @@
             <tbody>
             {% for legislator in house_list %}
                 <tr>
+                    {% if legislator.vacant %}
+                    <td class="name">Vacant <small>{{ ordinal(legislator.district) }} district</small></td>
+                    {% else %}
                     <td class="name"><a href="{{ legislator.url() }}">{{ legislator.display_name() }} <small>{{ legislator.party }} | {{ ordinal(legislator.district) }} district</small></a></td>
+                    {% endif %}
                 </tr>
             {% endfor %}
             </tbody>
@@ -46,7 +50,11 @@
             <tbody>
             {% for legislator in senate_list %}
                 <tr>
+                    {% if legislator.vacant %}
+                    <td class="name">Vacant <small>{{ ordinal(legislator.district) }} district</small></td>
+                    {% else %}
                     <td class="name"><a href="{{ legislator.url() }}">{{ legislator.display_name() }} <small>{{ legislator.party }} | {{ ordinal(legislator.district) }} district</small></a></td>
+                    {% endif %}
                 </tr>
             {% endfor %}
             </tbody>

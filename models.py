@@ -89,6 +89,7 @@ class Legislator(SlugModel):
     phone = CharField()
     year_elected = IntegerField(null=True)
     hometown = CharField()
+    vacant = BooleanField()
     
     class Meta:
         database = database
@@ -295,6 +296,18 @@ class LobbyLoader:
 
             for k in row:
                 row[k] = row[k].strip()
+
+            # Process vacant seats
+            if row['last_name'].upper() == 'VACANT':
+                Legislator.create(
+                    office=office,
+                    district=row['district'],
+                    vacant=True
+                )
+
+                self.legislators_created += 1
+
+                continue
             
             office = row['office']
 
@@ -325,7 +338,8 @@ class LobbyLoader:
                 ethics_name=row['ethics_name'],
                 phone=row['phone'],
                 year_elected=year_elected,
-                hometown=row['hometown']
+                hometown=row['hometown'],
+                vacant=False
             )
 
             legislator.save()
