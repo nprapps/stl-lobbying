@@ -18,15 +18,12 @@ stl-lobbying
 * [Compile static assets](#compile-static-assets)
 * [Test the rendered app](#test-the-rendered-app)
 * [Deploy to S3](#deploy-to-s3)
-* [Deploy to EC2](#deploy-to-ec2)
-* [Install cron jobs](#install-cron-jobs)
-* [Install web services](#install-web-services)
-* [Run a remote fab command](#run-a-remote-fab-command)
+* [Update the data](#update-the-data)
 
 What is this?
 -------------
 
-**Describe stl-lobbying here.**
+A lobbying data explorer for the Missouri Legislature. This project is a collaboration betwee nprapps and St. Louis Public Radio.
 
 Assumptions
 -----------
@@ -192,68 +189,25 @@ Deploy to S3
 fab staging master deploy
 ```
 
-Deploy to EC2
--------------
+Update the data
+---------------
 
-You can deploy to EC2 for a variety of reasons. We cover two cases: Running a dynamic web application (`public_app.py`) and executing cron jobs (`crontab`).
+Notes on how the data is stored:
 
-Servers capable of running the app can be setup using our [servers](https://github.com/nprapps/servers) project.
+* The canonical representation of the legislators is the [legislator demographics Google document](https://docs.google.com/spreadsheet/ccc?key=0AlXMOHKxzQVRdFFQRzBuLUxhN0JubjlvRVA2SlpVVlE&usp=drive_web#gid=0). This document should only ever contain the current legislators.
+* The canonical source for company names and industries is the [organization name lookup Google document](https://docs.google.com/spreadsheet/ccc?key=0AlXMOHKxzQVRdFJNMlZTXy1pSFNRUHJIR3RVSWhJSGc&usp=drive_web#gid=0). New organizations/organization misspellings should be added to this document.
+* The data itself lives in three CSVs: `data/individual_expenditures.csv', 'data/group_expenditures.csv', and 'data/solicitation_expenditures'. Each of these documents should be replaced locally before the update process is run.
 
-For running a Web application:
+To load the data, run:
 
-* In ``app_config.py`` set ``DEPLOY_TO_SERVERS`` to ``True``.
-* Also in ``app_config.py`` set ``DEPLOY_WEB_SERVICES`` to ``True``.
-* Run ``fab staging master setup_server`` to configure the server.
-* Run ``fab staging master deploy`` to deploy the app.
+`fab local_bootstrap`
 
-For running cron jobs:
+This will fetch the two documents mentioned above. Any warnings or errors will be printed to the console once the loader is finished. Errors **must** be resolved before you complete the update process. If an error refers to an unknown organization name then it should be added to the [organization name lookup Google document](https://docs.google.com/spreadsheet/ccc?key=0AlXMOHKxzQVRdFJNMlZTXy1pSFNRUHJIR3RVSWhJSGc&usp=drive_web#gid=0).
 
-* In ``app_config.py`` set ``DEPLOY_TO_SERVERS`` to ``True``.
-* Also in ``app_config.py``, set ``INSTALL_CRONTAB`` to ``True``
-* Run ``fab staging master setup_server`` to configure the server.
-* Run ``fab staging master deploy`` to deploy the app.
+Be sure to test the site before you deploy!
 
-You can configure your EC2 instance to both run Web services and execute cron jobs; just set both environment variables in the fabfile.
+`python app.py`
 
-Install cron jobs
------------------
+To rerender and deploy the site using the new data:
 
-Cron jobs are defined in the file `crontab`. Each task should use the `cron.sh` shim to ensure the project's virtualenv is properly activated prior to execution. For example:
-
-```
-* * * * * ubuntu bash /home/ubuntu/apps/$PROJECT_NAME/repository/cron.sh fab $DEPLOYMENT_TARGET cron_test
-```
-
-**Note:** In this example you will need to replace `$PROJECT_NAME` with your actual deployed project name.
-
-To install your crontab set `INSTALL_CRONTAB` to `True` in `app_config.py`. Cron jobs will be automatically installed each time you deploy to EC2.
-
-Install web services
----------------------
-
-Web services are configured in the `confs/` folder. 
-
-Running ``fab setup_server`` will deploy your confs if you have set ``DEPLOY_TO_SERVERS`` and ``DEPLOY_WEB_SERVICES`` both to ``True`` at the top of ``app_config.py``.
-
-To check that these files are being properly rendered, you can render them locally and see the results in the `confs/rendered/` directory.
-
-```
-fab render_confs
-```
-
-You can also deploy the configuration files independently of the setup command by running:
-
-```
-fab deploy_confs
-```
-
-Run a  remote fab command
--------------------------
-
-Sometimes it makes sense to run a fabric command on the server, for instance, when you need to render using a production database. You can do this with the `fabcast` fabric command. For example:
-
-```
-fab staging master fabcast:deploy
-```
-
-If any of the commands you run themselves require executing on the server, the server will SSH into itself to run them.
+`fab production stable deploy deploy_pages`
