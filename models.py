@@ -70,6 +70,8 @@ class Lobbyist(SlugModel):
 class Legislator(SlugModel):
     """
     A legislator.
+
+    NB: Only current legislators get models.
     """
     OFFICE_SHORT_NAMES = {
         'Senator': 'Sen.',
@@ -162,7 +164,6 @@ class LobbyLoader:
     Load expenditures from files.
     """
     # Folks we have data for, but predate our period of interest
-    SKIP_LEGISLATORS = ['PURGASON, CHUCK']
     SKIP_TYPES = ['Local Government Official', 'Public Official', 'ATTORNEY GENERAL', 'STATE TREASURER', 'GOVERNOR', 'STATE AUDITOR', 'LIEUTENANT GOVERNOR', 'SECRETARY OF STATE', 'JUDGE']
     ERROR_DATE_MIN = datetime.date(2012, 1, 1)
     ERROR_DATE_MAX = datetime.datetime.today().date()
@@ -312,8 +313,8 @@ class LobbyLoader:
             if year_elected:
                 year_elected = int(year_elected)
             else:
-                year_elected = None
                 self.error('%05i -- No year elected for "%s": "%s"' % (i, office, row['ethics_name']))
+                year_elected = None
 
             legislator = Legislator(
                 first_name=row['first_name'],
@@ -371,10 +372,6 @@ class LobbyLoader:
             # Recipient
             recipient, recipient_type = map(unicode.strip, row['Recipient'].rsplit(' - ', 1))
 
-            if recipient in self.SKIP_LEGISLATORS:
-                self.info('%05i -- Skipping "%s": "%s" for "%s": "%s"' % (i, recipient_type, recipient, legislator_type, legislator_name))
-                continue
-
             # NB: Brute force correction for name mispelling in one state dropdown
             if recipient == 'CARPENTER, JOHN':
                 recipient = 'CARPENTER, JON'
@@ -384,16 +381,11 @@ class LobbyLoader:
 
             if recipient_type in ['Senator', 'Representative']:
                 try:
-                    legislator = Legislator.get(Legislator.ethics_name==recipient, Legislator.office==recipient_type)
+                    legislator = Legislator.get(Legislator.ethics_name==recipient)
                 except Legislator.DoesNotExist:
-                    self.error('%05i -- No matching legislator for "%s": "%s"' % (i, recipient_type, recipient))
-                    continue
+                    self.warn('%05i -- Not a current legislator: %s %s' % (i, recipient_type, recipient))
             elif recipient_type in ['Employee or Staff', 'Spouse or Child']:
                 legislator_name, legislator_type = map(unicode.strip, row['Pub Off'].rsplit(' - ', 1))
-
-                if legislator_name in self.SKIP_LEGISLATORS:
-                    self.info('%05i -- Skipping "%s": "%s" for "%s": "%s"' % (i, recipient_type, recipient, legislator_type, legislator_name))
-                    continue
 
                 # NB: Brute force correction for name mispelling in one state dropdown
                 if legislator_name == 'CARPENTER, JOHN':
@@ -404,10 +396,9 @@ class LobbyLoader:
                     continue
 
                 try:
-                    legislator = Legislator.get(Legislator.ethics_name==legislator_name, Legislator.office==legislator_type)
+                    legislator = Legislator.get(Legislator.ethics_name==legislator_name)
                 except Legislator.DoesNotExist:
-                    self.error('%05i -- No matching legislator for "%s": "%s"' % (i, legislator_type, legislator_name))
-                    continue
+                    self.warn('%05i -- Not a current legislator: %s %s' % (i, legislator_type, legislator_name))
             elif recipient_type in self.SKIP_TYPES:
                 self.info('%05i -- Skipping "%s": "%s"' % (i, recipient_type, recipient))
                 continue
