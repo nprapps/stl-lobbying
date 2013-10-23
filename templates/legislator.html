@@ -60,12 +60,18 @@
         </div>
     </div>
     <div class="table-responsive gift-table">
+        <label for="gift-sort">Sort by: </label>
+        <select id="gift-sort">
+            <option value="cost" selected="selected">Most expensive</option>
+            <option value="date">Most recent</option>
+            <option value="organization">Name of organization</option>
+        </select>
         <table class="table table-striped">
             <thead>
                 <tr>
                     <th class="date">Date</th>
                     <th class="recipient">Organization</th>
-                    <th class="expenditure">Expenditure</th>
+                    <th class="expenditure">Value</th>
                     <th class="description">Description</th>
                     <th class="category">Category</th>
                 </tr>

@@ -8,6 +8,8 @@ var $search_results = $('.results');
 var $rep_result = $('.results .rep');
 var $sen_result = $('.results .sen');
 var $search_examples = $('.search .example');
+var $gift_table = $('.gift-table table');
+var $gift_sort = $('#gift-sort');
 
 var geocode_xhr = null;
 
@@ -143,6 +145,23 @@ function on_search_submit() {
     return false;
 }
 
+function on_gift_sort_change() {
+    var val = $(this).val();
+    var sort = [];
+
+    if (val == 'date') {
+        sort = [[0, 1]];
+    } else if (val == 'organization') {
+        sort = [[1, 0]];
+    } else if (val == 'cost') {
+        sort = [[2, 1]];
+    }
+
+    $gift_table.trigger('sorton', [sort]);
+
+    return false;
+}
+
 $(function() {
     $.getJSON('static-data/senate_0.2.topojson', function(data) {
         SENATE_TOPOJSON = data;
@@ -155,4 +174,10 @@ $(function() {
     $search_form.on('submit', on_search_submit);
     $did_you_mean.on('click', 'li', on_did_you_mean_click);
     $search_examples.on('click', on_example_click);
+    $gift_sort.on('change', on_gift_sort_change);
+
+    $gift_table.tablesorter();
+
+    // Disable default sort events
+    $gift_table.find('th').off();
 });
