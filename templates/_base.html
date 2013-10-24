@@ -185,12 +185,13 @@
         {{ JS.push('js/lib/underscore.js') }}
         {{ JS.push('js/lib/moment.js') }}
         {{ JS.push('js/lib/bootstrap.js') }}
-        {{ JS.push('js/lib/jquery.tablesorter.js') }}
-        {{ JS.push('js/lib/mapbox.js') }}
         {% block extra_foot_js %}{% endblock extra_foot_js %}
         {{ JS.push('js/templates.js') }}
         {{ JS.push('js/app.js') }}
         {{ JS.render('js/app-footer.min.js') }}
+
+        <script type="text/javascript" src="{{ S3_BASE_URL }}/js/lib/jquery.tablesorter.js"></script>
+        <script type="text/javascript" src="{{ S3_BASE_URL }}/js/lib/mapbox.js"></script>
 
         {% block extra_foot %}
         {% endblock extra_foot %}
