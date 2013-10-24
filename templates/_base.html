@@ -202,7 +202,8 @@
             {% for senator in senators %}
             '{{ senator.district }}': {
                 'display_name': '{{ senator.display_name() }}',
-                'slug': '{{ senator.slug }}'
+                'slug': '{{ senator.slug }}',
+                'district': '{{ senator.district }}'
             }{% if not loop.last %},{% endif %}
             {% endfor %}
         };
@@ -211,7 +212,8 @@
             {% for rep in representatives %}
             '{{ rep.district }}': {
                 'display_name': '{{ rep.display_name() }}',
-                'slug': '{{ rep.slug }}'
+                'slug': '{{ rep.slug }}',
+                'district': '{{ rep.district }}'
             }{% if not loop.last %},{% endif %}
             {% endfor %}
         };

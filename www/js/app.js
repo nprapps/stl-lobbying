@@ -133,11 +133,13 @@ function on_gift_sort_change() {
 
 function move_search_map(lat, lng) {
     search_map.setView([lat, lng], 10);
-    on_search_map_click({ latlng: new L.LatLng(lat, lng) });
+    //on_search_map_click({ latlng: new L.LatLng(lat, lng) });
 }
 
-function on_search_map_click(e) {
-    senate_grid.getData(e.latlng, function(senate_data) {
+function on_search_map_moveend(e) {
+    var center = search_map.getCenter();
+
+    senate_grid.getData(center, function(senate_data) {
         if (senate_data === null) {
             $not_found.show();
             return;
@@ -147,7 +149,7 @@ function on_search_map_click(e) {
         var sen = SENATORS[sen_district];
         $sen_result.html(JST.search_result(sen)); 
 
-        house_grid.getData(e.latlng, function(house_data) {
+        house_grid.getData(center, function(house_data) {
             if (house_data === null) {
                 $not_found.show();
                 return;
@@ -203,7 +205,7 @@ $(function() {
     search_map.addLayer(house_grid);
     search_map.setView([36.46, -92.1], 7);
 
-    search_map.on('click', on_search_map_click);
+    search_map.on('moveend', on_search_map_moveend);
     $show_senate_map.on('click', on_show_senate_map_click);
     $show_house_map.on('click', on_show_house_map_click);
 });
