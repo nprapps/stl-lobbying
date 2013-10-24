@@ -10,9 +10,17 @@ var $sen_result = $('.results .sen');
 var $search_examples = $('.search .example');
 var $gift_table = $('.gift-table table');
 var $gift_sort = $('#gift-sort');
-var $senate_map = $('#senate-map');
+var $show_senate_map = $('#show-senate-map');
+var $show_house_map = $('#show-house-map');
 
 var geocode_xhr = null;
+var search_map = null;
+    
+var senate_layer = null;
+var senate_grid = null;
+var house_layer = null;
+var house_grid = null;
+var current_grid = null;
 
 var SENATE_TOPOJSON = null;
 var HOUSE_TOPOJSON = null;
@@ -163,6 +171,41 @@ function on_gift_sort_change() {
     return false;
 }
 
+function on_search_map_click(e) {
+    current_grid.getData(e.latlng, function(data) {
+        if (data === null) {
+            // TODO
+            return;
+        }
+
+        console.log('District: ' + data.DISTRICT);
+    });
+
+    return false;
+}
+
+function on_show_senate_map_click() {
+    search_map.removeLayer(house_layer);
+    search_map.removeLayer(house_grid);
+    search_map.addLayer(senate_layer);
+    search_map.addLayer(senate_grid);
+
+    current_grid = senate_grid;
+
+    return false;
+}
+
+function on_show_house_map_click() {
+    search_map.removeLayer(senate_layer);
+    search_map.removeLayer(senate_grid);
+    search_map.addLayer(house_layer);
+    search_map.addLayer(house_grid);
+
+    current_grid = house_grid;
+
+    return false;
+}
+
 $(function() {
     $.getJSON('static-data/senate_0.2.topojson', function(data) {
         SENATE_TOPOJSON = data;
@@ -183,13 +226,21 @@ $(function() {
     $gift_table.find('th').off();
 
     // Load maps
-    //var senate_map = L.mapbox.map('senate-map', 'npr.map-sxczgdka');
-    var senate_map = L.mapbox.map('senate-map', 'http://a.tiles.mapbox.com/v3/npr.map-sxczgdka.json?1414', { gridControl: false });
-    senate_map.setView([36.46, -92.1], 7);
+    search_map = L.mapbox.map('search-map');
+    
+    senate_layer = L.mapbox.tileLayer('http://a.tiles.mapbox.com/v3/npr.map-sxczgdka.json?1414');
+    senate_grid = L.mapbox.gridLayer('http://a.tiles.mapbox.com/v3/npr.map-sxczgdka.json?1414');
+    
+    house_layer = L.mapbox.tileLayer('http://a.tiles.mapbox.com/v3/npr.map-q06blnq9.json?1414');
+    house_grid = L.mapbox.gridLayer('http://a.tiles.mapbox.com/v3/npr.map-q06blnq9.json?1414');
 
-    senate_map.on('click', function(e) {
-        senate_map.gridLayer.getData(e.latlng, function(data) {
-            console.log('District: ' + data.DISTRICT);
-        });
-    });
+    search_map.addLayer(senate_layer);
+    search_map.addLayer(senate_grid);
+    search_map.setView([36.46, -92.1], 7);
+
+    current_grid = senate_grid;
+
+    search_map.on('click', on_search_map_click);
+    $show_senate_map.on('click', on_show_senate_map_click);
+    $show_house_map.on('click', on_show_house_map_click);
 });
