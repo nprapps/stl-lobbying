@@ -300,8 +300,15 @@ class LobbyLoader:
             # Process vacant seats
             if row['last_name'].upper() == 'VACANT':
                 Legislator.create(
+                    first_name='',
+                    last_name='',
                     office=office,
                     district=row['district'],
+                    party='',
+                    ethics_name='',
+                    phone='',
+                    year_elected=0,
+                    hometown='',
                     vacant=True
                 )
 
