@@ -5,13 +5,13 @@
 {% block header_content %}
 <div class="header-wrapper">
     <div class="project-header">
-        <h1>{{ PROJECT_NAME }}</h1>
+        <h1>{{ COPY.content.headline }}</h1>
         <div class="story-meta">
             <p class="byline">by <span>{{ COPY.attribution.byline }}</span></p>
             <p class="dateblock">
                 <span class="date">{{ COPY.attribution.pubdate }}</span>
             </p>
-            <p class="intro">{{ COPY.content.lorem_ipsum }}</p>
+            <p class="intro">{{ COPY.content.intro }}</p>
 
             {% include '_search.html' %}
         </div>
@@ -43,14 +43,14 @@
 
 {% block wide_content %}
 <div class="totals row">
-        <p class="total-spending">Total spending (Since TKTK) <strong>{{ total_spending|format_currency }}</strong></p>
-        <p class="total-gifts">Total expenditures/gifts (Since TKTK) <strong>{{ comma(total_expenditures) }}</strong></p>
-        <p class="total-orgs">Total organizations lobbying (Since TKTK) <strong>{{ comma(total_organizations) }}</strong></p>
-        <p class="total-lobbyists">Total lobbyists active (Since TKTK) <strong>{{ comma(total_lobbyists) }}</strong></p>
+        <p class="total-spending">{{ COPY.content.agg_sum_headline }}<strong>{{ total_spending|format_currency }}</strong></p>
+        <p class="total-gifts">{{ COPY.content.agg_count_headline }} <strong>{{ comma(total_expenditures) }}</strong></p>
+        <p class="total-orgs">{{ COPY.content.agg_org_count_headline }}<strong>{{ comma(total_organizations) }}</strong></p>
+        <p class="total-lobbyists">{{ COPY.content.agg_lobby_count_headline }}<strong>{{ comma(total_lobbyists) }}</strong></p>
 </div>
 <div class="top-entities row">
     <div class="organizations">
-        <h3>Organizations spending the most (Since TKTK)</h3>
+        <h3>{{ COPY.content.org_chart_headline }}</h3>
         <table>
             <tbody>
             {% for org in organizations_total_spending %}
@@ -63,7 +63,7 @@
         </table>
     </div>
     <div class="legislators">
-        <h3>Legislators receiving the most (Since TKTK)</h3>
+        <h3>{{ COPY.content.leg_chart_headline }}</h3>
         <table>
             <tbody>
             {% for legislator in legislators_total_spending %}
@@ -78,7 +78,7 @@
         <p><a href="{{ S3_BASE_URL }}/legislators/">View all legislators &raquo;</a></p>
     </div>
     <div class="categories">
-        <h3>Industries spending the most (Since TKTK)</h3>
+        <h3>{{ COPY.content.industry_chart_headline }}</h3>
         <table>
             <tbody>
             {% for category, total_spending in categories_total_spending %}
@@ -100,7 +100,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title">Choose your representative</h4>
+        <h4 class="modal-title">{{ COPY.content.modal_choose_headline }}</h4>
       </div>
       <div class="modal-body">
         {% include '_search_results.html' %}
