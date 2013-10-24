@@ -20,46 +20,6 @@ var senate_layer = null;
 var senate_grid = null;
 var house_layer = null;
 var house_grid = null;
-var current_grid = null;
-
-var SENATE_TOPOJSON = null;
-var HOUSE_TOPOJSON = null;
-
-function lookup_district(topology, name, lat, lng) {
-    var point = { 'type': 'Point', 'coordinates': [lng, lat] };
-    var count = topology.objects[name].geometries.length;
-
-    for (var i = 0; i < count; i++) {
-        var feature = topojson.feature(topology, topology.objects[name].geometries[i]);
-        var polygon = { 'type': 'Polygon', 'coordinates': feature.geometry.coordinates };
-
-        if (gju.pointInPolygon(point, polygon) !== false) {
-            return feature.properties.DISTRICT;
-        }
-    };
-
-    return null;
-}
-
-function lookup_legislators(lat, lng) {
-    var sen_district = lookup_district(SENATE_TOPOJSON, 'senate', lat, lng);
-
-    if (sen_district === null) {
-        $not_found.show();
-
-        return;
-    }
-    
-    var rep_district = lookup_district(HOUSE_TOPOJSON, 'house', lat, lng);
-
-    var sen = SENATORS[sen_district];
-    var rep = REPRESENTATIVES[rep_district];
-
-    $rep_result.html(JST.search_result(rep)); 
-    $sen_result.html(JST.search_result(sen)); 
-
-    $search_results.show();
-}
 
 function on_example_click() {
     var address = $(this).text();
@@ -78,7 +38,7 @@ function on_did_you_mean_click() {
 
     $did_you_mean.hide();
 
-    lookup_legislators(latitude, longitude);
+    move_search_map(latitude, longitude);
 
     return false;
 }
@@ -129,7 +89,7 @@ function on_search_submit() {
 
                     var display_name = locale['display_name'].replace(', United States of America', '');
 
-                    lookup_legislators(locale['lat'], locale['lon']);
+                    move_search_map(locale['lat'], locale['lon']);
                 } else {
                     // If there are many results,
                     // show the did-you-mean path.
@@ -171,14 +131,34 @@ function on_gift_sort_change() {
     return false;
 }
 
+function move_search_map(lat, lng) {
+    search_map.setView([lat, lng], 10);
+    on_search_map_click({ latlng: new L.LatLng(lat, lng) });
+}
+
 function on_search_map_click(e) {
-    current_grid.getData(e.latlng, function(data) {
-        if (data === null) {
-            // TODO
+    senate_grid.getData(e.latlng, function(senate_data) {
+        if (senate_data === null) {
+            $not_found.show();
             return;
         }
 
-        console.log('District: ' + data.DISTRICT);
+        var sen_district = senate_data.DISTRICT;
+        var sen = SENATORS[sen_district];
+        $sen_result.html(JST.search_result(sen)); 
+
+        house_grid.getData(e.latlng, function(house_data) {
+            if (house_data === null) {
+                $not_found.show();
+                return;
+            }
+
+            var house_district = house_data.DISTRICT;
+            var rep = REPRESENTATIVES[house_district];
+            $rep_result.html(JST.search_result(rep)); 
+        });
+
+        $search_results.show();
     });
 
     return false;
@@ -186,35 +166,19 @@ function on_search_map_click(e) {
 
 function on_show_senate_map_click() {
     search_map.removeLayer(house_layer);
-    search_map.removeLayer(house_grid);
     search_map.addLayer(senate_layer);
-    search_map.addLayer(senate_grid);
-
-    current_grid = senate_grid;
 
     return false;
 }
 
 function on_show_house_map_click() {
     search_map.removeLayer(senate_layer);
-    search_map.removeLayer(senate_grid);
     search_map.addLayer(house_layer);
-    search_map.addLayer(house_grid);
-
-    current_grid = house_grid;
 
     return false;
 }
 
 $(function() {
-    $.getJSON('static-data/senate_0.2.topojson', function(data) {
-        SENATE_TOPOJSON = data;
-    });
-
-    $.getJSON('static-data/house_0.1.topojson', function(data) {
-        HOUSE_TOPOJSON = data;
-    });
-
     $search_form.on('submit', on_search_submit);
     $did_you_mean.on('click', 'li', on_did_you_mean_click);
     $search_examples.on('click', on_example_click);
@@ -236,9 +200,8 @@ $(function() {
 
     search_map.addLayer(senate_layer);
     search_map.addLayer(senate_grid);
+    search_map.addLayer(house_grid);
     search_map.setView([36.46, -92.1], 7);
-
-    current_grid = senate_grid;
 
     search_map.on('click', on_search_map_click);
     $show_senate_map.on('click', on_show_senate_map_click);
