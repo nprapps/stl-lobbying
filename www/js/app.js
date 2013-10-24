@@ -161,12 +161,17 @@ function on_search_map_moveend(e) {
         });
 
         $search_results.show();
+        $('#search-results').modal('show');
     });
 
     return false;
 }
 
 function on_show_senate_map_click() {
+    if ($show_senate_map.hasClass('btn-default')){
+        $show_senate_map.toggleClass('btn-default btn-primary');
+        $show_house_map.toggleClass('btn-default btn-primary');
+    }
     search_map.removeLayer(house_layer);
     search_map.addLayer(senate_layer);
 
@@ -174,6 +179,10 @@ function on_show_senate_map_click() {
 }
 
 function on_show_house_map_click() {
+    if ($show_house_map.hasClass('btn-default')){
+        $show_senate_map.toggleClass('btn-default btn-primary');
+        $show_house_map.toggleClass('btn-default btn-primary');
+    }
     search_map.removeLayer(senate_layer);
     search_map.addLayer(house_layer);
 
@@ -208,4 +217,8 @@ $(function() {
     search_map.on('moveend', on_search_map_moveend);
     $show_senate_map.on('click', on_show_senate_map_click);
     $show_house_map.on('click', on_show_house_map_click);
+
+    $('#search-results').on('shown.bs.modal', function () {
+      // do something…
+    })
 });

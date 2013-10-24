@@ -1,4 +1,10 @@
 <div class="search">
+    <div class="btn-group btn-group-justified">
+        <a href="#" class="btn btn-primary" id="show-senate-map">Show senate map</a>
+        <a href="#" class="btn btn-default" id="show-house-map">Show house map</a>
+    </div>
+    <div id="search-map" style="width: 100%; height: 300px;"></div>
+    
     <form role="form">
         <div class="form-group">
             <label for="address">Search for your address to find your legislators</label>
@@ -11,16 +17,11 @@
         
     </form>
 
-    <div class="loading" style="display: none;">
-        Loading...
-    </div>
+    <div class="results" style="display: none;">
+        <div class="rep">
+        </div>
 
-    <div class="did-you-mean" style="display: none;">
-        <p>Did you mean...?</p>
-        <ul></ul>
-    </div>
-
-    <div class="not-found" style="display: none;">
-        Not found.
+        <div class="sen">
+        </div>
     </div>
 </div>

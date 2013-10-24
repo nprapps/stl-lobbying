@@ -36,6 +36,14 @@
 	content: ' ';
 }
 
+.modal {
+	display: block !important;
+	visibility: hidden;
+}
+
+.fade.in {
+	visibility: visible;
+}
 
 nav {
 
@@ -340,6 +348,12 @@ nav {
 
 				&.spending {
 					font-size: 13px;
+					padding: @line-height-computed / 4 0;
+
+					.bar {
+						line-height: 40px;
+						height: 50px;
+					}
 				}
 			}
 		}
@@ -544,12 +558,21 @@ nav {
 	.top-categories {
 		.organization,
 		.legislator,
-		.category {
+		.category,
+		.amount {
 			font-size: 11px;
-			width: 40%;
-			text-align: right;
+
+			text-align: left;
 			padding-right: 5px;
 			line-height: 1.1;
+		}
+
+		.amount {
+			text-align: right;
+		}
+
+		.spending {
+			width: 50%;
 		}
 	}
 
@@ -588,9 +611,6 @@ nav {
 	}
 }
 
-
-
-
 /* All legislators page 
 =================================================*/
 
@@ -603,5 +623,13 @@ nav {
 				margin-left: 5px;
 			}
 		}
+	}
+}
+
+/* Search results modal
+=================================================*/
+#search-results {
+	.btn-group {
+		margin-bottom: @line-height-computed / 2;
 	}
 }
