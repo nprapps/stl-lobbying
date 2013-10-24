@@ -9,13 +9,24 @@
         <div class="form-group">
             <label for="address">Search for your address to find your legislators</label>
             <div class="input-group input-group-lg">
-                <input type="text" id="address" class="form-control" placeholder="Enter your address" />
+                <input type="text" class="address form-control" placeholder="Enter your address" />
                 <span class="input-group-btn"><button type="submit" class="btn btn-primary">Search</button></span>
             </div>
-            <span class="help-block">For example, <a href="#" class="example">3651 Olive St. St. Louis, MO 63108</a> or <a href="#" class="example">Columbia, MO</a></span>
         </div>
         
     </form>
+    <div class="loading" style="display: none;">
+        Loading...
+    </div>
+
+    <div class="did-you-mean" style="display: none;">
+        <p>Did you mean...?</p>
+        <ul></ul>
+    </div>
+
+    <div class="not-found" style="display: none;">
+        Not found.
+    </div>
 
     <div class="results" style="display: none;">
         <div class="rep">

@@ -632,4 +632,24 @@ nav {
 	.btn-group {
 		margin-bottom: @line-height-computed / 2;
 	}
+
+	#search-map {
+		position: relative;
+
+		&:before {
+			display: block;
+			content: ' ';
+			position: absolute;
+			left: 50%;
+			top: 50%;
+			z-index: 10000;
+			margin-top: -@line-height-computed / 2;
+			margin-left: -@line-height-computed / 2;
+			width: @line-height-computed;
+			height: @line-height-computed;
+			background: fadeout(@brand-red, 30%);
+			border-radius: @line-height-computed / 2;
+			border: 2px solid @brand-red;
+		}
+	}	
 }

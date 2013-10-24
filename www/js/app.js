@@ -1,5 +1,5 @@
 var $search_form = $('.search form');
-var $search_address = $('#address');
+var $search_address = $('.search .address');
 var $did_you_mean = $('.search .did-you-mean');
 var $did_you_mean_list = $did_you_mean.find('ul');
 var $not_found = $('.search .not-found');
@@ -8,6 +8,7 @@ var $search_results = $('.results');
 var $rep_result = $('.results .rep');
 var $sen_result = $('.results .sen');
 var $search_examples = $('.search .example');
+var $results_modal = $('#search-results');
 var $gift_table = $('.gift-table table');
 var $gift_sort = $('#gift-sort');
 var $show_senate_map = $('#show-senate-map');
@@ -44,15 +45,17 @@ function on_did_you_mean_click() {
 }
 
 function on_search_submit() {
-    if ($search_address.val() === '') {
+    if ($(this).find('input.address') === '') {
         return false;
     }
+
+    var address = $(this).find('input.address').val();
+
+    $search_address.val(address);
 
     $did_you_mean.hide();
     $not_found.hide();
     $search_results.hide();
-
-    var address = $search_address.val();
 
     if (address) {
         $search_loading.show();
@@ -90,6 +93,7 @@ function on_search_submit() {
                     var display_name = locale['display_name'].replace(', United States of America', '');
 
                     move_search_map(locale['lat'], locale['lon']);
+                    $('#search-results').modal('show');
                 } else {
                     // If there are many results,
                     // show the did-you-mean path.
@@ -161,7 +165,6 @@ function on_search_map_moveend(e) {
         });
 
         $search_results.show();
-        $('#search-results').modal('show');
     });
 
     return false;
