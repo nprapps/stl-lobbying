@@ -10,6 +10,7 @@ var $sen_result = $('.results .sen');
 var $search_examples = $('.search .example');
 var $gift_table = $('.gift-table table');
 var $gift_sort = $('#gift-sort');
+var $senate_map = $('#senate-map');
 
 var geocode_xhr = null;
 
@@ -180,4 +181,15 @@ $(function() {
 
     // Disable default sort events
     $gift_table.find('th').off();
+
+    // Load maps
+    //var senate_map = L.mapbox.map('senate-map', 'npr.map-sxczgdka');
+    var senate_map = L.mapbox.map('senate-map', 'http://a.tiles.mapbox.com/v3/npr.map-sxczgdka.json?1414', { gridControl: false });
+    senate_map.setView([36.46, -92.1], 7);
+
+    senate_map.on('click', function(e) {
+        senate_map.gridLayer.getData(e.latlng, function(data) {
+            console.log('District: ' + data.DISTRICT);
+        });
+    });
 });

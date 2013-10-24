@@ -14,9 +14,14 @@
         <script type="text/javascript">var _sf_startpt=(new Date()).getTime()</script>
 
         <!-- CSS -->
+        {{ CSS.push('css/mapbox.css') }}
         {{ CSS.push('less/app.less') }}
         {% block extra_css %}{% endblock extra_css %}
         {{ CSS.render('css/app.min.css') }}
+
+         <!--[if lte IE 8]>
+            <link href='{{ BASE_S3_URL }}/css/mapbox.ie.css' rel='stylesheet' />
+        <![endif]-->
 
         <!-- AD CODE -->
         <script>
@@ -183,6 +188,7 @@
         {{ JS.push('js/lib/jquery.tablesorter.js') }}
         {{ JS.push('js/lib/geojson-utils.js') }}
         {{ JS.push('js/lib/topojson.js') }}
+        {{ JS.push('js/lib/mapbox.js') }}
         {% block extra_foot_js %}{% endblock extra_foot_js %}
         {{ JS.push('js/templates.js') }}
         {{ JS.push('js/app.js') }}
