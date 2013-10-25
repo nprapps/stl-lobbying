@@ -94,8 +94,9 @@ function on_search_submit() {
 
                     move_search_map(locale['lat'], locale['lon']);
                     on_show_senate_map_click();
-                    on_search_map_moveend();
+                    
                     $('#search-results').modal('show');
+                    on_search_map_moveend();
                 } else {
                     // If there are many results,
                     // show the did-you-mean path.
