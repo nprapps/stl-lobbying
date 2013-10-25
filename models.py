@@ -166,8 +166,9 @@ class LobbyLoader:
     Load expenditures from files.
     """
     # Folks we have data for, but predate our period of interest
+    FIRST_YEAR = 2004 
     SKIP_TYPES = ['Local Government Official', 'Public Official', 'ATTORNEY GENERAL', 'STATE TREASURER', 'GOVERNOR', 'STATE AUDITOR', 'LIEUTENANT GOVERNOR', 'SECRETARY OF STATE', 'JUDGE']
-    ERROR_DATE_MIN = datetime.date(2012, 1, 1)
+    ERROR_DATE_MIN = datetime.date(FIRST_YEAR - 1, 1, 1)
     ERROR_DATE_MAX = datetime.datetime.today().date()
 
     organization_name_lookup = {}
@@ -186,18 +187,27 @@ class LobbyLoader:
     groups_created = 0
 
     def __init__(self):
-        self.expenditures_xlsx = 'data/expenditures/2013.xlsx'
+        self.expenditures_xlsx = 'data/expenditures/%i.xlsx'
         self.legislators_demographics_filename = 'data/legislator_demographics.csv'
         self.organization_name_lookup_filename = 'data/organization_name_lookup.csv'
 
-    def info(self, msg):
+    def _format_log(self, msg, year=None, line=None):
+        if line:
+            msg = '%05i -- %s' % (line, msg)
+
+        if year:
+            msg = '%i -- %s' % (year, msg)
+        
+        return msg
+
+    def info(self, msg, year=None, line=None):
         pass
 
-    def warn(self, msg):
-        self.warnings.append(msg)
+    def warn(self, msg, year=None, line=None):
+        self.warnings.append(self._format_log(msg, year, line))
 
-    def error(self, msg):
-        self.errors.append(msg)
+    def error(self, msg, year=None, line=None):
+        self.errors.append(self._format_log(msg, year, line))
 
     def load_organization_name_lookup(self):
         """
@@ -319,21 +329,21 @@ class LobbyLoader:
             office = row['office']
 
             if office not in VALID_OFFICES:
-                self.warn('%05i -- Not a valid office: "%s"' % (i, office))
+                self.warn('Not a valid office: "%s"' % (office), year, i)
 
             party = row['party']
 
             if not party:
-                self.error('%05i -- No party affiliation for "%s": "%s"' % (i, office, row['ethics_name']))
+                self.error( 'No party affiliation for "%s": "%s"' % (office, row['ethics_name']), year, i)
             elif party not in VALID_PARTIES:
-                self.warn('%05i -- Unknown party name: "%s"' % (i, party))
+                self.warn('Unknown party name: "%s"' % (party), year, i)
 
             year_elected = row['year_elected']
 
             if year_elected:
                 year_elected = int(year_elected)
             else:
-                self.error('%05i -- No year elected for "%s": "%s"' % (i, office, row['ethics_name']))
+                self.error('No year elected for "%s": "%s"' % (office, row['ethics_name']), year, i)
                 year_elected = None
 
             legislator = Legislator(
@@ -353,7 +363,7 @@ class LobbyLoader:
 
             self.legislators_created += 1
 
-    def load_individual_expenditures(self, rows, solicitations=False):
+    def load_individual_expenditures(self, year, rows, solicitations=False):
         """
         Load individual expenditures from files.
         """
@@ -379,15 +389,23 @@ class LobbyLoader:
                 self.lobbyists_created += 1 
 
             # Report period
+            if not row['Report']:
+                self.warn('Skipping row with no report date!', year, i)
+                continue
+
             report_period = datetime.datetime(*xlrd.xldate_as_tuple(row['Report'], self.datemode)).date()
 
             if report_period < self.ERROR_DATE_MIN:
-                self.error('%05i -- Report date too old: %s' % (i, report_period))
+                self.error('Report date too old: %s' % (report_period), year, i)
             elif report_period > self.ERROR_DATE_MAX:
-                self.error('%05i -- Report date too new: %s' % (i, report_period))
+                self.error('Report date too new: %s' % (report_period), year, i)
 
             # Recipient
-            recipient, recipient_type = map(unicode.strip, row['Recipient'].rsplit(' - ', 1))
+            try:
+                recipient, recipient_type = map(unicode.strip, row['Recipient'].rsplit(' - ', 1))
+            except ValueError:
+                self.warn('Skipping "%s", no recipient type' % (recipient), year, i)
+                continue
 
             # NB: Brute force correction for name mispelling in one state dropdown
             if recipient == 'CARPENTER, JOHN':
@@ -400,42 +418,46 @@ class LobbyLoader:
                 try:
                     legislator = Legislator.get(Legislator.ethics_name==recipient)
                 except Legislator.DoesNotExist:
-                    self.warn('%05i -- Not a current legislator: %s %s' % (i, recipient_type, recipient))
+                    self.info('Not a current legislator: %s %s' % (recipient_type, recipient), year, i)
             elif recipient_type in ['Employee or Staff', 'Spouse or Child']:
-                legislator_name, legislator_type = map(unicode.strip, row['Pub Off'].rsplit(' - ', 1))
+                try:
+                    legislator_name, legislator_type = map(unicode.strip, row['Pub Off'].rsplit(' - ', 1))
+                except ValueError:
+                    self.warn('Skipping "%s", no recipient type' % (legislator_name), year, i)
+                    continue
 
                 # NB: Brute force correction for name mispelling in one state dropdown
                 if legislator_name == 'CARPENTER, JOHN':
                     legislator_name = 'CARPENTER, JON'
 
                 if legislator_type in self.SKIP_TYPES:
-                    self.info('%05i -- Skipping "%s": "%s" for "%s": "%s"' % (i, recipient_type, recipient, legislator_type, legislator_name))
+                    self.info('Skipping "%s": "%s" for "%s": "%s"' % (recipient_type, recipient, legislator_type, legislator_name), line=i)
                     continue
 
                 try:
                     legislator = Legislator.get(Legislator.ethics_name==legislator_name)
                 except Legislator.DoesNotExist:
-                    self.warn('%05i -- Not a current legislator: %s %s' % (i, legislator_type, legislator_name))
+                    self.info('Not a current legislator: %s %s' % (legislator_type, legislator_name), year, i)
             elif recipient_type in self.SKIP_TYPES:
-                self.info('%05i -- Skipping "%s": "%s"' % (i, recipient_type, recipient))
+                self.info('Skipping "%s": "%s"' % (recipient_type, recipient), line=i)
                 continue
             else:
-                self.error('%05i -- Unknown recipient type, "%s": "%s"' % (i, recipient_type, recipient))
+                self.error('Unknown recipient type, "%s": "%s"' % (recipient_type, recipient), year, i)
                 continue
 
             # Event date
             event_date = datetime.datetime(*xlrd.xldate_as_tuple(row['Date'], self.datemode)).date()
 
             if event_date < self.ERROR_DATE_MIN:
-                self.error('%05i -- Event date too old: %s' % (i, event_date))
+                self.error('Event date too old: %s' % (event_date), year, i)
             elif event_date > self.ERROR_DATE_MAX:
-                self.error('%05i -- Event date too new: %s' % (i, event_date))
+                self.error('Event date too new: %s' % (event_date), year, i)
 
             # Cost
             cost = row['Cost']
 
             if cost < 0:
-                self.error('%05i -- Negative cost outside an amendment!' % i)
+                self.error('Negative cost outside an amendment!' % i, year, i)
                 continue
 
             # Organization
@@ -461,9 +483,9 @@ class LobbyLoader:
                 is_solicitation=solicitations
             ))
 
-        self.individual_rows = i 
+        self.individual_rows += i 
 
-    def load_group_expenditures(self, rows):
+    def load_group_expenditures(self, year, rows):
         """
         Load group expenditures from files.
         """
@@ -492,9 +514,9 @@ class LobbyLoader:
             report_period = datetime.datetime(*xlrd.xldate_as_tuple(row['Report'], self.datemode)).date()
 
             if report_period < self.ERROR_DATE_MIN:
-                self.error('%05i -- Report date too old: %s' % (i, report_period))
+                self.error('Report date too old: %s' % (report_period), year, i)
             elif report_period > self.ERROR_DATE_MAX:
-                self.error('%05i -- Report date too new: %s' % (i, report_period))
+                self.error('Report date too new: %s' % (report_period), year, i)
 
             # Group
             created, group = self.load_group(row['Group'])
@@ -506,15 +528,15 @@ class LobbyLoader:
             event_date = datetime.datetime(*xlrd.xldate_as_tuple(row['Date'], self.datemode)).date()
 
             if event_date < self.ERROR_DATE_MIN:
-                self.error('%05i -- Event date too old: %s' % (i, event_date))
+                self.error('Event date too old: %s' % (event_date), year, i)
             elif event_date > self.ERROR_DATE_MAX:
-                self.error('%05i -- Event date too new: %s' % (i, event_date))
+                self.error('Event date too new: %s' % (event_date), year, i)
 
             # Cost
             cost = row['Cost']
 
             if cost < 0:
-                self.error('%05i -- Negative cost outside an amendment!' % i)
+                self.error('Negative cost outside an amendment!' % i, year, i)
                 continue
 
             # Organization
@@ -540,42 +562,53 @@ class LobbyLoader:
                 is_solicitation=False
             ))
 
-        self.group_rows = i
+        self.group_rows += i
 
     def run(self):
         """
         Run the loader and output summary.
         """
-        book = xlrd.open_workbook(self.expenditures_xlsx)
-        self.datemode = book.datemode
-
-        tables = []
-
-        for sheet in book.sheets():
-            columns = sheet.row_values(0)
-            rows = []
-
-            for n in range(1, sheet.nrows):
-                rows.append(dict(zip(columns, sheet.row_values(n))))
-
-            tables.append(rows)
-
-        print 'Loading organization names...'
+        print 'Loading organization names'
         self.load_organization_name_lookup()
 
-        print 'Loading legislator demographics...'
+        print 'Loading legislator demographics'
         self.load_legislators()
 
-        print 'Loading individual expenditures...'
-        self.load_individual_expenditures(tables[0], False)
-
-        print 'Loading soliciation expenditures...'
-        self.load_individual_expenditures(tables[1], True)
-
-        print 'Loading group expenditures...'
-        self.load_group_expenditures(tables[2])
-
         print ''
+
+        for year in range(self.FIRST_YEAR, datetime.datetime.today().year + 1):
+            print year
+            print '----'
+            print ''
+
+            path = self.expenditures_xlsx % year
+
+            print 'Opening %s' % path
+
+            book = xlrd.open_workbook(path)
+            self.datemode = book.datemode
+
+            tables = []
+
+            for sheet in book.sheets():
+                columns = sheet.row_values(0)
+                rows = []
+
+                for n in range(1, sheet.nrows):
+                    rows.append(dict(zip(columns, sheet.row_values(n))))
+
+                tables.append(rows)
+
+            print 'Loading individual expenditures'
+            self.load_individual_expenditures(year, tables[0], False)
+
+            print 'Loading soliciation expenditures'
+            self.load_individual_expenditures(year, tables[1], True)
+
+            print 'Loading group expenditures'
+            self.load_group_expenditures(year, tables[2])
+
+            print ''
 
         if self.warnings:
             print 'WARNINGS'
