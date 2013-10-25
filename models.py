@@ -6,6 +6,7 @@ import re
 import csvkit
 from peewee import *
 from playhouse.sqlite_ext import SqliteExtDatabase
+import xlrd
 
 import app_config
 
@@ -171,6 +172,7 @@ class LobbyLoader:
 
     organization_name_lookup = {}
     expenditures = []
+    datemode = None
 
     warnings = []
     errors = []
@@ -184,11 +186,9 @@ class LobbyLoader:
     groups_created = 0
 
     def __init__(self):
+        self.expenditures_xlsx = 'data/expenditures/2013.xlsx'
         self.legislators_demographics_filename = 'data/legislator_demographics.csv'
         self.organization_name_lookup_filename = 'data/organization_name_lookup.csv'
-        self.individual_data_filename = 'data/individual_expenditures.csv'
-        self.solicitation_data_filename = 'data/solicitation_expenditures.csv'
-        self.group_data_filename = 'data/group_expenditures.csv'
 
     def info(self, msg):
         pass
@@ -353,15 +353,10 @@ class LobbyLoader:
 
             self.legislators_created += 1
 
-    def load_individual_expenditures(self, filename, solicitations=False):
+    def load_individual_expenditures(self, rows, solicitations=False):
         """
         Load individual expenditures from files.
         """
-        # Load data
-        with open(filename) as f:
-            reader = csvkit.CSVKitDictReader(f)
-            rows = list(reader)
-
         i = 0
 
         for row in rows:
@@ -369,7 +364,8 @@ class LobbyLoader:
 
             # Strip whitespace
             for k, v in row.items():
-                row[k] = v.strip()
+                if type(row[k]) is unicode:
+                    row[k] = v.strip()
 
             # Amended?
             if row['If Amended'] == 'Amended':
@@ -383,12 +379,12 @@ class LobbyLoader:
                 self.lobbyists_created += 1 
 
             # Report period
-            report_period = datetime.datetime.strptime(row['Report'], '%b-%y').date()
+            report_period = datetime.datetime(*xlrd.xldate_as_tuple(row['Report'], self.datemode)).date()
 
             if report_period < self.ERROR_DATE_MIN:
-                self.error('%05i -- Report date too old: %s' % (i, row['Report']))
+                self.error('%05i -- Report date too old: %s' % (i, report_period))
             elif report_period > self.ERROR_DATE_MAX:
-                self.error('%05i -- Report date too new: %s' % (i, row['Report']))
+                self.error('%05i -- Report date too new: %s' % (i, report_period))
 
             # Recipient
             recipient, recipient_type = map(unicode.strip, row['Recipient'].rsplit(' - ', 1))
@@ -428,22 +424,19 @@ class LobbyLoader:
                 continue
 
             # Event date
-            bits = map(int, row['Date'].split('/'))
-            event_date = datetime.date(bits[2], bits[0], bits[1])
+            event_date = datetime.datetime(*xlrd.xldate_as_tuple(row['Date'], self.datemode)).date()
 
             if event_date < self.ERROR_DATE_MIN:
-                self.error('%05i -- Event date too old: %s' % (i, row['Date']))
+                self.error('%05i -- Event date too old: %s' % (i, event_date))
             elif event_date > self.ERROR_DATE_MAX:
-                self.error('%05i -- Event date too new: %s' % (i, row['Date']))
+                self.error('%05i -- Event date too new: %s' % (i, event_date))
 
             # Cost
-            cost = row['Cost'].strip('$').replace(',', '')
+            cost = row['Cost']
 
-            if '(' in cost or '-' in cost:
+            if cost < 0:
                 self.error('%05i -- Negative cost outside an amendment!' % i)
                 continue
-
-            cost = float(cost)
 
             # Organization
             organization = self.load_organization(row['Principal'])
@@ -470,15 +463,10 @@ class LobbyLoader:
 
         self.individual_rows = i 
 
-    def load_group_expenditures(self):
+    def load_group_expenditures(self, rows):
         """
         Load group expenditures from files.
         """
-        # Load data
-        with open(self.group_data_filename) as f:
-            reader = csvkit.CSVKitDictReader(f)
-            rows = list(reader)
-
         i = 0
 
         for row in rows:
@@ -486,7 +474,8 @@ class LobbyLoader:
 
             # Strip whitespace
             for k, v in row.items():
-                row[k] = v.strip()
+                if type(row[k]) is unicode:
+                    row[k] = v.strip()
 
             # Amended?
             if row['If Amended'] == 'Amended':
@@ -500,12 +489,12 @@ class LobbyLoader:
                 self.lobbyists_created += 1 
 
             # Report period
-            report_period = datetime.datetime.strptime(row['Report'], '%b-%y').date()
+            report_period = datetime.datetime(*xlrd.xldate_as_tuple(row['Report'], self.datemode)).date()
 
             if report_period < self.ERROR_DATE_MIN:
-                self.error('%05i -- Report date too old: %s' % (i, row['Report']))
+                self.error('%05i -- Report date too old: %s' % (i, report_period))
             elif report_period > self.ERROR_DATE_MAX:
-                self.error('%05i -- Report date too new: %s' % (i, row['Report']))
+                self.error('%05i -- Report date too new: %s' % (i, report_period))
 
             # Group
             created, group = self.load_group(row['Group'])
@@ -514,22 +503,19 @@ class LobbyLoader:
                 self.groups_created += 1
 
             # Event date
-            bits = map(int, row['Date'].split('/'))
-            event_date = datetime.date(bits[2], bits[0], bits[1])
+            event_date = datetime.datetime(*xlrd.xldate_as_tuple(row['Date'], self.datemode)).date()
 
             if event_date < self.ERROR_DATE_MIN:
-                self.error('%05i -- Event date too old: %s' % (i, row['Date']))
+                self.error('%05i -- Event date too old: %s' % (i, event_date))
             elif event_date > self.ERROR_DATE_MAX:
-                self.error('%05i -- Event date too new: %s' % (i, row['Date']))
+                self.error('%05i -- Event date too new: %s' % (i, event_date))
 
             # Cost
-            cost = row['Cost'].strip('$').replace(',', '')
+            cost = row['Cost']
 
-            if '(' in cost or '-' in cost:
+            if cost < 0:
                 self.error('%05i -- Negative cost outside an amendment!' % i)
                 continue
-
-            cost = float(cost)
 
             # Organization
             organization = self.load_organization(row['Principal'])
@@ -560,11 +546,36 @@ class LobbyLoader:
         """
         Run the loader and output summary.
         """
+        book = xlrd.open_workbook(self.expenditures_xlsx)
+        self.datemode = book.datemode
+
+        tables = []
+
+        for sheet in book.sheets():
+            columns = sheet.row_values(0)
+            rows = []
+
+            for n in range(1, sheet.nrows):
+                rows.append(dict(zip(columns, sheet.row_values(n))))
+
+            tables.append(rows)
+
+        print 'Loading organization names...'
         self.load_organization_name_lookup()
+
+        print 'Loading legislator demographics...'
         self.load_legislators()
-        self.load_individual_expenditures(self.individual_data_filename, False)
-        self.load_individual_expenditures(self.solicitation_data_filename, True)
-        self.load_group_expenditures()
+
+        print 'Loading individual expenditures...'
+        self.load_individual_expenditures(tables[0], False)
+
+        print 'Loading soliciation expenditures...'
+        self.load_individual_expenditures(tables[1], True)
+
+        print 'Loading group expenditures...'
+        self.load_group_expenditures(tables[2])
+
+        print ''
 
         if self.warnings:
             print 'WARNINGS'
