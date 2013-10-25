@@ -546,8 +546,8 @@ def create_tables():
 def delete_tables():
     models.delete_tables()
 
-def load_data():
-    loader = models.LobbyLoader()
+def load_data(first_year=2004):
+    loader = models.LobbyLoader(first_year)
     loader.run()
 
 def local_bootstrap():
@@ -556,6 +556,14 @@ def local_bootstrap():
     delete_tables()
     create_tables()
     load_data()
+
+def local_bootstrap_sample():
+    update_copy()
+    update_data_files()
+    delete_tables()
+    create_tables()
+    load_data(2011)
+
 
 """
 Cron jobs

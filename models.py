@@ -165,10 +165,8 @@ class LobbyLoader:
     """
     Load expenditures from files.
     """
-    # Folks we have data for, but predate our period of interest
-    FIRST_YEAR = 2004 
     SKIP_TYPES = ['Local Government Official', 'Public Official', 'ATTORNEY GENERAL', 'STATE TREASURER', 'GOVERNOR', 'STATE AUDITOR', 'LIEUTENANT GOVERNOR', 'SECRETARY OF STATE', 'JUDGE']
-    ERROR_DATE_MIN = datetime.date(FIRST_YEAR - 1, 1, 1)
+    ERROR_DATE_MIN = datetime.date(2003, 1, 1)
     ERROR_DATE_MAX = datetime.datetime.today().date()
 
     organization_name_lookup = {}
@@ -186,7 +184,9 @@ class LobbyLoader:
     organizations_created = 0
     groups_created = 0
 
-    def __init__(self):
+    def __init__(self, first_year=2004):
+        self.first_year = first_year
+
         self.expenditures_xlsx = 'data/expenditures/%i.xlsx'
         self.legislators_demographics_filename = 'data/legislator_demographics.csv'
         self.organization_name_lookup_filename = 'data/organization_name_lookup.csv'
@@ -578,7 +578,7 @@ class LobbyLoader:
 
         print ''
 
-        for year in range(self.FIRST_YEAR, datetime.datetime.today().year + 1):
+        for year in range(self.first_year, datetime.datetime.today().year + 1):
             print year
             print '----'
             print ''
