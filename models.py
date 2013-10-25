@@ -396,9 +396,11 @@ class LobbyLoader:
             report_period = datetime.datetime(*xlrd.xldate_as_tuple(row['Report'], self.datemode)).date()
 
             if report_period < self.ERROR_DATE_MIN:
-                self.error('Report date too old: %s' % (report_period), year, i)
+                self.warn('Skipping: report date too old, %s' % (report_period), year, i)
+                continue
             elif report_period > self.ERROR_DATE_MAX:
-                self.error('Report date too new: %s' % (report_period), year, i)
+                self.warn('Skipping: report date too new, %s' % (report_period), year, i)
+                continue
 
             # Recipient
             try:
@@ -449,9 +451,9 @@ class LobbyLoader:
             event_date = datetime.datetime(*xlrd.xldate_as_tuple(row['Date'], self.datemode)).date()
 
             if event_date < self.ERROR_DATE_MIN:
-                self.error('Event date too old: %s' % (event_date), year, i)
+                self.warn('Skipping, event date too old: %s' % (event_date), year, i)
             elif event_date > self.ERROR_DATE_MAX:
-                self.error('Event date too new: %s' % (event_date), year, i)
+                self.warn('Skipping, event date too new: %s' % (event_date), year, i)
 
             # Cost
             cost = row['Cost']
@@ -514,9 +516,9 @@ class LobbyLoader:
             report_period = datetime.datetime(*xlrd.xldate_as_tuple(row['Report'], self.datemode)).date()
 
             if report_period < self.ERROR_DATE_MIN:
-                self.error('Report date too old: %s' % (report_period), year, i)
+                self.warn('Skipping, report date too old: %s' % (report_period), year, i)
             elif report_period > self.ERROR_DATE_MAX:
-                self.error('Report date too new: %s' % (report_period), year, i)
+                self.warn('Skipping, report date too new: %s' % (report_period), year, i)
 
             # Group
             created, group = self.load_group(row['Group'])
@@ -528,9 +530,9 @@ class LobbyLoader:
             event_date = datetime.datetime(*xlrd.xldate_as_tuple(row['Date'], self.datemode)).date()
 
             if event_date < self.ERROR_DATE_MIN:
-                self.error('Event date too old: %s' % (event_date), year, i)
+                self.warn('Skipping, event date too old: %s' % (event_date), year, i)
             elif event_date > self.ERROR_DATE_MAX:
-                self.error('Event date too new: %s' % (event_date), year, i)
+                self.warn('Skipping, event date too new: %s' % (event_date), year, i)
 
             # Cost
             cost = row['Cost']
