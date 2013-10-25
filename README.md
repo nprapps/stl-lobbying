@@ -201,6 +201,8 @@ Data will be emailed to us from the Missouri State Board of Ethics each month. T
 * The canonical representation of the legislators is the [legislator demographics Google document](https://docs.google.com/spreadsheet/ccc?key=0AlXMOHKxzQVRdFFQRzBuLUxhN0JubjlvRVA2SlpVVlE&usp=drive_web#gid=0). This document should only ever contain the current legislators. If a district is vacant you should include a row for it with the word `VACANT` in the `last_name` column. This will cause the `vacant` flag to be set on the correct `Legislator` database entry (other fields will be set to blank). 
 * The canonical source for lobbying organization names and categories is the [organization name lookup Google document](https://docs.google.com/spreadsheet/ccc?key=0AlXMOHKxzQVRdFJNMlZTXy1pSFNRUHJIR3RVSWhJSGc&usp=drive_web#gid=0). New organizations/organization misspellings should be added to this document.
 
+Be sure to republish these spreadsheets by going to `File`, `Publish to the web...` and then clicking `Republish now`. Otherwise they may still be cached when you run the loader.
+
 **Loading the data**
 
 `fab local_bootstrap`
