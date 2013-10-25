@@ -192,22 +192,33 @@ fab staging master deploy
 Update the data
 ---------------
 
-Notes on how the data is stored:
+**Getting it**
 
-* The canonical representation of the legislators is the [legislator demographics Google document](https://docs.google.com/spreadsheet/ccc?key=0AlXMOHKxzQVRdFFQRzBuLUxhN0JubjlvRVA2SlpVVlE&usp=drive_web#gid=0). This document should only ever contain the current legislators. If a district is vacant you should include a row for it with the word `VACANT` in the `last_name` column.
-* The canonical source for company names and industries is the [organization name lookup Google document](https://docs.google.com/spreadsheet/ccc?key=0AlXMOHKxzQVRdFJNMlZTXy1pSFNRUHJIR3RVSWhJSGc&usp=drive_web#gid=0). New organizations/organization misspellings should be added to this document.
-* The data itself lives in three CSVs: `data/individual_expenditures.csv', 'data/group_expenditures.csv', and 'data/solicitation_expenditures'. Each of these documents should be replaced locally before the update process is run.
+Data will be emailed to us from the Missouri State Board of Ethics each month. They will send us an `.xlsx` file with three tabs: individual expenditures, solicitations, and group expenditures. This file should be renamed for the current year (e.g. `2013.xlsx`) and placed in the directory `data/expenditures/`. If we already have a partial data file for the current year, simply replace it.
 
-To load the data, run:
+**Updating other datasets**
+
+* The canonical representation of the legislators is the [legislator demographics Google document](https://docs.google.com/spreadsheet/ccc?key=0AlXMOHKxzQVRdFFQRzBuLUxhN0JubjlvRVA2SlpVVlE&usp=drive_web#gid=0). This document should only ever contain the current legislators. If a district is vacant you should include a row for it with the word `VACANT` in the `last_name` column. This will cause the `vacant` flag to be set on the correct `Legislator` database entry (other fields will be set to blank). 
+* The canonical source for lobbying organization names and categories is the [organization name lookup Google document](https://docs.google.com/spreadsheet/ccc?key=0AlXMOHKxzQVRdFJNMlZTXy1pSFNRUHJIR3RVSWhJSGc&usp=drive_web#gid=0). New organizations/organization misspellings should be added to this document.
+
+**Loading the data**
 
 `fab local_bootstrap`
 
-This will fetch the two documents mentioned above. Any warnings or errors will be printed to the console once the loader is finished. Errors **must** be resolved before you complete the update process. If an error refers to an unknown organization name then it should be added to the [organization name lookup Google document](https://docs.google.com/spreadsheet/ccc?key=0AlXMOHKxzQVRdFJNMlZTXy1pSFNRUHJIR3RVSWhJSGc&usp=drive_web#gid=0).
+This will fetch the two documents mentioned above. Any warnings or errors will be printed to the console once the loader is finished.
 
-Be sure to test the site before you deploy!
+Errors **must** be resolved before you complete the update process. If an error refers to an unknown organization name then it should be added to the [organization name lookup Google document](https://docs.google.com/spreadsheet/ccc?key=0AlXMOHKxzQVRdFJNMlZTXy1pSFNRUHJIR3RVSWhJSGc&usp=drive_web#gid=0).
+
+Warnings do not need to be resolved unless they indicate the source data is invalid. There are likely to be a small number of date errors each year. We can safely ignore these.
+
+Rerun the loader until all errors have been successfully resolved. (If doing a lot of this you can just load recent data using `fab local_bootstrap_sample`.
+
+**Test the site**
 
 `python app.py`
 
-To rerender and deploy the site using the new data:
+**Deploy**
+
+Finally rerender and deploy the site to production:
 
 `fab production stable deploy deploy_pages`
