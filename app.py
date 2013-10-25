@@ -85,7 +85,7 @@ def legislators():
 
     return render_template('legislator_list.html', **context)    
 
-@app.route('/download/data.csv')
+@app.route('/download/missouri-lobbying.csv')
 def download_csv():
     """
     Generate a data download.
