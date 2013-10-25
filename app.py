@@ -55,7 +55,7 @@ def index():
             categories_total_spending[org.category] = org.total_spending
 
     organizations_total_spending = sorted(organizations, key=lambda o: o.total_spending, reverse=True)[:10]
-    categories_total_spending = sorted(categories_total_spending.items(), key=lambda c: c[1], reverse=True)[:10]
+    categories_total_spending = sorted(categories_total_spending.items(), key=lambda c: c[1], reverse=True)
 
     context['senators'] = Legislator.select().where(Legislator.office == 'Senator')
     context['representatives'] = Legislator.select().where(Legislator.office == 'Representative')
@@ -189,7 +189,7 @@ def _legislator(slug):
             top_categories[org.category] = org.total_spending
 
     top_organizations = sorted(top_organizations, key=lambda o: o.total_spending, reverse=True)[:10]
-    top_categories = sorted(top_categories.items(), key=lambda c: c[1], reverse=True)[:10]
+    top_categories = sorted(top_categories.items(), key=lambda c: c[1], reverse=True)
 
     context['legislator'] = legislator
     context['expenditures'] = legislator.expenditures.order_by(Expenditure.cost.desc())
