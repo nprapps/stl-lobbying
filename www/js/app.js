@@ -237,8 +237,8 @@ $(function() {
     // Load maps
     search_map = L.mapbox.map('search-map');
     
-    senate_layer = L.mapbox.tileLayer('http://a.tiles.mapbox.com/v3/npr.map-sxczgdka.json?1414');
-    senate_grid = L.mapbox.gridLayer('http://a.tiles.mapbox.com/v3/npr.map-sxczgdka.json?1414');
+    senate_layer = L.mapbox.tileLayer('http://a.tiles.mapbox.com/v3/npr.map-d0jcwmbw.json?1414');
+    senate_grid = L.mapbox.gridLayer('http://a.tiles.mapbox.com/v3/npr.map-d0jcwmbw.json?1414');
     
     house_layer = L.mapbox.tileLayer('http://a.tiles.mapbox.com/v3/npr.map-bjum1mub.json?1414');
     house_grid = L.mapbox.gridLayer('http://a.tiles.mapbox.com/v3/npr.map-bjum1mub.json?1414');
