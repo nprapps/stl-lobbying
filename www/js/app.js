@@ -201,7 +201,35 @@ $(function() {
     $search_examples.on('click', on_example_click);
     $gift_sort.on('change', on_gift_sort_change);
 
-    $gift_table.tablesorter();
+    $.tablesorter.addParser({ 
+        id: 'hidden-text', 
+        is: function(s) { 
+            return false; 
+        }, 
+        format: function(s, table, cell, cellIndex) { 
+            return $(cell).find('span').text();
+        }, 
+        type: 'text' 
+    }); 
+
+    $.tablesorter.addParser({ 
+        id: 'hidden-number', 
+        is: function(s) { 
+            return false; 
+        }, 
+        format: function(s, table, cell, cellIndex) { 
+            return parseFloat($(cell).find('span').text());
+        }, 
+        type: 'numeric' 
+    }); 
+
+
+    $gift_table.tablesorter({
+        headers: {
+            0: { sorter: 'hidden-text' },
+            2: { sorter: 'hidden-number' }
+        }
+    });
 
     // Disable default sort events
     $gift_table.find('th').off();
