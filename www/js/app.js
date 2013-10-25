@@ -98,7 +98,7 @@ function on_search_submit() {
                     $('#search-results').modal('show');
                     on_search_map_moveend();
                 } else {
-                    // If there are many results,
+                    // If there are many resulits,
                     // show the did-you-mean path.
                     $did_you_mean_list.empty();
 
@@ -219,6 +219,7 @@ $(function() {
     search_map.addLayer(senate_grid);
     search_map.addLayer(house_grid);
     search_map.setView([36.46, -92.1], 7);
+    search_map.scrollWheelZoom.disable();
 
     search_map.on('moveend', on_search_map_moveend);
     $show_senate_map.on('click', on_show_senate_map_click);
