@@ -234,14 +234,15 @@ def _organization(slug):
         if not ex.legislator:
             continue
 
-        if ex.organization in legislator_spending:
-            legislator_spending[ex.legislator] += ex.cost
+        if ex.legislator.id in legislator_spending:
+            legislator_spending[ex.legislator.id] += ex.cost
         else:
-            legislator_spending[ex.legislator] = ex.cost
+            legislator_spending[ex.legislator.id] = ex.cost
 
     top_legislators = []
 
-    for legislator, spending in legislator_spending.items():
+    for legislator_id, spending in legislator_spending.items():
+        legislator = Legislator.get(Legislator.id == legislator_id)
         legislator.total_spending = spending
         top_legislators.append(legislator)
 
