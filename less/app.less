@@ -646,6 +646,7 @@ nav {
 
 	#search-map {
 		position: relative;
+		margin-bottom: @line-height-computed / 2;
 
 		&:before {
 			display: block;
@@ -663,4 +664,32 @@ nav {
 			border: 2px solid @brand-red;
 		}
 	}	
+
+	.results {
+		display: table;
+
+		.sen,
+		.rep {
+			display: table-cell;
+			width: 50%;
+			padding: 0 15px 0 0;
+			margin: 0;
+			vertical-align: top;
+
+			img {
+				width: 60px;
+				float: left;
+				margin-right: @line-height-computed / 2;
+			}	
+		}
+
+		a {
+			font-size: @font-size-base * 1.3;
+
+			small {
+				display: block;
+				color: @gray-light;
+			}
+		}
+	}
 }

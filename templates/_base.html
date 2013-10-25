@@ -205,6 +205,7 @@
             {% for senator in senators %}
             '{{ senator.district }}': {
                 'display_name': '{{ senator.display_name() }}',
+                'mug_url': '{{ S3_BASE_URL }}/img/mugs/{{ senator.office|lower }}_{{ senator.first_name|lower|replace(".", "")|replace(" ", "_") }}_{{ senator.last_name|lower }}.gif',
                 'slug': '{{ senator.slug }}',
                 'district': '{{ senator.district }}'
             }{% if not loop.last %},{% endif %}
@@ -215,6 +216,7 @@
             {% for rep in representatives %}
             '{{ rep.district }}': {
                 'display_name': '{{ rep.display_name() }}',
+                'mug_url': '{{ S3_BASE_URL }}/img/mugs/{{ rep.office|lower }}_{{ rep.first_name|lower|replace(".", "")|replace(" ", "_") }}_{{ rep.last_name|lower }}.png',
                 'slug': '{{ rep.slug }}',
                 'district': '{{ rep.district }}'
             }{% if not loop.last %},{% endif %}

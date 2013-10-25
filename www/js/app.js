@@ -93,7 +93,10 @@ function on_search_submit() {
                     var display_name = locale['display_name'].replace(', United States of America', '');
 
                     move_search_map(locale['lat'], locale['lon']);
+                    on_show_senate_map_click();
+                    
                     $('#search-results').modal('show');
+                    on_search_map_moveend();
                 } else {
                     // If there are many results,
                     // show the did-you-mean path.
@@ -220,8 +223,4 @@ $(function() {
     search_map.on('moveend', on_search_map_moveend);
     $show_senate_map.on('click', on_show_senate_map_click);
     $show_house_map.on('click', on_show_house_map_click);
-
-    $('#search-results').on('shown.bs.modal', function () {
-      // do something…
-    })
 });
