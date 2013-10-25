@@ -16,8 +16,7 @@
 }
 
 .bar {
-	background: lighten(@brand-red, 7%);
-	color: #fff;
+	background: lighten(@brand-red, 50%);
 	font-weight: bold;
 	font-size: @font-size-base;
 	height: 36px;
@@ -200,6 +199,11 @@ nav {
 		&:after {
 			.rule-3px;
 		}
+
+		&:before {
+			margin-bottom: 0;
+		}
+
 		.total-spending,
 		.total-gifts,
 		.total-orgs,
@@ -212,9 +216,10 @@ nav {
 				display: block;
 				font-size: 42px;
 			}
-			&:first-child {
-				border-left: none;
-			}
+		}
+
+		.total-spending {
+			border-left: none;
 		}
 
 		@media screen and (max-width: @screen-sm-max){
@@ -282,11 +287,30 @@ nav {
 		}
 
 
-		.total-spending,
-		.total-gifts,
+		> h3 {
+			.make-md-column(12);
+
+
+			&:after {
+				display: block; 
+				content: ' ';
+				margin-left: 0;
+				margin-right: 0;
+				margin-top: @line-height-computed / 2;
+				height: 1px;
+				background: @gray-light;
+			}
+		}
+
+		.total-spending{
+			.make-md-column(4);
+		}
+		.total-gifts{
+			.make-md-column(4);
+		}
 		.total-orgs,
 		.total-lobbyists {
-			.make-md-column(3);
+			.make-md-column(2);
 		}
 	}
 
@@ -294,6 +318,11 @@ nav {
 
 		h3 {
 			margin-top: @line-height-computed / 2;
+
+			small {
+				text-transform: uppercase;
+				font-size: 12px;
+			}
 		}
 		table {
 			width: 100%;
@@ -304,9 +333,10 @@ nav {
 				padding: 1px 5px;
 
 				&.organization,
-				&.legislator {
-					width: 33.33333%;
+				&.legislator,
+				&.category {
 					text-align: right;
+					padding-right: 10px;
 				}
 
 				@media screen and (max-width: @screen-xs-max){
@@ -314,7 +344,8 @@ nav {
 					padding: 0;
 
 					&.organization,
-					&.legislator {
+					&.legislator,
+					&.category {
 						width: auto;
 						text-align: left;
 						padding-bottom: 3px;
@@ -335,10 +366,13 @@ nav {
 			}
 
 			td {
-				&.organization,
-				&.legislator {
-					font-size: 11px;
+				vertical-align: top;
+				line-height: 30px;
+				padding: 2px 0;
 
+				&.organization,
+				&.legislator,
+				&.category {
 					small {
 						display: block;
 						color: @gray-light;
@@ -346,42 +380,48 @@ nav {
 					}
 				}
 
+				&.organization {
+					line-height: 1;
+					vertical-align: middle;
+				}
+
 				&.spending {
 					font-size: 13px;
-					padding: @line-height-computed / 4 0;
+					// padding: @line-height-computed / 4 0;
+					vertical-align: top;
+					width: 50%;
+					text-align: left;
 
 					.bar {
-						line-height: 40px;
-						height: 50px;
+						padding: 5px;
 					}
 				}
 			}
 		}
 	}
 
-	.organizations,
 	.legislators {
-		.make-md-column(6);
+		.make-md-column(4);
+	}
+	.categories {
+		.make-md-column(3);
 	}
 
-	.legislators {
-		@media screen and (min-width: @screen-md){
-			border-left: 1px solid @gray-light;
-		}
+	.organizations {
+		.make-md-column(5);
 	}
 
 	.categories {
-		.make-md-column(12);
 
-		h3 {
-			border-bottom: 1px solid @gray-light;
-			padding-bottom: @line-height-computed / 2;
-			margin-bottom: 5px;
-			&:before {
-				.rule-3px;
-				margin: @line-height-computed 0;
-			}
-		}
+		// h3 {
+		// 	border-bottom: 1px solid @gray-light;
+		// 	padding-bottom: @line-height-computed / 2;
+		// 	margin-bottom: 5px;
+		// 	&:before {
+		// 		.rule-3px;
+		// 		margin: @line-height-computed 0;
+		// 	}
+		// }
 
 
 		ul {
@@ -562,7 +602,7 @@ nav {
 		.amount {
 			font-size: 11px;
 
-			text-align: left;
+			text-align: right;
 			padding-right: 5px;
 			line-height: 1.1;
 		}
@@ -677,6 +717,7 @@ nav {
 
 	.results {
 		display: table;
+		width: 100%;
 		margin-bottom: @line-height-computed / 2;
 		min-height: 90px;
 

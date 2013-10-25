@@ -43,6 +43,7 @@
 
 {% block wide_content %}
 <div class="totals row">
+        <h3>24-Month Totals</h3>
         <p class="total-spending">{{ COPY.content.agg_sum_headline }}<strong>{{ total_spending|format_currency }}</strong></p>
         <p class="total-gifts">{{ COPY.content.agg_count_headline }} <strong>{{ comma(total_expenditures) }}</strong></p>
         <p class="total-orgs">{{ COPY.content.agg_org_count_headline }}<strong>{{ comma(total_organizations) }}</strong></p>
@@ -50,7 +51,7 @@
 </div>
 <div class="top-entities row">
     <div class="organizations">
-        <h3>{{ COPY.content.org_chart_headline }}</h3>
+        <h3>{{ COPY.content.org_chart_headline }} <small>(Last 24 Months)</small></h3>
         <table>
             <tbody>
             {% for org in organizations_total_spending %}
@@ -63,7 +64,7 @@
         </table>
     </div>
     <div class="legislators">
-        <h3>{{ COPY.content.leg_chart_headline }}</h3>
+        <h3>{{ COPY.content.leg_chart_headline }} <small>(Last 24 Months)</small></h3>
         <table>
             <tbody>
             {% for legislator in legislators_total_spending %}
@@ -78,7 +79,7 @@
         <p><a href="{{ S3_BASE_URL }}/legislators/">View all legislators &raquo;</a></p>
     </div>
     <div class="categories">
-        <h3>{{ COPY.content.industry_chart_headline }}</h3>
+        <h3>{{ COPY.content.industry_chart_headline }} <small>(Last 24 Months)</small></h3>
         <table>
             <tbody>
             {% for category, total_spending in categories_total_spending %}
