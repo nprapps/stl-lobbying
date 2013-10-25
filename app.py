@@ -171,15 +171,16 @@ def _legislator(slug):
     org_spending = {}
 
     for ex in legislator.expenditures:
-        if ex.organization in org_spending:
-            org_spending[ex.organization] += ex.cost
+        if ex.organization.id in org_spending:
+            org_spending[ex.organization.id] += ex.cost
         else:
-            org_spending[ex.organization] = ex.cost
+            org_spending[ex.organization.id] = ex.cost
 
     top_organizations = []
     top_categories = {}
 
-    for org, spending in org_spending.items():
+    for org_id, spending in org_spending.items():
+        org = Organization.get(Organization.id == org_id)
         org.total_spending = spending
         top_organizations.append(org)
 
