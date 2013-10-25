@@ -222,7 +222,7 @@ class LobbyLoader:
 
                 ethics_name = row[0]
                 correct_name = row[1]
-                category = row[2]
+                category = row[2] or 'Other'
 
                 if not correct_name:
                     correct_name = ethics_name

@@ -541,16 +541,28 @@ def deploy_pages():
 Local commands
 """
 def create_tables():
+    """
+    Create all database tables.
+    """
     models.create_tables()
 
 def delete_tables():
+    """
+    Delete all database tables.
+    """
     models.delete_tables()
 
 def load_data(first_year=2004):
+    """
+    Execute the data loader.
+    """
     loader = models.LobbyLoader(first_year)
     loader.run()
 
 def local_bootstrap():
+    """
+    Destroy and rebuild the local database.
+    """
     update_copy()
     update_data_files()
     delete_tables()
@@ -558,6 +570,9 @@ def local_bootstrap():
     load_data()
 
 def local_bootstrap_sample():
+    """
+    Rebuild the local database with only the last few years of data.
+    """
     update_copy()
     update_data_files()
     delete_tables()
