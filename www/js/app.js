@@ -147,7 +147,7 @@ function on_search_map_moveend(e) {
     var center = search_map.getCenter();
 
     senate_grid.getData(center, function(senate_data) {
-        if (senate_data === null) {
+        if (_.isUndefined(senate_data)) {
             $not_found.show();
             return;
         }
@@ -157,7 +157,7 @@ function on_search_map_moveend(e) {
         $sen_result.html(JST.search_result(sen)); 
 
         house_grid.getData(center, function(house_data) {
-            if (house_data === null) {
+            if (_.isUndefined(house_data)) {
                 $not_found.show();
                 return;
             }
