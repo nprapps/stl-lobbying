@@ -23,15 +23,15 @@
         <h3>{{ COPY.organization.all_time_headline }}</h3>
         <ul class="list-unstyled ">
             <li>{{ COPY.organization.all_time_spending }}<strong>{{ total_spending|format_currency }}</strong></li>
-            <li>{{ COPY.organization.all_time_gifts }}<strong>{{ comma(total_expenditures) }}</strong></li>
+            <li>{{ COPY.organization.all_time_gifts }}<strong>{{ comma(total_expenditures) }} gifts</strong></li>
         </ul>
     </div>
     <div class="two-year stats">
         <h3>{{ COPY.organization.recent_headline }}</h3>
         <ul class="list-unstyled ">
             <li>{{ COPY.organization.recent_spending }}<strong>{{ total_spending_recent|format_currency }}</strong></li>
-            <li>{{ COPY.organization.recent_gifts }}<strong>{{ comma(total_expenditures_recent) }}</strong></li>
-            <li>{{ COPY.organization.recent_rank }}<strong>{{ ordinal(organization_rank) }}</strong></li>
+            <li>{{ COPY.organization.recent_gifts }}<strong>{{ comma(total_expenditures_recent) }} gifts</strong></li>
+            <li><strong>{{ ordinal(organization_rank) }} highest spending organization</strong></li>
         </ul>
     </div>
     <div class="leaderboard">
@@ -61,10 +61,10 @@
             <thead>
                 <tr>
                     <th class="date">{{ COPY.organization.th_date }}</th>
-                    <th class="recipient">{{ COPY.recipient.th_recipient }}</th>
-                    <th class="expenditure">{{ COPY.recipient.th_value }}</th>
-                    <th class="description">{{ COPY.recipient.th_desc }}</th>
-                    <th class="category">{{ COPY.recipient.th_category }}</th>
+                    <th class="recipient">{{ COPY.organization.th_recipient }}</th>
+                    <th class="expenditure">{{ COPY.organization.th_value }}</th>
+                    <th class="description">{{ COPY.organization.th_desc }}</th>
+                    <th class="category">{{ COPY.organization.th_category }}</th>
                 </tr>
             </thead>
             <tbody>

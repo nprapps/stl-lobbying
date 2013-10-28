@@ -43,7 +43,7 @@
 
 {% block wide_content %}
 <div class="totals row">
-        <h3>24-Month Totals</h3>
+        <h3>{{ COPY.content.recent_headline }}</h3>
         <p class="total-spending">{{ COPY.content.agg_sum_headline }}<strong>{{ total_spending|format_currency }}</strong></p>
         <p class="total-gifts">{{ COPY.content.agg_count_headline }} <strong>{{ comma(total_expenditures) }}</strong></p>
         <p class="total-orgs">{{ COPY.content.agg_org_count_headline }}<strong>{{ comma(total_organizations) }}</strong></p>
