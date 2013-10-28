@@ -165,7 +165,7 @@ class LobbyLoader:
     """
     Load expenditures from files.
     """
-    SKIP_TYPES = ['Local Government Official', 'Public Official', 'ATTORNEY GENERAL', 'STATE TREASURER', 'GOVERNOR', 'STATE AUDITOR', 'LIEUTENANT GOVERNOR', 'SECRETARY OF STATE', 'JUDGE']
+    SKIP_TYPES = ['Local Government Official', 'Public Official', 'ATTORNEY GENERAL', 'STATE TREASURER', 'GOVERNOR', 'STATE AUDITOR', 'LIEUTENANT GOVERNOR', 'SECRETARY OF STATE', 'JUDGE', 'GOVERNOR ELECT', 'CHIEF JUSTICE']
     ERROR_DATE_MIN = datetime.date(2003, 1, 1)
     ERROR_DATE_MAX = datetime.datetime.today().date()
 
