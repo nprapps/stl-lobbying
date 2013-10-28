@@ -33,24 +33,24 @@
 {% block wide_content %}
 <div class="row">
     <div class="all-time stats">
-        <h3>All Time Totals</h3>
+        <h3>{{ COPY.legislator.all_time_headline }}</h3>
         <ul class="list-unstyled">
-            <li class="total-amount">Total received: <strong>{{ total_spending|format_currency }}</strong></li>
-            <li class="gift-count">Total gifts received: <strong>{{ comma(total_expenditures) }}</strong></li>
+            <li class="total-amount">{{ COPY.legislator.all_time_received }}<strong>{{ total_spending|format_currency }}</strong></li>
+            <li class="gift-count">{{ COPY.legislator.all_time_gifts_received }} <strong>{{ comma(total_expenditures) }}</strong></li>
         </ul>
     </div>
     <div class="two-year stats">
-        <h3>TKTK Totals</h3>
+        <h3>{{ COPY.legislator.recent_headline }}</h3>
         <ul class="list-unstyled">
-            <li class="total-amount">Total received: <strong>{{ total_spending_recent|format_currency }}</strong></li>
-            <li class="gift-count">Total gifts received: <strong>{{ comma(total_expenditures_recent) }}</strong></li>
-            <li class="rank">Legislator rank: <strong>{{ ordinal(legislator_rank) }}</strong></li>
+            <li class="total-amount">{{ COPY.legislator.recent_received }}<strong>{{ total_spending_recent|format_currency }}</strong></li>
+            <li class="gift-count">{{ COPY.legislator.recent_gifts_received }}<strong>{{ comma(total_expenditures_recent) }}</strong></li>
+            <li class="rank">{{ COPY.legislator.recent_rank }}<strong>{{ ordinal(legislator_rank) }}</strong></li>
         </ul>
     </div>
     <div class="leaderboard">
         <div class="leaderboard-wrapper">
             <div class="top-organizations">
-                <h3>Top organizations (all time)</h3>
+                <h3>{{ COPY.legislator.org_chart_hed }}</h3>
                 <table>
                     {% for org in top_organizations %}
                     <tr>
@@ -61,7 +61,7 @@
                 </table>
             </div>
             <div class="top-categories">
-                <h3>Spending by industry (all time)</h3>
+                <h3>{{ COPY.legislator.category_chart_hed }}</h3>
                 <table>
                     {% for category, total_spending in top_categories %}
                     <tr>
@@ -76,18 +76,18 @@
     <div class="table-responsive gift-table">
         <label for="gift-sort">Sort by: </label>
         <select id="gift-sort">
-            <option value="cost" selected="selected">Most expensive</option>
-            <option value="date">Most recent</option>
-            <option value="organization">Name of organization</option>
+            <option value="cost" selected="selected">{{ COPY.legislator.most_expensive }}</option>
+            <option value="date">{{ COPY.legislator.most_recent }}</option>
+            <option value="organization">{{ COPY.legislator.name_of_org }}</option>
         </select>
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th class="date">Date</th>
-                    <th class="recipient">Organization</th>
-                    <th class="expenditure">Value</th>
-                    <th class="description">Description</th>
-                    <th class="category">Category</th>
+                    <th class="date">{{ COPY.legislator.th_date }}</th>
+                    <th class="recipient">{{ COPY.legislator.th_org }}</th>
+                    <th class="expenditure">{{ COPY.legislator.th_value }}</th>
+                    <th class="description">{{ COPY.legislator.th_desc }}</th>
+                    <th class="category">{{ COPY.legislator.th_category }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -96,7 +96,7 @@
                     <td class="date"><span style="display: none;">{{ ex.event_date.isoformat() }}</span>{{ ex.event_date.strftime('%B %e, %Y') }}</td>
                     <td class="recipient">{% if ex.organization %}<a href="{{ ex.organization.url() }}">{{ ex.organization.name }}</a>{% endif %}</td>
                     <td class="expenditure"><span style="display: none;">{{ ex.cost }}</span>{{ ex.cost|format_currency }}</td>
-                    <td class="description{% if not ex.description %} not-disclosed{% endif %}">{% if ex.description %}{{ ex.description }}{% else %}<em>Not disclosed</em>{% endif %}</td>
+                    <td class="description{% if not ex.description %} not-disclosed{% endif %}">{% if ex.description %}{{ ex.description }}{% else %}<em>{{ COPY.legislator.not_disclosed }}</em>{% endif %}</td>
                     <td class="category">{{ ex.category }}</td>
                 </tr>
             {% endfor %}
