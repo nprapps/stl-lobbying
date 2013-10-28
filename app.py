@@ -85,6 +85,15 @@ def legislators():
 
     return render_template('legislator_list.html', **context)    
 
+@app.route('/methodology/')
+def methodology():
+    """
+    Methodology explainer page.
+    """
+    context = make_context()
+
+    return render_template('methodology.html', **context)
+
 @app.route('/download/missouri-lobbying.csv')
 def download_csv():
     """
