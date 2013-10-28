@@ -1,1 +1,7 @@
-<a href="legislators/<%= slug %>"><img src="<%= mug_url %>"><%= display_name %> <small>District <%= district %></small></a>
+<span class="result">
+<% if (vacant) { %>
+<img src="" />Vacant <small>District <%= district %></small></spa>
+<% } else { %>
+<a href="legislators/<%= slug %>"><img src="<%= mug_url %>" /><%= display_name %> <small>District <%= district %></small></a>
+<% } %>
+</span>

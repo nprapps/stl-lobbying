@@ -52,7 +52,7 @@
 <div class="top-entities row">
     <div class="org-legislator-wrapper">
         <div class="organizations">
-            <h3>{{ COPY.content.org_chart_headline }} <small>(Last 24 Months)</small></h3>
+            <h3>{{ COPY.content.org_chart_headline }}</h3>
             <table>
                 <tbody>
                 {% for org in organizations_total_spending %}
@@ -65,7 +65,7 @@
             </table>
         </div>
         <div class="legislators">
-            <h3>{{ COPY.content.leg_chart_headline }} <small>(Last 24 Months)</small></h3>
+            <h3>{{ COPY.content.leg_chart_headline }}</h3>
             <table>
                 <tbody>
                 {% for legislator in legislators_total_spending %}
@@ -81,7 +81,7 @@
         </div>
     </div>
     <div class="categories">
-        <h3>{{ COPY.content.industry_chart_headline }} <small>(Last 24 Months)</small></h3>
+        <h3>{{ COPY.content.industry_chart_headline }}</h3>
         <table>
             <tbody>
             {% for category, total_spending in categories_total_spending %}
