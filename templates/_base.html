@@ -217,7 +217,7 @@
             {% for rep in representatives %}
             '{{ rep.district }}': {
                 'display_name': '{{ rep.display_name() }}',
-                'mug_url': '{{ S3_BASE_URL }}/img/mugs/{{ rep.office|lower }}_{{ rep.first_name|lower|replace(".", "")|replace(" ", "_") }}_{{ rep.last_name }}.png',
+                'mug_url': '{{ S3_BASE_URL }}/img/mugs/{{ rep.office|lower|replace(".", "")|replace(" ", "_") }}_{{ rep.first_name|lower|replace(".", "")|replace(" ", "_") }}_{{ rep.last_name }}.png',
                 'slug': '{{ rep.slug }}',
                 'district': '{{ rep.district }}',
                 'vacant': {{ rep.vacant|lower }}
