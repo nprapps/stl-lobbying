@@ -36,15 +36,15 @@
         <h3>{{ COPY.legislator.all_time_headline }}</h3>
         <ul class="list-unstyled">
             <li class="total-amount">{{ COPY.legislator.all_time_received }}<strong>{{ total_spending|format_currency }}</strong></li>
-            <li class="gift-count">{{ COPY.legislator.all_time_gifts_received }} <strong>{{ comma(total_expenditures) }}</strong></li>
+            <li class="gift-count">{{ COPY.legislator.all_time_gifts_received }} <strong>{{ comma(total_expenditures) }} gifts</strong></li>
         </ul>
     </div>
     <div class="two-year stats">
         <h3>{{ COPY.legislator.recent_headline }}</h3>
         <ul class="list-unstyled">
             <li class="total-amount">{{ COPY.legislator.recent_received }}<strong>{{ total_spending_recent|format_currency }}</strong></li>
-            <li class="gift-count">{{ COPY.legislator.recent_gifts_received }}<strong>{{ comma(total_expenditures_recent) }}</strong></li>
-            <li class="rank">{{ COPY.legislator.recent_rank }}<strong>{{ ordinal(legislator_rank) }}</strong></li>
+            <li class="gift-count">{{ COPY.legislator.recent_gifts_received }}<strong>{{ comma(total_expenditures_recent) }} gifts</strong></li>
+            <li class="rank"><strong>{{ ordinal(legislator_rank) }} most benefiting legislator</strong></li>
         </ul>
     </div>
     <div class="leaderboard">
