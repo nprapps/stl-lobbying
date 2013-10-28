@@ -12,7 +12,7 @@
 
 
 {% block content %}
-<h1>All Legislators</h1>
+<h1>{{ COPY.legislator_list.title }}</h1>
 {% endblock %}
 
 
@@ -23,16 +23,22 @@
         <table class="table table-striped legislator-table">
             <thead>
                 <tr>
-                    <th class="recipient">Name</th>
+                    <th class="name">{{ COPY.legislator_list.th_name }}</th>
+                    <th class="party">{{ COPY.legislator_list.th_party }}</th>
+                    <th class="district">{{ COPY.legislator_list.th_district }}</th>
                 </tr>
             </thead>
             <tbody>
             {% for legislator in house_list %}
                 <tr>
                     {% if legislator.vacant %}
-                    <td class="name">Vacant <small>{{ ordinal(legislator.district) }} district</small></td>
+                    <td class="name">Vacant</td>
+                    <td class="party"></td>
+                    <td class="district">{{ ordinal(legislator.district) }} district</small></td></td>
                     {% else %}
-                    <td class="name"><a href="{{ legislator.url() }}">{{ legislator.display_name() }} <small>{{ legislator.party }} | {{ ordinal(legislator.district) }} district</small></a></td>
+                    <td class="name"><a href="{{ legislator.url() }}">{{ legislator.display_name() }}</td>
+                    <td class="party">{{ legislator.party }}</td>
+                    <td class="district">{{ ordinal(legislator.district) }} district</small></a></td>
                     {% endif %}
                 </tr>
             {% endfor %}
@@ -44,16 +50,22 @@
         <table class="table table-striped legislator-table">
             <thead>
                 <tr>
-                    <th class="recipient">Name</th>
+                    <th class="name">{{ COPY.legislator_list.th_name }}</th>
+                    <th class="party">{{ COPY.legislator_list.th_party }}</th>
+                    <th class="district">{{ COPY.legislator_list.th_district }}</th>
                 </tr>
             </thead>
             <tbody>
             {% for legislator in senate_list %}
                 <tr>
                     {% if legislator.vacant %}
-                    <td class="name">Vacant <small>{{ ordinal(legislator.district) }} district</small></td>
+                    <td class="name">Vacant</td>
+                    <td class="party"></td>
+                    <td class="district">{{ ordinal(legislator.district) }} district</small></td></td>
                     {% else %}
-                    <td class="name"><a href="{{ legislator.url() }}">{{ legislator.display_name() }} <small>{{ legislator.party }} | {{ ordinal(legislator.district) }} district</small></a></td>
+                    <td class="name"><a href="{{ legislator.url() }}">{{ legislator.display_name() }}</td>
+                    <td class="party">{{ legislator.party }}</td>
+                    <td class="district">{{ ordinal(legislator.district) }} district</small></a></td>
                     {% endif %}
                 </tr>
             {% endfor %}
