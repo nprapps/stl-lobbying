@@ -11,12 +11,15 @@
 {% endblock %}
 
 {% block content %}
-{% endblock %}
-
-{% block wide_content %}
+<div class="row">
 <h3>{{ COPY.methodology.title }}</h3>
 
 {{ COPY.methodology.body }}
 
 <p><a href="{{ S3_BASE_URL }}/download/missouri-lobbying.csv">{{ COPY.methodology.download }}</a></p>
+</div>
+{% endblock %}
+
+{% block wide_content %}
+
 {% endblock %}
