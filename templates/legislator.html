@@ -13,7 +13,7 @@
 
 {% block content %}
 <div class="legislator-header detail-header">
-    <img class="img-responsive" src="{{ S3_BASE_URL }}/img/mugs/{{ legislator.office|lower }}_{{ legislator.first_name|lower }}_{{ legislator.last_name|lower }}{{ legislator.office|replace("Representative", ".png")|replace("Senator", ".gif") }}">
+    <img class="img-responsive" src="{{ S3_BASE_URL }}/img/mugs/{{ legislator.office|lower }}_{{ legislator.first_name|lower|replace(".", "")|replace(" ", "_") }}_{{ legislator.last_name|lower }}{{ legislator.office|replace("Representative", ".png")|replace("Senator", ".gif") }}">
     <div class="legislator-info">
         <h1>{{ legislator.display_name() }}</h1>
         <h3>{{ legislator.party }} &ndash; {{ ordinal(legislator.district) }} district</h3>
