@@ -43,7 +43,7 @@
                 <table>
                     {% for legislator in top_legislators %}
                     <tr>
-                        <td class="legislator"><a href="{{ legislator.url() }}">{{ legislator.display_name() }}</a></td>
+                        <td class="legislator"><a href="{{ legislator.url() }}">{{ legislator.display_name() }} <small>{{ legislator.party }} | {{ ordinal(legislator.district) }} district</a></td>
                         <td class="spending"><div class="bar" style="width: {{ legislator.total_spending / (top_legislators|first).total_spending * 100 }}%">{{ legislator.total_spending|format_currency }}</div></td>
                     </tr>
                     {% endfor %}

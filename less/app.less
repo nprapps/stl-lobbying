@@ -391,20 +391,16 @@ nav {
 				font-size: 12px;
 
 				&.organization,
-				&.legislator,
-				&.category {
-					small {
-						display: block;
-						color: @gray-light;
-						font-size: 11px;
-					}
-				}
-
-				&.organization,
                 &.legislator,
 				&.category {
 					line-height: 1.4em;
 					vertical-align: middle;
+
+                    small {
+						display: block;
+						color: @gray-light;
+						font-size: 11px;
+					}
 				}
 
 				&.spending {
@@ -579,7 +575,15 @@ nav {
 
 			text-align: right;
 			padding-right: 5px;
-			line-height: 1.1;
+
+            line-height: 1.4em;
+			vertical-align: middle;
+
+            small {
+                display: block;
+                color: @gray-light;
+                font-size: 11px;
+            }
 		}
 
 		.amount {
