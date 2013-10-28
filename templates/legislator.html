@@ -29,13 +29,21 @@
 
 {% block wide_content %}
 <div class="row">
-    <ul class="list-unstyled stats">
-        <li class="total-amount">Total received (all time): <strong>{{ total_spending|format_currency }}</strong></li>
-        <li class="total-amount">Total received (since TKTK): <strong>{{ total_spending_recent|format_currency }}</strong></li>
-        <li class="gift-count">Total gifts received (all_time): <strong>{{ comma(total_expenditures) }}</strong></li>
-        <li class="gift-count">Total gifts received (since TKTK): <strong>{{ comma(total_expenditures_recent) }}</strong></li>
-        <li class="rank">Legislator rank (since TKTK): <strong>{{ ordinal(legislator_rank) }}</strong></li>
-    </ul>
+    <div class="all-time stats">
+        <h3>All Time Totals</h3>
+        <ul class="list-unstyled">
+            <li class="total-amount">Total received: <strong>{{ total_spending|format_currency }}</strong></li>
+            <li class="gift-count">Total gifts received: <strong>{{ comma(total_expenditures) }}</strong></li>
+        </ul>
+    </div>
+    <div class="two-year stats">
+        <h3>TKTK Totals</h3>
+        <ul class="list-unstyled">
+            <li class="total-amount">Total received: <strong>{{ total_spending_recent|format_currency }}</strong></li>
+            <li class="gift-count">Total gifts received: <strong>{{ comma(total_expenditures_recent) }}</strong></li>
+            <li class="rank">Legislator rank: <strong>{{ ordinal(legislator_rank) }}</strong></li>
+        </ul>
+    </div>
     <div class="leaderboard">
         <div class="leaderboard-wrapper">
             <div class="top-organizations">
@@ -85,7 +93,7 @@
                     <td class="date"><span style="display: none;">{{ ex.event_date.isoformat() }}</span>{{ ex.event_date.strftime('%B %e, %Y') }}</td>
                     <td class="recipient">{% if ex.organization %}<a href="{{ ex.organization.url() }}">{{ ex.organization.name }}</a>{% endif %}</td>
                     <td class="expenditure"><span style="display: none;">{{ ex.cost }}</span>{{ ex.cost|format_currency }}</td>
-                    <td class="description">{% if ex.description %}{{ ex.description }}{% else %}<em>Not disclosed</em>{% endif %}</td>
+                    <td class="description{% if not ex.description %} not-disclosed{% endif %}">{% if ex.description %}{{ ex.description }}{% else %}<em>Not disclosed</em>{% endif %}</td>
                     <td class="category">{{ ex.category }}</td>
                 </tr>
             {% endfor %}
