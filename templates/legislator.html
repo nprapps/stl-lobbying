@@ -12,16 +12,19 @@
 
 
 {% block content %}
-<div class="legislator-header">
-    <img src="{{ S3_BASE_URL }}/img/mugs/{{ legislator.office|lower }}_{{ legislator.first_name|lower }}_{{ legislator.last_name|lower }}{{ legislator.office|replace("Representative", ".png")|replace("Senator", ".gif") }}">
-    <h1>{{ legislator.display_name() }}</h1>
-    <ul class="list-unstyled info">
-        <li>{{ legislator.party }}</li>
-        <li>{{ ordinal(legislator.district) }} district</li>
-        <li>Elected in {{ legislator.year_elected }}</li>
-        {% if legislator.hometown %}<li>{{ legislator.hometown }}</li>{% endif %}
-        {% if legislator.phone %}<li>{{ legislator.phone }}</li>{% endif %}
-    </ul>
+<div class="legislator-header detail-header">
+    <img class="img-responsive" src="{{ S3_BASE_URL }}/img/mugs/{{ legislator.office|lower }}_{{ legislator.first_name|lower|replace(".", "")|replace(" ", "_") }}_{{ legislator.last_name|lower }}{{ legislator.office|replace("Representative", ".png")|replace("Senator", ".gif") }}">
+    <div class="legislator-info">
+        <h1>{{ legislator.display_name() }}</h1>
+        <h3>{{ legislator.party }} &ndash; {{ ordinal(legislator.district) }} district</h3>
+        <div class="info dl-horizontal">
+            {% if legislator.hometown %}<p><strong>Hometown</strong> <span>{{ legislator.hometown }}</span></p>{% endif %}
+            <p><strong>Elected in</strong> <span>{{ legislator.year_elected }}</span></p>
+            {% if legislator.phone %}<p><strong>Phone</strong> <span>{{ legislator.phone }}</span></p>{% endif %}
+        </div>
+    </div>
+    
+    
 </div>
 
 {% endblock %}
