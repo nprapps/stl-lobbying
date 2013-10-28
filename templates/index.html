@@ -50,33 +50,35 @@
         <p class="total-lobbyists">{{ COPY.content.agg_lobby_count_headline }}<strong>{{ comma(total_lobbyists) }}</strong></p>
 </div>
 <div class="top-entities row">
-    <div class="organizations">
-        <h3>{{ COPY.content.org_chart_headline }} <small>(Last 24 Months)</small></h3>
-        <table>
-            <tbody>
-            {% for org in organizations_total_spending %}
-            <tr>
-                <td class="organization"><a href="{{ org.url() }}">{{ org.name }} <small>{{ org.category }}</small></a></td>
-                <td class="spending"><div class="bar" style="width: {{ org.total_spending / (organizations_total_spending|first).total_spending * 100 }}%">{{ org.total_spending|format_currency }}</div> </td>
-            </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    </div>
-    <div class="legislators">
-        <h3>{{ COPY.content.leg_chart_headline }} <small>(Last 24 Months)</small></h3>
-        <table>
-            <tbody>
-            {% for legislator in legislators_total_spending %}
-            <tr>
-                <td class="legislator"><a href="{{ legislator.url() }}">{{ legislator.display_name() }}</a></td>
-                <td class="spending"><div class="bar" style="width: {{ legislator.total_spending / (legislators_total_spending|first).total_spending * 100 }}%">{{ legislator.total_spending|format_currency }}</div> </td>
-            </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+    <div class="org-legislator-wrapper">
+        <div class="organizations">
+            <h3>{{ COPY.content.org_chart_headline }} <small>(Last 24 Months)</small></h3>
+            <table>
+                <tbody>
+                {% for org in organizations_total_spending %}
+                <tr>
+                    <td class="organization"><a href="{{ org.url() }}">{{ org.name }} <small>{{ org.category }}</small></a></td>
+                    <td class="spending"><div class="bar" style="width: {{ org.total_spending / (organizations_total_spending|first).total_spending * 100 }}%">{{ org.total_spending|format_currency }}</div> </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="legislators">
+            <h3>{{ COPY.content.leg_chart_headline }} <small>(Last 24 Months)</small></h3>
+            <table>
+                <tbody>
+                {% for legislator in legislators_total_spending %}
+                <tr>
+                    <td class="legislator"><a href="{{ legislator.url() }}">{{ legislator.display_name() }}</a></td>
+                    <td class="spending"><div class="bar" style="width: {{ legislator.total_spending / (organizations_total_spending|first).total_spending * 100 }}%">{{ legislator.total_spending|format_currency }}</div> </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
 
-        <p><a href="{{ S3_BASE_URL }}/legislators/">View all legislators &raquo;</a></p>
+            <p><a href="{{ S3_BASE_URL }}/legislators/">View all legislators &raquo;</a></p>
+        </div>
     </div>
     <div class="categories">
         <h3>{{ COPY.content.industry_chart_headline }} <small>(Last 24 Months)</small></h3>

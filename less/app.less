@@ -16,7 +16,7 @@
 }
 
 .bar {
-	background: lighten(@brand-red, 50%);
+	background: desaturate(lighten(@brand-red, 40%), 10%);
 	font-weight: bold;
 	font-size: @font-size-base;
 	height: 36px;
@@ -24,6 +24,7 @@
 	text-align: right;
 	padding: 5px;
 	-webkit-font-smoothing: antialiased;
+	-webkit-animation: animate-bar 1.5s forwards;
 }
 
 .rule-3px {
@@ -337,22 +338,37 @@ nav {
 				&.category {
 					text-align: right;
 					padding-right: 10px;
+					width: 45%;
+				}
+
+				&.category {
+					width: 20%;
 				}
 
 				@media screen and (max-width: @screen-xs-max){
-					display: block;
-					padding: 0;
+					// display: block;
+					// padding: 0;
 
 					&.organization,
 					&.legislator,
 					&.category {
-						width: auto;
-						text-align: left;
+						width: 50%;
+						// text-align: left;
 						padding-bottom: 3px;
+					}
+
+					&.organization {
+						+ .spending {
+							.bar {
+								height: 50px;
+								line-height: 40px;
+							}
+						}
 					}
 
 					&.spending {
 						margin-bottom: @line-height-computed / 2;
+						width: 50%;
 					}
 				}
 			}
@@ -369,6 +385,7 @@ nav {
 				vertical-align: top;
 				line-height: 30px;
 				padding: 2px 0;
+				font-size: 12px;
 
 				&.organization,
 				&.legislator,
@@ -389,7 +406,6 @@ nav {
 					font-size: 13px;
 					// padding: @line-height-computed / 4 0;
 					vertical-align: top;
-					width: 50%;
 					text-align: left;
 
 					.bar {
@@ -401,117 +417,25 @@ nav {
 	}
 
 	.legislators {
-		.make-md-column(4);
+		border-top: 1px solid @gray-light;
+		border-bottom: 1px solid @gray-light;
+		margin-top: @line-height-computed / 2;
 	}
+
+	
 	.categories {
-		.make-md-column(3);
+		.make-md-column(6);
 	}
 
-	.organizations {
-		.make-md-column(5);
-	}
+	.org-legislator-wrapper {
+		.make-md-column(6);
 
-	.categories {
+		@media screen and (min-width: @screen-md){
+			border-right: 1px solid @gray-light;
 
-		// h3 {
-		// 	border-bottom: 1px solid @gray-light;
-		// 	padding-bottom: @line-height-computed / 2;
-		// 	margin-bottom: 5px;
-		// 	&:before {
-		// 		.rule-3px;
-		// 		margin: @line-height-computed 0;
-		// 	}
-		// }
-
-
-		ul {
-			.make-row();
-			text-transform: uppercase;
-			font-size: 12px;
-
-			strong {
-				display: block;
-				font-size: @font-size-base * 2;
+			.legislators {
+				border-bottom: none;
 			}
-
-			li {
-				.make-xs-column(6);
-				.make-sm-column(4);
-				.make-md-column(3);
-
-				border-left: 1px solid @gray-light;
-				margin-bottom: @line-height-computed / 2;
-
-				&:after {
-					display: block;
-					content: '';
-					border-bottom: 1px solid @gray-light;
-					margin: 0 -16px;
-					position: relative;
-					bottom: -5px;
-				}
-
-				strong {
-
-				}
-
-				@media screen and (max-width: @screen-xs-max){
-					strong {
-						font-size: @font-size-base * 1.3;
-					}
-
-					&:nth-child(odd){
-						clear: left;
-					}
-				}
-
-				@media screen and (max-width: @screen-xs-max){
-					&:nth-child(odd){
-						border-left: none;
-						&:after {
-							margin: 0 -16px 0 0;
-						}
-
-					}
-					&:nth-child(even){
-						&:after {
-							margin: 0 0 0 -16px;
-						}
-					}
-				}
-
-				@media screen and (min-width: @screen-sm) and (max-width: @screen-sm-max){
-					&:nth-child(3n+1){
-						border-left: none;
-
-						&:after {
-							margin: 0 -16px 0 0;
-						}
-					}
-					&:nth-child(3n){
-						&:after {
-							margin: 0 0 0 -16px;
-						}
-					}
-				}
-
-				@media screen and (min-width: @screen-md){
-					&:nth-child(4n+1){
-						border-left: none;
-
-						&:after {
-							margin: 0 -16px 0 0;
-						}
-					}
-					&:nth-child(4n){
-						&:after {
-							margin: 0 0 0 -16px;
-						}
-					}
-				}
-			}
-
-			
 		}
 	}
 }
@@ -785,4 +709,22 @@ nav {
 			}
 		}
 	}
+}
+
+@-webkit-keyframes animate-bar {
+  0% {
+    -webkit-transform: scaleX(0);
+    -webkit-transform-origin: 0 0;
+    color: rgba(51,51,51,0);
+  }
+
+  50% {
+  	-webkit-transform: scaleX(100%);
+  	-webkit-transform-origin: 0 0;
+  	color: rgba(51,51,51,0);
+  }
+  100% {
+    -webkit-transform-origin: 0 0;
+    color: rgba(51,51,51,1);
+  }
 }
