@@ -1,5 +1,5 @@
 @import "less/lib/bootstrap/bootstrap";
-// @import "less/lib/font-awesome/font-awesome";
+@import "less/lib/font-awesome/font-awesome";
 @import "less/adhesion";
 
 // Global variables
@@ -23,6 +23,7 @@
 	line-height: 26px;
 	text-align: right;
 	padding: 5px 0;
+	text-indent: 5px;
 	-webkit-font-smoothing: antialiased;
 	-webkit-animation: animate-bar 1.5s forwards;
 
@@ -458,6 +459,10 @@ nav {
 				.make-lg-column(12);
 			}
 		}
+
+		table {
+			width: 100%;
+		}
 	}
 
 	.gift-table {
@@ -547,6 +552,10 @@ nav {
 				border-right: none;
 			}
 
+			&.rank strong {
+				font-size: @font-size-base * 1.5;
+			}
+
 			@media screen and (min-width: @screen-sm){
 				border-right: 1px solid @gray-light;
 			}
@@ -582,6 +591,15 @@ nav {
 		}
 	}
 
+	.top-categories {
+		&:before {
+			border-top: 1px solid @gray-light;
+			display: block;
+			content: ' ';
+			margin: @line-height-computed 0 0;
+		}
+	}
+
 	.gift-table {
 		label {
 			margin-top: @line-height-computed;
@@ -606,6 +624,14 @@ nav {
 
 				&.not-disclosed {
 					color: @gray-light;
+				}
+			}
+
+			&.share {
+				white-space: nowrap;
+
+				i {
+					margin: 0 5px;
 				}
 			}
 		}

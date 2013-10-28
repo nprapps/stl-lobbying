@@ -88,16 +88,18 @@
                     <th class="expenditure">{{ COPY.legislator.th_value }}</th>
                     <th class="description">{{ COPY.legislator.th_desc }}</th>
                     <th class="category">{{ COPY.legislator.th_category }}</th>
+                    <th class="share"></th>
                 </tr>
             </thead>
             <tbody>
             {% for ex in expenditures %}
-                <tr>
+                <tr id="exp{{ ex.ethics_id }}">
                     <td class="date"><span style="display: none;">{{ ex.event_date.isoformat() }}</span>{{ ex.event_date.strftime('%B %e, %Y') }}</td>
                     <td class="recipient">{% if ex.organization %}<a href="{{ ex.organization.url() }}">{{ ex.organization.name }}</a>{% endif %}</td>
                     <td class="expenditure"><span style="display: none;">{{ ex.cost }}</span>{{ ex.cost|format_currency }}</td>
                     <td class="description{% if not ex.description %} not-disclosed{% endif %}">{% if ex.description %}{{ ex.description }}{% else %}<em>{{ COPY.legislator.not_disclosed }}</em>{% endif %}</td>
                     <td class="category">{{ ex.category }}</td>
+                    <td class="share"><a href="https://twitter.com/share?text={{ ex.legislator.display_name() }} received {{ ex.cost|format_currency }} from {{ ex.organization.name }} &url={{ legislator.url() }}%23exp{{ ex.ethics_id }}" target="_blank"><i class="icon-twitter"></i></a><a href="https://www.facebook.com/sharer/sharer.php?u={{ legislator.url() }}%23exp{{ ex.ethics_id }}"><i class="icon-facebook"></i></a></td>
                 </tr>
             {% endfor %}
             </tbody>
