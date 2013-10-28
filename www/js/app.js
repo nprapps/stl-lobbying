@@ -9,10 +9,17 @@ var $rep_result = $('.results .rep');
 var $sen_result = $('.results .sen');
 var $search_examples = $('.search .example');
 var $results_modal = $('#search-results');
+var $modal_search_address = $results_modal.find('.address');
+var $modal_not_found = $results_modal.find('.not-found');
+var $modal_did_you_mean = $results_modal.find('.did-you-mean');
+var $modal_did_you_mean_list = $modal_did_you_mean.find('ul');
+var $modal_search_loading = $results_modal.find('.loading');
 var $gift_table = $('.gift-table table');
 var $gift_sort = $('#gift-sort');
 var $show_senate_map = $('#show-senate-map');
 var $show_house_map = $('#show-house-map');
+
+var MISSOURI_EXTENTS = [-95.7747, 35.9957, -89.099, 40.6136];
 
 var geocode_xhr = null;
 var search_map = null;
@@ -40,8 +47,13 @@ function on_did_you_mean_click() {
     $did_you_mean.hide();
 
     move_search_map(latitude, longitude);
+    $results_modal.modal('show');
 
     return false;
+}
+
+function modal_is_visible() {
+    return $results_modal.data('bs.modal') && $results_modal.data('bs.modal').isShown;
 }
 
 function on_search_submit() {
@@ -51,21 +63,36 @@ function on_search_submit() {
 
     var address = $(this).find('input.address').val();
 
-    $search_address.val(address);
+    if (modal_is_visible()) {
+        $modal_search_address.val(address);
+    } else {
+        $search_address.val(address);
+    }
 
     $did_you_mean.hide();
     $not_found.hide();
     $search_results.hide();
 
     if (address) {
-        $search_loading.show();
+        if (modal_is_visible()) {
+            $modal_search_loading.show();
+        } else {
+            $search_loading.show();
+        }
 
         if (geocode_xhr) {
-            geocode_xhr.cancel();
+            geocode_xhr.abort();
         }
 
         geocode_xhr = $.ajax({
-            'url': 'http://open.mapquestapi.com/nominatim/v1/search.php?format=json&json_callback=theCallback&q=' + address,
+            'url': 'http://open.mapquestapi.com/nominatim/v1/search.php',
+            'data': {
+                'format': 'json',
+                'json_callback': 'theCallback',
+                'q': address,
+                'viewbox': MISSOURI_EXTENTS.join(','),
+                'bounded': 1
+            },
             'type': 'GET',
             'dataType': 'jsonp',
             'cache': true,
@@ -76,16 +103,20 @@ function on_search_submit() {
                 geocode_xhr = null;
             },
             'success': function(data) {
-                // US addresses only, plzkthxbai.
+                // Missouri addresses only.
                 data = _.filter(data, function(locale) {
-                    return locale['display_name'].indexOf("United States of America") > 0;
+                    return locale['display_name'].indexOf('United States of America') > 0 && locale['display_name'].indexOf('Missouri') > 0;
                 });
 
                 $search_loading.hide();
 
                 if (data.length === 0) {
                     // If there are no results, show a nice message.
-                    $not_found.show();
+                    if (modal_is_visible()) {
+                        $modal_not_found.show();
+                    } else {
+                        $not_found.show();
+                    }
                 } else if (data.length == 1) {
                     // If there's one result, render it.
                     var locale = data[0];
@@ -95,7 +126,7 @@ function on_search_submit() {
                     move_search_map(locale['lat'], locale['lon']);
                     on_show_senate_map_click();
                     
-                    $('#search-results').modal('show');
+                    $results_modal.modal('show');
                     on_search_map_moveend();
                 } else {
                     // If there are many resulits,
@@ -110,12 +141,20 @@ function on_search_submit() {
                         $did_you_mean_list.append(html);
                     });
 
-                    $did_you_mean.show();
+                    if (modal_is_visible()) {
+                        $modal_did_you_mean.show();
+                    } else {
+                        $did_you_mean.show();
+                    }
                 }
             }
         });
     } else {
-        $not_found.show();
+        if (modal_is_visible()) {
+            $modal_not_found.show();
+        } else {
+            $not_found.show();
+        }
     }
 
     return false;
@@ -148,7 +187,7 @@ function on_search_map_moveend(e) {
 
     senate_grid.getData(center, function(senate_data) {
         if (_.isUndefined(senate_data)) {
-            $not_found.show();
+            $search_results.hide();
             return;
         }
 
@@ -158,7 +197,7 @@ function on_search_map_moveend(e) {
 
         house_grid.getData(center, function(house_data) {
             if (_.isUndefined(house_data)) {
-                $not_found.show();
+                $search_results.hide();
                 return;
             }
 
@@ -235,7 +274,10 @@ $(function() {
     $gift_table.find('th').off();
 
     // Load maps
-    search_map = L.mapbox.map('search-map');
+    search_map = L.mapbox.map('search-map', null, {
+        minZoom: 6,
+        maxZoom: 15
+    });
     
     senate_layer = L.mapbox.tileLayer('http://a.tiles.mapbox.com/v3/npr.map-d0jcwmbw.json?1414');
     senate_grid = L.mapbox.gridLayer('http://a.tiles.mapbox.com/v3/npr.map-d0jcwmbw.json?1414');
