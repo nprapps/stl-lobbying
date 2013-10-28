@@ -472,10 +472,18 @@ nav {
 		}
 	}
 
+	.detail-header {
+		margin-bottom: @line-height-computed;
+		
+		h3 {
+			margin-top: 0;
+			font-size: 16px;
+		}
+	}
+
 
 	.info {
 
-		margin-bottom: @line-height-computed;
 		font-size: 14px;
 		color: @gray-light;
 
@@ -484,7 +492,6 @@ nav {
 			border-left: 1px solid @gray-light;
 			margin-left: 2px;
 			padding-left: 5px;
-			text-transform: uppercase;
 			line-height: 1;
 
 			&:first-child {
@@ -608,6 +615,25 @@ nav {
 			width: 100px;
 			margin-right: @line-height-computed / 2;
 			margin-bottom: @line-height-computed / 2;
+		}
+
+		.info {
+			display: table;
+
+			p {
+				display: table-row;
+
+				strong,
+				span {
+					display: table-cell;
+					padding: 0 3px;
+				}
+
+				strong {
+					text-align: right;
+					padding-right: 10px;
+				}
+			}
 		}
 	}
 

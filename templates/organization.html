@@ -12,8 +12,10 @@
 
 
 {% block content %}
-<h1>{{ organization.name }}</h1>
-<p class="info">Industry: <strong>{{ organization.category }}</strong></p>
+<div class="detail-header organization-header">
+    <h1>{{ organization.name }}</h1>
+    <p class="info">Industry: <strong>{{ organization.category }}</strong></p>
+</div>
 {% endblock %}
 
 
