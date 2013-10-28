@@ -22,9 +22,15 @@
 	height: 36px;
 	line-height: 26px;
 	text-align: right;
-	padding: 5px;
+	padding: 5px 0;
 	-webkit-font-smoothing: antialiased;
 	-webkit-animation: animate-bar 1.5s forwards;
+
+	&:after {
+		content: ' ';
+		display: inline-block;
+		width: 5px;
+	}
 }
 
 .rule-3px {
@@ -346,14 +352,10 @@ nav {
 				}
 
 				@media screen and (max-width: @screen-xs-max){
-					// display: block;
-					// padding: 0;
-
 					&.organization,
 					&.legislator,
 					&.category {
 						width: 50%;
-						// text-align: left;
 						padding-bottom: 3px;
 					}
 
@@ -397,7 +399,8 @@ nav {
 					}
 				}
 
-				&.organization {
+				&.organization,
+				&.category {
 					line-height: 1;
 					vertical-align: middle;
 				}
@@ -407,10 +410,6 @@ nav {
 					// padding: @line-height-computed / 4 0;
 					vertical-align: top;
 					text-align: left;
-
-					.bar {
-						padding: 5px;
-					}
 				}
 			}
 		}
@@ -474,10 +473,16 @@ nav {
 
 	.detail-header {
 		margin-bottom: @line-height-computed;
-		
+
 		h3 {
 			margin-top: 0;
 			font-size: 16px;
+		}
+
+		@media screen and (max-width: @screen-xs-max){
+			h1 {
+				font-size: @font-size-base * 1.9;
+			}
 		}
 	}
 
@@ -613,8 +618,13 @@ nav {
 		img {
 			float: left;
 			width: 100px;
-			margin-right: @line-height-computed / 2;
+			margin-right: 15px;
 			margin-bottom: @line-height-computed / 2;
+
+			@media screen and (max-width: @screen-xs-max){
+				float: right;
+				margin: 0 0 0 15px;
+			}
 		}
 
 		.info {
