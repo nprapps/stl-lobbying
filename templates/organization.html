@@ -19,13 +19,21 @@
 
 {% block wide_content %}
 <div class="row">
-    <ul class="list-unstyled stats">
-        <li>Total spending (all time): <strong>{{ total_spending|format_currency }}</strong></li>
-        <li>Total spending (since TKTK): <strong>{{ total_spending_recent|format_currency }}</strong></li>
-        <li>Total gifts sent (all time): <strong>{{ comma(total_expenditures) }}</strong></li>
-        <li>Total gifts sent (since TKTK): <strong>{{ comma(total_expenditures_recent) }}</strong></li>
-        <li>Organization rank (since TKTK): <strong>{{ ordinal(organization_rank) }}</strong></li>
-    </ul>
+    <div class="all-time stats">
+        <h3>All-Time Totals</h3>
+        <ul class="list-unstyled ">
+            <li>Total spending (all time): <strong>{{ total_spending|format_currency }}</strong></li>
+            <li>Total gifts sent (all time): <strong>{{ comma(total_expenditures) }}</strong></li>
+        </ul>
+    </div>
+    <div class="two-year stats">
+        <h3>Two-Year Totals</h3>
+        <ul class="list-unstyled ">
+            <li>Total spending (since TKTK): <strong>{{ total_spending_recent|format_currency }}</strong></li>
+            <li>Total gifts sent (since TKTK): <strong>{{ comma(total_expenditures_recent) }}</strong></li>
+            <li>Organization rank (since TKTK): <strong>{{ ordinal(organization_rank) }}</strong></li>
+        </ul>
+    </div>
     <div class="leaderboard">
         <div class="leaderboard-wrapper">
             <div class="top-legislators">
