@@ -33,7 +33,7 @@
         <ul class="list-unstyled ">
             <li>{{ COPY.organization.recent_spending }}<strong>{{ total_spending_recent|format_currency }}</strong></li>
             <li>{{ COPY.organization.recent_gifts }}<strong>{{ comma(total_expenditures_recent) }} gifts</strong></li>
-            <li><strong>{{ ordinal(organization_rank) }} highest spending organization</strong></li>
+            <li class="rank"><strong>{{ ordinal(organization_rank) }} highest spending organization</strong></li>
         </ul>
     </div>
     <div class="leaderboard">

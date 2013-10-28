@@ -551,6 +551,10 @@ nav {
 				border-right: none;
 			}
 
+			&.rank strong {
+				font-size: @font-size-base * 1.5;
+			}
+
 			@media screen and (min-width: @screen-sm){
 				border-right: 1px solid @gray-light;
 			}
@@ -583,6 +587,15 @@ nav {
 
 		.spending {
 			width: 50%;
+		}
+	}
+
+	.top-categories {
+		&:before {
+			border-top: 1px solid @gray-light;
+			display: block;
+			content: ' ';
+			margin: @line-height-computed 0 0;
 		}
 	}
 
