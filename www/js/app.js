@@ -61,7 +61,7 @@ function on_search_submit() {
         $search_loading.show();
 
         if (geocode_xhr) {
-            geocode_xhr.cancel();
+            geocode_xhr.abort();
         }
 
         geocode_xhr = $.ajax({
@@ -235,7 +235,10 @@ $(function() {
     $gift_table.find('th').off();
 
     // Load maps
-    search_map = L.mapbox.map('search-map');
+    search_map = L.mapbox.map('search-map', null, {
+        minZoom: 6,
+        maxZoom: 15
+    });
     
     senate_layer = L.mapbox.tileLayer('http://a.tiles.mapbox.com/v3/npr.map-d0jcwmbw.json?1414');
     senate_grid = L.mapbox.gridLayer('http://a.tiles.mapbox.com/v3/npr.map-d0jcwmbw.json?1414');
