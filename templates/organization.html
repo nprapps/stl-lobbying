@@ -78,7 +78,7 @@
                     <td class="expenditure">{{ ex.cost|format_currency }}</td>
                     <td class="description{% if not ex.description %} not-disclosed{% endif %}">{% if ex.description %}{{ ex.description }}{% else %}<em>{{ COPY.organization.not_disclosed }}</em>{% endif %}</td>
                     <td class="category">{{ ex.category }}</td>
-                    <td class="share"><a href="https://twitter.com/share?text={% if ex.group %}{{ ex.group.name }}{% elif ex.legislator %}{{ ex.legislator.display_name() }}{% else %}{{ COPY.organization.no_longer_serving }}{% endif %} received {{ ex.cost|format_currency }} from {{ organization.name }} &url={{ organization.url() }}%23exp{{ ex.ethics_id }}" target="_blank"><i class="icon-twitter"></i></a><a href="https://www.facebook.com/sharer/sharer.php?u={{ organization.url() }}%23exp{{ ex.ethics_id }}"><i class="icon-facebook"></i></a></td>
+                    <td class="share"><a href="https://twitter.com/share?text={% if ex.group %}{{ ex.group.name }}{% elif ex.legislator %}{{ ex.legislator.display_name() }}{% else %}{{ COPY.organization.no_longer_serving }}{% endif %} received a gift valued at {{ ex.cost|format_currency }} from {{ organization.name }} &url={{ organization.url() }}%23exp{{ ex.ethics_id }}" target="_blank"><i class="icon-twitter"></i></a><a href="https://www.facebook.com/sharer/sharer.php?u={{ organization.url() }}%23exp{{ ex.ethics_id }}"><i class="icon-facebook"></i></a></td>
                 </tr>
             {% endfor %}
             </tbody>
