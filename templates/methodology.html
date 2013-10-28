@@ -4,19 +4,7 @@
 {% endblock %}
 
 {% block wide_content %}
-<h3>About this site</h3>
+<h3>{{ COPY.methodology.title }}</h3>
 
-<p>Companies and other organizations with an interest in Missouri state government hire lobbyists to influence policy in Jefferson City. State law requires these lobbyists to disclose how much they spend in the process, listing which officials received benefits, such as free meals, professional sports tickets, trips and other gifts.</p>
-
-<p>St. Louis Public Radio, in partnership with NPR, obtained data from the Missouri Ethics Commission that details lobbyists’ spending. The data, which you can download here, shows every reported instance in which a lobbyist purchased something for a state lawmaker or legislative staffer. Each record in the database shows the name of the lobbyist, the lawmaker name, the date, the amount of the purchase, the spending category (food, gift, travel, etc.) and, in some cases, a description of the transaction. (The latter is not always reported by lobbyists. The application lists those cases as “not disclosed”). For succinctness, we are calling these transactions “gifts” on this site.</p>
-
-<p>This data contains information as it was submitted to the commission by lobbyists, but we’ve made some important additions to the data in an effort to make it more useful. First, we attempted to standardize the names of the hundreds of organizations who hire lobbyists. “AT&T”, for example, can also be reported as “AT & T” — complicating efforts to aggregate spending totals.</p>
-
-<p>We also created subject matter categories and assigned one to each organization, allowing readers a broader understanding of the industries lobbying state government. Ameren was categorized as “Energy”, for example, and AT&T goes in the “Telecommunications/Cable” category. Dozens of trade association that hire lobbyists were categorized based on their industry. The Associated General Contractors of Missouri is categorized as “Construction/Real Estate,” for example.</p>
-
-<p>The data published on this website, which is updated monthly, reflect spending on current state lawmakers. In Missouri, lobbyists can also assign an expense to a legislative committee of the entire legislature. In those cases, the spending recipient is listed as that entity – not by the members of the committee or the legislature.</p>
-
-<p>The commission releases data a couple months after the reporting deadline, so there is a lag in the updates here. The totals on the homepage are for the last 24 months. Lawmaker and organization pages also have spending totals back to January 2004. In some cases, lawmakers reimburse lobbyists for expenditures. Some lawmakers reimburse lobbyists out of their own pocket, but others use campaign funds. It’s a practice that’s received <a href=”http://www.stltoday.com/news/local/govt-and-politics/political-fix/freebies-from-lobbyists-becoming-harder-to-track-in-missouri/article_6b1ded58-4d3d-50c6-85d7-fdcf2a62c8c9.html”>some scrutiny</a>, but no legal challenge in Missouri. When lobbyists are reimbursed, they then file backdated amendments to their original reports. We’re not including these transactions that were corrected after the initial filing by a lobbyist.</p>
-
-<p>We’ve taken care to present the data in an accurate and clear manner, but government data can be complicated, so please <a href=”mailto:nprapps@npr.org”>let us know</a> if you spot an error or have questions.</p>
+{{ COPY.methodology.body }}
 {% endblock %}
