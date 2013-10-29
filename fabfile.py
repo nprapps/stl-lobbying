@@ -395,6 +395,7 @@ def _deploy_to_s3(path='.gzip'):
     local('rm -rf %s/live-data' % path)
     local('rm -rf %s/sitemap.xml' % path)
     
+    local('rm -rf .download')
     local('mv %s/download .download' % path)
 
     s3cmd = 's3cmd -P --add-header=Cache-Control:max-age=5 --guess-mime-type --recursive --exclude-from gzip_types.txt sync %s/ %s'
