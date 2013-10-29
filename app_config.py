@@ -31,7 +31,7 @@ PROJECT_FILENAME = 'stl_lobbying'
 DEPLOYMENT
 """
 PRODUCTION_S3_BUCKETS = ['www.lobbyingmissouri.org']
-STAGING_S3_BUCKETS = []
+STAGING_S3_BUCKETS = ['staging.lobbyingmissouri.org']
 
 PRODUCTION_SERVERS = ['cron.nprapps.org']
 STAGING_SERVERS = ['50.112.92.131']
