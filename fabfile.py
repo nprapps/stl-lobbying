@@ -395,9 +395,6 @@ def _deploy_to_s3(path='.gzip'):
     local('rm -rf %s/live-data' % path)
     local('rm -rf %s/sitemap.xml' % path)
     
-    local('rm -rf .download')
-    local('mv %s/download .download' % path)
-
     s3cmd = 's3cmd -P --add-header=Cache-Control:max-age=5 --guess-mime-type --recursive --exclude-from gzip_types.txt sync %s/ %s'
     s3cmd_gzip = 's3cmd -P --add-header=Cache-Control:max-age=5 --add-header=Content-encoding:gzip --guess-mime-type --recursive --exclude "*" --include-from gzip_types.txt sync %s/ %s'
     s3cmd_download = 's3cmd -P --add-header=Cache-Control:max-age=5 --add-header=Content-encoding:gzip --add-header="Content-Disposition:attachment;filename=missouri-lobbying.csv;" --guess-mime-type --recursive sync %s/ %s'
@@ -526,6 +523,10 @@ def deploy(remote='origin'):
 
     render()
     _gzip('www', '.gzip')
+    
+    local('rm -rf .download')
+    local('mv %s/download .download' % path)
+
     _deploy_to_s3()
 
 def deploy_pages():
@@ -540,6 +541,10 @@ def deploy_pages():
 
     # Ensure assets are updated
     _gzip('www', '.gzip')
+
+    local('rm -rf .download')
+    local('mv %s/download .download' % path)
+
     _deploy_to_s3()
 
 """

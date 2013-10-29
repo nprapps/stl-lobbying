@@ -24,14 +24,14 @@
     <div class="all-time stats">
         <h3>{{ COPY.organization.all_time_headline }}</h3>
         <ul class="list-unstyled ">
-            <li>{{ COPY.organization.all_time_spending }}<strong>{{ total_spending|format_currency }}</strong></li>
+            <li>{{ COPY.organization.all_time_spending }}<strong>{{ total_spending|format_currency_round }}</strong></li>
             <li>{{ COPY.organization.all_time_gifts }}<strong>{{ comma(total_expenditures) }} gifts</strong></li>
         </ul>
     </div>
     <div class="two-year stats">
         <h3>{{ COPY.organization.recent_headline }}</h3>
         <ul class="list-unstyled ">
-            <li>{{ COPY.organization.recent_spending }}<strong>{{ total_spending_recent|format_currency }}</strong></li>
+            <li>{{ COPY.organization.recent_spending }}<strong>{{ total_spending_recent|format_currency_round }}</strong></li>
             <li>{{ COPY.organization.recent_gifts }}<strong>{{ comma(total_expenditures_recent) }} gifts</strong></li>
             <li class="rank"><strong>{{ ordinal(organization_rank) }} highest spending organization</strong></li>
         </ul>
@@ -44,7 +44,7 @@
                     {% for legislator in top_legislators %}
                     <tr>
                         <td class="legislator"><a href="{{ legislator.url() }}">{{ legislator.display_name() }} <small>{{ legislator.party }} | {{ ordinal(legislator.district) }} district</a></td>
-                        <td class="spending"><div class="bar" style="width: {{ legislator.total_spending / (top_legislators|first).total_spending * 100 }}%">{{ legislator.total_spending|format_currency }}</div></td>
+                        <td class="spending"><div class="bar" style="width: {{ legislator.total_spending / (top_legislators|first).total_spending * 100 }}%">{{ legislator.total_spending|format_currency_round }}</div></td>
                     </tr>
                     {% endfor %}
                 </table>

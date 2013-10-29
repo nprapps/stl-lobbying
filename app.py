@@ -329,6 +329,11 @@ def urlencode_filter(s):
 def format_currency(value):
     return "${:,.2f}".format(value)
 
+@app.template_filter('format_currency_round')
+def format_currency_round(value):
+    return "${:,.0f}".format(value)
+
+
 if __name__ == '__main__':
     import argparse
 
