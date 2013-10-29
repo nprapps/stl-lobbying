@@ -400,9 +400,9 @@ def _deploy_to_s3(path='.gzip'):
     s3cmd_download = 's3cmd -P --add-header=Cache-Control:max-age=5 --add-header=Content-encoding:gzip --add-header="Content-Disposition:attachment;filename=missouri-lobbying.csv;" --guess-mime-type --recursive sync %s/ %s'
 
     for bucket in app_config.S3_BUCKETS:
-        local(s3cmd % (path, 's3://%s/%s/' % (bucket, app_config.PROJECT_SLUG)))
-        local(s3cmd_gzip % (path, 's3://%s/%s/' % (bucket, app_config.PROJECT_SLUG)))
-        local(s3cmd_download % ('.download', 's3://%s/%s/download/' % (bucket, app_config.PROJECT_SLUG)))
+        local(s3cmd % (path, 's3://%s/' % (bucket)))
+        local(s3cmd_gzip % (path, 's3://%s/' % (bucket)))
+        local(s3cmd_download % ('.download', 's3://%s/download/' % (bucket)))
 
 def _gzip(in_path='www', out_path='.gzip'):
     """
@@ -651,7 +651,7 @@ def shiva_the_destroyer():
         s3cmd = 's3cmd del --recursive %s'
 
         for bucket in app_config.S3_BUCKETS:
-            local(s3cmd % ('s3://%s/%s' % (bucket, app_config.PROJECT_SLUG)))
+            local(s3cmd % ('s3://%s/' % (bucket)))
 
         if app_config.DEPLOY_TO_SERVERS:
             run('rm -rf %(SERVER_PROJECT_PATH)s' % app_config.__dict__)
