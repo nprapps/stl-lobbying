@@ -273,6 +273,9 @@ $(function() {
     // Disable default sort events
     $gift_table.find('th').off();
 
+    // make the header fixed on scroll
+    $('.table-fixed-header').fixedHeader();
+
     // Load maps
     search_map = L.mapbox.map('search-map', null, {
         minZoom: 6,
@@ -295,3 +298,4 @@ $(function() {
     $show_senate_map.on('click', on_show_senate_map_click);
     $show_house_map.on('click', on_show_house_map_click);
 });
+

@@ -202,14 +202,27 @@ nav {
 /* Homepage 
 =================================================*/
 .homepage {
+
+	.story-meta {
+		.search {
+			label {
+				font-size: 24px; 
+				font-weight: 500;
+				margin-top: @line-height-computed;
+			}
+		}
+	}
 	.totals {
-		&:before,
-		&:after {
+		&:before {
 			.rule-3px;
+			margin-bottom: 0;
 		}
 
-		&:before {
-			margin-bottom: 0;
+		&:after {
+			display: block;
+			content: ' ';
+			border-bottom: 1px solid @gray-light;
+			margin-bottom: @line-height-computed / 2;
 		}
 
 		.total-spending,
@@ -486,6 +499,7 @@ nav {
 		h3 {
 			margin-top: 0;
 			font-size: 16px;
+			text-transform: capitalize;
 		}
 
 		@media screen and (max-width: @screen-xs-max){
@@ -608,6 +622,11 @@ nav {
 			display: block;
 			content: ' ';
 			margin: @line-height-computed 0 0;
+
+			@media screen and (min-width: @screen-sm) and (max-width: @screen-md-max){
+				border-top: none;
+				margin: 0;
+			}
 		}
 	}
 
@@ -848,4 +867,23 @@ nav {
     -webkit-transform-origin: 0 0;
     color: rgba(51,51,51,1);
   }
+}
+
+table .header-fixed {
+  position: fixed;
+  top: 0;
+  /*left: 0;*/
+  /*right: 0;*/
+  z-index: 1020; /* 10 less than .navbar-fixed to prevent any overlap */
+  border-bottom: 1px solid #d5d5d5;
+  -webkit-border-radius: 0;
+     -moz-border-radius: 0;
+          border-radius: 0;
+
+  > tr > th {
+  	border-top: none;
+  }
+}
+thead {
+  background-color: #fff;
 }
