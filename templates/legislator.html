@@ -13,17 +13,21 @@
 
 {% block content %}
 <div class="legislator-header detail-header">
-    <img class="img-responsive" src="{{ S3_BASE_URL }}/img/mugs/{{ legislator.office|lower }}_{{ legislator.first_name|lower|replace(".", "")|replace(" ", "_") }}_{{ legislator.last_name|lower|replace(".", "")|replace(" ", "_") }}{{ legislator.office|replace("Representative", ".png")|replace("Senator", ".gif") }}">
-    <div class="legislator-info">
-        <h1>{{ legislator.display_name() }}</h1>
-        <h3>{{ legislator.party }} &ndash; {{ ordinal(legislator.district) }} district</h3>
-        <div class="info dl-horizontal">
-            {% if legislator.hometown %}<p><strong>Hometown</strong> <span>{{ legislator.hometown }}</span></p>{% endif %}
-            <p><strong>Elected in</strong> <span>{{ legislator.year_elected }}</span></p>
-            {% if legislator.phone %}<p><strong>Phone</strong> <span>{{ legislator.phone }}</span></p>{% endif %}
+        
+        <div class="legislator-info">
+            <img class="img-responsive mug" src="{{ S3_BASE_URL }}/img/mugs/{{ legislator.office|lower }}_{{ legislator.first_name|lower|replace(".", "")|replace(" ", "_") }}_{{ legislator.last_name|lower|replace(".", "")|replace(" ", "_") }}{{ legislator.office|replace("Representative", ".png")|replace("Senator", ".gif") }}">
+            <div class="info-wrapper">
+                <h1>{{ legislator.display_name() }}</h1>
+                <h3>{{ legislator.party }} &ndash; {{ ordinal(legislator.district) }} district</h3>
+                <div class="info">
+                    {% if legislator.hometown %}<p><strong>Hometown</strong> <span>{{ legislator.hometown }}</span></p>{% endif %}
+                    <p><strong>Elected in</strong> <span>{{ legislator.year_elected }}</span></p>
+                    {% if legislator.phone %}<p><strong>Phone</strong> <span>{{ legislator.phone }}</span></p>{% endif %}
+                </div>
+            </div>
+            
         </div>
-    </div>
-    
+        <img class="district" src="{{ S3_BASE_URL }}/img/districts/{{ legislator.office|replace("Senator", "senate")|replace("Representative", "house") }}{{ legislator.district }}.png">
     
 </div>
 
