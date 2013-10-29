@@ -525,9 +525,9 @@ def deploy(remote='origin'):
     _gzip('www', '.gzip')
     
     local('rm -rf .download')
-    local('mv %s/download .download' % path)
+    local('mv .gzip/download .download')
 
-    _deploy_to_s3()
+    _deploy_to_s3('.gzip')
 
 def deploy_pages():
     require('settings', provided_by=[production, staging])
@@ -543,9 +543,9 @@ def deploy_pages():
     _gzip('www', '.gzip')
 
     local('rm -rf .download')
-    local('mv %s/download .download' % path)
+    local('mv .gzip/download .download')
 
-    _deploy_to_s3()
+    _deploy_to_s3('.gzip')
 
 """
 Local commands
