@@ -267,8 +267,6 @@ class LobbyLoader:
         
             return Organization.get(Organization.name==name)
         else:
-            self.error('Organization name "%s" not in lookup table' % name)
-
             return None
 
     def load_group(self, name):
@@ -466,6 +464,7 @@ class LobbyLoader:
             organization = self.load_organization(row['Principal'])
 
             if not organization:
+                self.error('Organization name "%s" not in lookup table' % row['Principal'], year, i)
                 continue
 
             # Create it!
@@ -545,6 +544,7 @@ class LobbyLoader:
             organization = self.load_organization(row['Principal'])
 
             if not organization:
+                self.error('Organization name "%s" not in lookup table' % row['Principal'], year, i)
                 continue
 
             # Create it!
