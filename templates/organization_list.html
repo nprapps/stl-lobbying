@@ -1,0 +1,40 @@
+{% extends '_base.html' %}
+
+{% block body_class %}organization-list detail list{% endblock body_class %}
+
+{% block header_content %}
+<div class="header-wrapper">
+    <div class="project-header">
+        <h1><a href="{{ S3_BASE_URL }}">{{ PROJECT_NAME }}</a></h1>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block content %}
+<h1>{{ COPY.organization_list.title }}</h1>
+{% endblock %}
+
+
+{% block wide_content %}
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-striped organization-table">
+            <thead>
+                <tr>
+                    <th class="name">{{ COPY.organization_list.th_name }}</th>
+                    <th class="industry">{{ COPY.organization_list.th_industry }}</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for organization in organizations %}
+                <tr>
+                    <td class="name"><a href="{{ organization.url() }}">{{ organization.name }}</td>
+                    <td class="industry">{{ organization.category }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -121,7 +121,7 @@ class Organization(SlugModel):
         database = database
 
     def url(self):
-        return '%s/organization/%s/' % (app_config.S3_BASE_URL, self.slug)
+        return '%s/organizations/%s/' % (app_config.S3_BASE_URL, self.slug)
 
 class Expenditure(Model):
     """

@@ -85,6 +85,17 @@ def legislators():
 
     return render_template('legislator_list.html', **context)    
 
+@app.route('/organizations/')
+def organizations():
+    """
+    Legislator list page.
+    """
+    context = make_context()
+
+    context['organizations'] = Organization.select().order_by(Organization.name)
+
+    return render_template('organization_list.html', **context)    
+
 @app.route('/methodology/')
 def methodology():
     """
@@ -94,7 +105,7 @@ def methodology():
 
     return render_template('methodology.html', **context)
 
-@app.route('/download/missouri-lobbying.csv')
+@app.route('/download/lobbyingmissouri.csv')
 def download_csv():
     """
     Generate a data download.
@@ -213,7 +224,7 @@ def _legislator(slug):
 
     return render_template('legislator.html', **context)
 
-@app.route('/organization/<string:slug>/')
+@app.route('/organizations/<string:slug>/')
 def _organization(slug):
     """
     Organization detail page.
