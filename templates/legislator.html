@@ -40,7 +40,7 @@
     <div class="two-year stats">
         <h3>{{ COPY.legislator.recent_headline }}</h3>
         
-        <p>{{ legislator.short_display_name() }} received <strong>{{ comma(total_expenditures_recent) }}</strong> gift{% if total_expenditures_recent != 1 %}s{% endif %} valued at <strong>{{ total_spending_recent|format_currency_round }}</strong> from lobbyists. {% if total_expenditures_recent != 0 %}During that time, <strong>{{ (legislator_rank - 1) }}</strong> other lawmakers received more valuable gifts.{% endif %}</p>   
+        <p>{{ legislator.short_display_name() }} received <strong>{{ comma(total_expenditures_recent) }}</strong> gift{% if total_expenditures_recent != 1 %}s{% endif %} valued at <strong>{{ total_spending_recent|format_currency_round }}</strong> from lobbyists. {% if total_expenditures_recent != 0 %}During that time, <strong>{{ (legislator_rank - 1)|apnumber }}</strong> other lawmaker{% if (legislator_rank - 1) != 1 %}s{% endif %} received more valuable gifts.{% endif %}</p>   
     </div>
     <div class="all-time stats">
         <h3>{{ COPY.legislator.all_time_headline }}</h3>
