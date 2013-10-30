@@ -153,21 +153,21 @@ def configure_targets(deployment_target):
 
     if deployment_target == 'production':
         S3_BUCKETS = PRODUCTION_S3_BUCKETS
-        S3_BASE_URL = 'http://%s/' % (S3_BUCKETS[0])
+        S3_BASE_URL = 'http://%s' % (S3_BUCKETS[0])
         SERVERS = PRODUCTION_SERVERS
-        SERVER_BASE_URL = 'http://%s/' % (SERVERS[0])
+        SERVER_BASE_URL = 'http://%s' % (SERVERS[0])
         DEBUG = False
     elif deployment_target == 'staging':
         S3_BUCKETS = STAGING_S3_BUCKETS
-        S3_BASE_URL = 'http://%s/' % (S3_BUCKETS[0])
+        S3_BASE_URL = 'http://%s' % (S3_BUCKETS[0])
         SERVERS = STAGING_SERVERS
-        SERVER_BASE_URL = 'http://%s/' % (SERVERS[0])
+        SERVER_BASE_URL = 'http://%s' % (SERVERS[0])
         DEBUG = True
     else:
         S3_BUCKETS = [] 
         S3_BASE_URL = 'http://127.0.0.1:8000'
         SERVERS = []
-        SERVER_BASE_URL = 'http://127.0.0.1:8001/'
+        SERVER_BASE_URL = 'http://127.0.0.1:8001'
         DEBUG = True
 
     DEPLOYMENT_TARGET = deployment_target
