@@ -539,6 +539,20 @@ nav {
 
 			a {
 				margin-right: 10px;
+				display: inline-block;
+				width: 36px;
+				height: 36px;
+				border-radius: 18px;
+				text-align: center;
+				line-height: 36px;
+				color: #fff;
+				background: lighten(desaturate(@brand-red, 20%), 20%);
+
+				&:hover {
+					text-decoration: none;
+					background: @brand-red;
+				}
+
 			}
 		}
 	}
