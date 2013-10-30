@@ -28,7 +28,7 @@
     </div>
     <div class="all-time stats">
         <h3>{{ COPY.organization.all_time_headline }}</h3>
-        <p>{{ organization.name }} gave <strong>{{ comma(total_expenditures) }}</strong> gift{% if total_expenditures != 1 %}s{% endif %} valued at <strong>{{ total_spending|format_currency_round }}</strong> to state legislators and their staffs.</p>
+        <p>{{ organization.name }} gave <strong>{{ comma(total_expenditures) }} gift{% if total_expenditures != 1 %}s{% endif %}</strong> valued at <strong>{{ total_spending|format_currency_round }}</strong> to state legislators and their staffs.</p>
     </div>
     <div class="leaderboard">
         <div class="leaderboard-wrapper">
