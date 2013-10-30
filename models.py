@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import datetime
+import os
 import re
 
 import csvkit
@@ -91,6 +92,7 @@ class Legislator(SlugModel):
     year_elected = IntegerField(null=True)
     hometown = CharField()
     vacant = BooleanField()
+    photo_filename = CharField()
     
     class Meta:
         database = database
@@ -102,6 +104,9 @@ class Legislator(SlugModel):
         office = self.OFFICE_SHORT_NAMES[self.office] 
 
         return '%s %s %s' % (office, self.first_name, self.last_name)
+
+    def mugshot_url(self):
+        return '%s/img/mugs/%s' % (app_config.S3_BASE_URL, self.photo_filename)
 
 class Group(SlugModel):
     slug_fields = ['name']
@@ -317,7 +322,8 @@ class LobbyLoader:
                     phone='',
                     year_elected=0,
                     hometown='',
-                    vacant=True
+                    vacant=True,
+                    photo_filename=''
                 )
 
                 self.legislators_created += 1
@@ -354,10 +360,14 @@ class LobbyLoader:
                 phone=row['phone'],
                 year_elected=year_elected,
                 hometown=row['hometown'],
-                vacant=False
+                vacant=False,
+                photo_filename=row['photo']
             )
 
             legislator.save()
+
+            if not os.path.exists('www/%s' % legislator.mugshot_url()):
+                os.error('No mugshot for legislator: %s' % legislator.display_name())
 
             self.legislators_created += 1
 
