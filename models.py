@@ -102,6 +102,11 @@ class Legislator(SlugModel):
         office = self.OFFICE_SHORT_NAMES[self.office] 
 
         return '%s %s %s' % (office, self.first_name, self.last_name)
+        
+    def short_display_name(self):
+        office = self.OFFICE_SHORT_NAMES[self.office] 
+
+        return '%s %s' % (office, self.last_name)
 
 class Group(SlugModel):
     slug_fields = ['name']

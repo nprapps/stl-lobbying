@@ -38,18 +38,12 @@
 <div class="row">
     <div class="all-time stats">
         <h3>{{ COPY.legislator.all_time_headline }}</h3>
-        <ul class="list-unstyled">
-            <li class="total-amount">{{ COPY.legislator.all_time_received }}<strong>{{ total_spending|format_currency_round }}</strong></li>
-            <li class="gift-count">{{ COPY.legislator.all_time_gifts_received }} <strong>{{ comma(total_expenditures) }} gifts</strong></li>
-        </ul>
+        <p>{{ legislator.short_display_name() }} received {{ comma(total_expenditures) }} gifts valued at {{ total_spending|format_currency_round }} from lobbyists.</p>  
     </div>
     <div class="two-year stats">
         <h3>{{ COPY.legislator.recent_headline }}</h3>
-        <ul class="list-unstyled">
-            <li class="total-amount">{{ COPY.legislator.recent_received }}<strong>{{ total_spending_recent|format_currency_round }}</strong></li>
-            <li class="gift-count">{{ COPY.legislator.recent_gifts_received }}<strong>{{ comma(total_expenditures_recent) }} gifts</strong></li>
-            <li class="rank"><strong>{{ ordinal(legislator_rank) }} most benefiting legislator</strong></li>
-        </ul>
+        
+        <p>{{ legislator.short_display_name() }} received {{ comma(total_expenditures_recent) }} gifts valued at {{ total_spending_recent|format_currency_round }} from lobbyists. Only {{ (legislator_rank - 1) }} other lawmakers received a higher dollar amount during that time.</p>        
     </div>
     <div class="leaderboard">
         <div class="leaderboard-wrapper">
