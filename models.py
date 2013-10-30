@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import datetime
+import os
 import re
 
 import csvkit
@@ -91,6 +92,7 @@ class Legislator(SlugModel):
     year_elected = IntegerField(null=True)
     hometown = CharField()
     vacant = BooleanField()
+    photo_filename = CharField()
     
     class Meta:
         database = database
@@ -107,6 +109,9 @@ class Legislator(SlugModel):
         office = self.OFFICE_SHORT_NAMES[self.office] 
 
         return '%s %s' % (office, self.last_name)
+
+    def mugshot_url(self):
+        return '%s/img/mugs/%s' % (app_config.S3_BASE_URL, self.photo_filename)
 
 class Group(SlugModel):
     slug_fields = ['name']
@@ -322,7 +327,8 @@ class LobbyLoader:
                     phone='',
                     year_elected=0,
                     hometown='',
-                    vacant=True
+                    vacant=True,
+                    photo_filename=''
                 )
 
                 self.legislators_created += 1
@@ -359,10 +365,14 @@ class LobbyLoader:
                 phone=row['phone'],
                 year_elected=year_elected,
                 hometown=row['hometown'],
-                vacant=False
+                vacant=False,
+                photo_filename=row['photo']
             )
 
             legislator.save()
+
+            if not os.path.exists('www/%s' % legislator.mugshot_url()):
+                os.error('No mugshot for legislator: %s' % legislator.display_name())
 
             self.legislators_created += 1
 
@@ -455,8 +465,10 @@ class LobbyLoader:
 
             if event_date < self.ERROR_DATE_MIN:
                 self.warn('Skipping, event date too old: %s' % (event_date), year, i)
+                continue
             elif event_date > self.ERROR_DATE_MAX:
                 self.warn('Skipping, event date too new: %s' % (event_date), year, i)
+                continue
 
             # Cost
             cost = row['Cost']
@@ -466,10 +478,17 @@ class LobbyLoader:
                 continue
 
             # Organization
-            organization = self.load_organization(row['Principal'])
+            org_name = row['Principal']
+
+            if org_name == '':
+                self.warn('Skipping row with no organization name', year, i)
+
+                continue
+
+            organization = self.load_organization(org_name)
 
             if not organization:
-                self.error('Organization name "%s" not in lookup table' % row['Principal'], year, i)
+                self.error('Organization name "%s" not in lookup table' % org_name, year, i)
                 continue
 
             # Create it!
@@ -521,8 +540,10 @@ class LobbyLoader:
 
             if report_period < self.ERROR_DATE_MIN:
                 self.warn('Skipping, report date too old: %s' % (report_period), year, i)
+                continue
             elif report_period > self.ERROR_DATE_MAX:
                 self.warn('Skipping, report date too new: %s' % (report_period), year, i)
+                continue
 
             # Group
             created, group = self.load_group(row['Group'])
@@ -535,8 +556,10 @@ class LobbyLoader:
 
             if event_date < self.ERROR_DATE_MIN:
                 self.warn('Skipping, event date too old: %s' % (event_date), year, i)
+                continue
             elif event_date > self.ERROR_DATE_MAX:
                 self.warn('Skipping, event date too new: %s' % (event_date), year, i)
+                continue
 
             # Cost
             cost = row['Cost']

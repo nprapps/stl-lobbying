@@ -53,3 +53,5 @@ data/legislator_demographics.csv
 www/download
 .download
 www/methodology
+www/organizations
+www/sitemap.xml

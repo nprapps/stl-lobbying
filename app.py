@@ -8,7 +8,7 @@ import urllib
 
 from  csvkit.unicsv import  UnicodeCSVDictWriter
 import envoy
-from flask import Flask, Markup, abort, render_template
+from flask import Flask, Markup, abort, render_template, url_for
 from peewee import fn
 
 import app_config
@@ -164,6 +164,31 @@ def download_csv():
         writer.writerow(row)
 
     return f.getvalue().decode('utf-8')
+
+@app.route('/sitemap.xml')
+def sitemap():
+    """
+    Renders a sitemap.
+    """
+    context = make_context()
+    context['pages'] = []
+
+    now = datetime.date.today().isoformat()
+
+    context['pages'].append(('/', now))
+    context['pages'].append(('/methodology/', now))
+    context['pages'].append(('/legislators/', now))
+    context['pages'].append(('/organizations/', now))
+
+    for legislator in Legislator.select():
+        context['pages'].append((url_for('_legislator', slug=legislator.slug), now))
+
+    for organization in Organization.select():
+        context['pages'].append((url_for('_organization', slug=organization.slug), now))
+
+    sitemap = render_template('sitemap.xml', **context)
+
+    return (sitemap, 200, { 'content-type': 'application/xml' })
 
 @app.route('/legislators/<string:slug>/')
 def _legislator(slug):

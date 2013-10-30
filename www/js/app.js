@@ -277,25 +277,27 @@ $(function() {
     $('.table-fixed-header').fixedHeader();
 
     // Load maps
-    search_map = L.mapbox.map('search-map', null, {
-        minZoom: 6,
-        maxZoom: 15
-    });
-    
-    senate_layer = L.mapbox.tileLayer('http://a.tiles.mapbox.com/v3/npr.map-d0jcwmbw.json?3');
-    senate_grid = L.mapbox.gridLayer('http://a.tiles.mapbox.com/v3/npr.map-d0jcwmbw.json?3');
-    
-    house_layer = L.mapbox.tileLayer('http://a.tiles.mapbox.com/v3/npr.map-bjum1mub.json?3');
-    house_grid = L.mapbox.gridLayer('http://a.tiles.mapbox.com/v3/npr.map-bjum1mub.json?3');
+    if ($('#search-map').length > 0) {
+        search_map = L.mapbox.map('search-map', null, {
+            minZoom: 6,
+            maxZoom: 15
+        });
+        
+        senate_layer = L.mapbox.tileLayer('http://a.tiles.mapbox.com/v3/npr.map-d0jcwmbw.json?3');
+        senate_grid = L.mapbox.gridLayer('http://a.tiles.mapbox.com/v3/npr.map-d0jcwmbw.json?3');
+        
+        house_layer = L.mapbox.tileLayer('http://a.tiles.mapbox.com/v3/npr.map-bjum1mub.json?3');
+        house_grid = L.mapbox.gridLayer('http://a.tiles.mapbox.com/v3/npr.map-bjum1mub.json?3');
 
-    search_map.addLayer(senate_layer);
-    search_map.addLayer(senate_grid);
-    search_map.addLayer(house_grid);
-    search_map.setView([36.46, -92.1], 7);
-    search_map.scrollWheelZoom.disable();
+        search_map.addLayer(senate_layer);
+        search_map.addLayer(senate_grid);
+        search_map.addLayer(house_grid);
+        search_map.setView([36.46, -92.1], 7);
+        search_map.scrollWheelZoom.disable();
 
-    search_map.on('moveend', on_search_map_moveend);
-    $show_senate_map.on('click', on_show_senate_map_click);
-    $show_house_map.on('click', on_show_house_map_click);
+        search_map.on('moveend', on_search_map_moveend);
+        $show_senate_map.on('click', on_show_senate_map_click);
+        $show_house_map.on('click', on_show_house_map_click);
+    }
 });
 

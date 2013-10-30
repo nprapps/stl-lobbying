@@ -186,7 +186,7 @@ def render():
 
         if rule_string.endswith('/'):
             filename = 'www' + rule_string + 'index.html'
-        elif rule_string.endswith('.html') or rule_string.endswith('.csv') or rule_string.endswith('.json'):
+        elif rule_string.endswith('.html') or rule_string.endswith('.csv') or rule_string.endswith('.json') or rule_string.endswith('.xml'):
             filename = 'www' + rule_string
         else:
             print 'Skipping %s' % name
@@ -205,6 +205,9 @@ def render():
 
             view = app.__dict__[name]
             content = view()
+
+            if type(content) is tuple:
+                content = content[0] 
 
             compiled_includes = g.compiled_includes
 
@@ -393,7 +396,6 @@ def _deploy_to_s3(path='.gzip'):
     """
     # Clear files that should never be deployed
     local('rm -rf %s/live-data' % path)
-    local('rm -rf %s/sitemap.xml' % path)
     
     s3cmd = 's3cmd -P --add-header=Cache-Control:max-age=5 --guess-mime-type --recursive --exclude-from gzip_types.txt sync %s/ %s'
     s3cmd_gzip = 's3cmd -P --add-header=Cache-Control:max-age=5 --add-header=Content-encoding:gzip --guess-mime-type --recursive --exclude "*" --include-from gzip_types.txt sync %s/ %s'
