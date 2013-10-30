@@ -25,6 +25,7 @@
                     {% if legislator.phone %}<p><strong>{{ COPY.legislator.phone }}</strong> <span>{{ legislator.phone }}</span></p>{% endif %}
                     <p><strong>{{ COPY.legislator.website }}</strong> <span>{% if legislator.office == 'Representative' %}<a href="http://www.house.mo.gov/member.aspx?year={{ year }}&district={{ legislator.district }}">{{ COPY.legislator.website_house }}</a>{% else %}<a href="http://www.senate.mo.gov/13info/members/mem{{ legislator.district }}.htm">{{ COPY.legislator.website_senate }}</a>{% endif %}</span></p>
                 </div>
+                <p class="share"><a href="https://twitter.com/share?text=Within the last 24 months%2C {{ legislator.display_name() }} received {{ comma(total_expenditures_recent)|urlencode }} gift{% if total_expenditures_recent != 1 %}s{% endif %} valued at {{ total_spending_recent|format_currency_round|urlencode }} from lobbyists." target="_blank"><i class="icon-twitter"></i></a><a href="https://www.facebook.com/sharer/sharer.php?u={{ legislator.url() }}"><i class="icon-facebook"></i></a></p>
             </div>
             
         </div>
@@ -41,7 +42,7 @@
         <h3>{{ COPY.legislator.recent_headline }}</h3>
         
         <p>{{ legislator.short_display_name() }} received <strong>{{ comma(total_expenditures_recent) }}</strong> gift{% if total_expenditures_recent != 1 %}s{% endif %} valued at <strong>{{ total_spending_recent|format_currency_round }}</strong> from lobbyists. {% if total_expenditures_recent != 0 %}During that time, <strong>{{ (legislator_rank - 1)|apnumber }}</strong> other lawmaker{% if (legislator_rank - 1) != 1 %}s{% endif %} received more valuable gifts.{% endif %}</p> 
-        <p>* {{ COPY.content.month_explainer }}</p>
+        <p><small>* {{ COPY.content.month_explainer }}</small></p>
     </div>
     <div class="all-time stats">
         <h3>{{ COPY.legislator.all_time_headline }}</h3>
