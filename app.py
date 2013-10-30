@@ -369,6 +369,22 @@ def format_currency(value):
 def format_currency_round(value):
     return "${:,.0f}".format(value)
 
+@app.template_filter('apnumber')
+def apnumber(value):
+    """
+    Borrowed with love and adapted from django.contrib.humanize: https://github.com/django/django/blob/master/django/contrib/humanize/templatetags/humanize.py
+
+    For numbers 1-9, returns the number spelled out. Otherwise, returns the
+    number. This follows Associated Press style.
+    """
+    try:
+        value = int(value)
+    except (TypeError, ValueError):
+        return value
+    if not 0 <= value < 10:
+        return value
+    return ('zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine')[value]
+
 if __name__ == '__main__':
     import argparse
 
