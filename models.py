@@ -450,8 +450,10 @@ class LobbyLoader:
 
             if event_date < self.ERROR_DATE_MIN:
                 self.warn('Skipping, event date too old: %s' % (event_date), year, i)
+                continue
             elif event_date > self.ERROR_DATE_MAX:
                 self.warn('Skipping, event date too new: %s' % (event_date), year, i)
+                continue
 
             # Cost
             cost = row['Cost']
@@ -461,10 +463,17 @@ class LobbyLoader:
                 continue
 
             # Organization
-            organization = self.load_organization(row['Principal'])
+            org_name = row['Principal']
+
+            if org_name == '':
+                self.warn('Skipping row with no organization name', year, i)
+
+                continue
+
+            organization = self.load_organization(org_name)
 
             if not organization:
-                self.error('Organization name "%s" not in lookup table' % row['Principal'], year, i)
+                self.error('Organization name "%s" not in lookup table' % org_name, year, i)
                 continue
 
             # Create it!
@@ -516,8 +525,10 @@ class LobbyLoader:
 
             if report_period < self.ERROR_DATE_MIN:
                 self.warn('Skipping, report date too old: %s' % (report_period), year, i)
+                continue
             elif report_period > self.ERROR_DATE_MAX:
                 self.warn('Skipping, report date too new: %s' % (report_period), year, i)
+                continue
 
             # Group
             created, group = self.load_group(row['Group'])
@@ -530,8 +541,10 @@ class LobbyLoader:
 
             if event_date < self.ERROR_DATE_MIN:
                 self.warn('Skipping, event date too old: %s' % (event_date), year, i)
+                continue
             elif event_date > self.ERROR_DATE_MAX:
                 self.warn('Skipping, event date too new: %s' % (event_date), year, i)
+                continue
 
             # Cost
             cost = row['Cost']
