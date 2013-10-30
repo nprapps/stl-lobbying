@@ -20,9 +20,10 @@
                 <h1>{{ legislator.display_name() }}</h1>
                 <h3>{{ legislator.party }} &ndash; {{ ordinal(legislator.district) }} district</h3>
                 <div class="info">
-                    {% if legislator.hometown %}<p><strong>Hometown</strong> <span>{{ legislator.hometown }}</span></p>{% endif %}
-                    <p><strong>Elected in</strong> <span>{{ legislator.year_elected }}</span></p>
-                    {% if legislator.phone %}<p><strong>Phone</strong> <span>{{ legislator.phone }}</span></p>{% endif %}
+                    {% if legislator.hometown %}<p><strong>{{ COPY.legislator.hometown }}</strong> <span>{{ legislator.hometown }}</span></p>{% endif %}
+                    <p><strong>{{ COPY.legislator.phone }}</strong> <span>{{ legislator.year_elected }}</span></p>
+                    {% if legislator.phone %}<p><strong>{{ COPY.legislator.phone }}</strong> <span>{{ legislator.phone }}</span></p>{% endif %}
+                    <p><strong>{{ COPY.legislator.website }}</strong> <span>{% if legislator.office == 'Representative' %}<a href="http://www.house.mo.gov/member.aspx?year={{ year }}&district={{ legislator.district }}">{{ COPY.legislator.website_house }}</a>{% else %}<a href="http://www.senate.mo.gov/13info/members/mem{{ legislator.district }}.htm">{{ COPY.legislator.website_senate }}</a>{% endif %}</span></p>
                 </div>
             </div>
             
