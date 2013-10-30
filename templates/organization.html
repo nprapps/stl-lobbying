@@ -23,7 +23,8 @@
 <div class="row">
     <div class="two-year stats">
         <h3>{{ COPY.organization.recent_headline }}</h3>
-        <p>{{ organization.name }} gave <strong>{{ comma(total_expenditures_recent) }} gift{% if total_expenditures_recent != 1 %}s{% endif %}</strong> valued at <strong>{{ total_spending_recent|format_currency_round }}</strong> to state legislators and their staffs. During that time, <strong>{{ (organization_rank - 1)|apnumber }}</strong> organization{% if (organization_rank - 1) != 1 %}s{% endif %} spent more money on lobbying.</p>
+        <p>{{ organization.name }} gave <strong>{{ comma(total_expenditures_recent) }}</strong> gift{% if total_expenditures_recent != 1 %}s{% endif %} valued at <strong>{{ total_spending_recent|format_currency_round }}</strong> to state legislators and their staffs. During that time, <strong>{{ (organization_rank - 1)|apnumber }}</strong> organization{% if (organization_rank - 1) != 1 %}s{% endif %} spent more money on lobbying.</p>
+        <p>* {{ COPY.content.month_explainer }}</p>
     </div>
     <div class="all-time stats">
         <h3>{{ COPY.organization.all_time_headline }}</h3>
