@@ -59,18 +59,18 @@
                     <th class="recipient">{{ COPY.organization.th_recipient }}</th>
                     <th class="expenditure">{{ COPY.organization.th_value }}</th>
                     <th class="description">{{ COPY.organization.th_desc }}</th>
-                    <th class="category">{{ COPY.organization.th_category }}</th>
+                    <th>{{ COPY.organization.th_category }}</th>
                     <th class="share"></th>
                 </tr>
             </thead>
             <tbody>
-            {% for ex in expenditures %}
+            {% for ex in expenditures_recent %}
                 <tr id="exp{{ ex.ethics_id }}">
-                    <td class="date"><span style="display: none;">{{ ex.event_date.isoformat() }}</span>{{ ex.event_date.strftime('%B %e, %Y') }}</td>
+                    <td class="date"><span>{{ ex.event_date.isoformat() }}</span>{{ ex.event_date.strftime('%B %e, %Y') }}</td>
                     <td class="recipient">{% if ex.group %}{{ ex.group.name }}{% elif ex.legislator %}<a href="{{ ex.legislator.url() }}">{{ ex.legislator.display_name() }}</a>{% else %}{{ COPY.organization.no_longer_serving }}{% endif %}</td>
-                    <td class="expenditure"><span style="display: none;">{{ ex.cost }}</span>{{ ex.cost|format_currency }}</td>
+                    <td class="expenditure"><span>{{ ex.cost }}</span>{{ ex.cost|format_currency }}</td>
                     <td class="description{% if not ex.description %} not-disclosed{% endif %}">{% if ex.description %}{{ ex.description }}{% else %}<em>{{ COPY.organization.not_disclosed }}</em>{% endif %}</td>
-                    <td class="category">{{ ex.category }}</td>
+                    <td>{{ ex.category }}</td>
                     <td class="share"><a href="https://twitter.com/share?text={% if ex.group %}{{ ex.group.name }}{% elif ex.legislator %}{{ ex.legislator.display_name() }}{% else %}{{ COPY.organization.no_longer_serving }}{% endif %} received a gift valued at {{ ex.cost|format_currency }} from {{ organization.name }} &url={{ organization.url() }}%23exp{{ ex.ethics_id }}" target="_blank"><i class="icon-twitter"></i></a><a href="https://www.facebook.com/sharer/sharer.php?u={{ organization.url() }}%23exp{{ ex.ethics_id }}"><i class="icon-facebook"></i></a></td>
                 </tr>
             {% endfor %}
