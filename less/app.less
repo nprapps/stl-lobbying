@@ -463,6 +463,7 @@ nav {
 .detail {
 	.leaderboard {
 		.make-lg-column(4);
+		.make-lg-column-push(8);
 		clear: left;
 
 		.leaderboard-wrapper {
@@ -483,6 +484,7 @@ nav {
 
 	.gift-table {
 		.make-lg-column(8);
+		.make-lg-column-pull(4);
 	}
 
 	.leaderboard,
@@ -556,6 +558,10 @@ nav {
 		h3 {
 			border-bottom: 1px solid @gray-light;
 			padding-bottom: @line-height-computed / 2;
+		}
+
+		p {
+			font-size: @font-size-base * 1.3;
 		}
 
 		ul {

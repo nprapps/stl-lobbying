@@ -369,7 +369,6 @@ def format_currency(value):
 def format_currency_round(value):
     return "${:,.0f}".format(value)
 
-
 if __name__ == '__main__':
     import argparse
 

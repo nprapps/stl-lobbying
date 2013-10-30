@@ -36,14 +36,14 @@
 
 {% block wide_content %}
 <div class="row">
-    <div class="all-time stats">
-        <h3>{{ COPY.legislator.all_time_headline }}</h3>
-        <p>{{ legislator.short_display_name() }} received {{ comma(total_expenditures) }} gifts valued at {{ total_spending|format_currency_round }} from lobbyists.</p>  
-    </div>
     <div class="two-year stats">
         <h3>{{ COPY.legislator.recent_headline }}</h3>
         
-        <p>{{ legislator.short_display_name() }} received {{ comma(total_expenditures_recent) }} gifts valued at {{ total_spending_recent|format_currency_round }} from lobbyists. During that time, {{ (legislator_rank - 1) }} other lawmakers received more valuable gifts.</p>        
+        <p>{{ legislator.short_display_name() }} received <strong>{{ comma(total_expenditures_recent) }}</strong> gift{% if total_expenditures_recent != 1 %}s{% endif %} valued at <strong>{{ total_spending_recent|format_currency_round }}</strong> from lobbyists. During that time, <strong>{{ (legislator_rank - 1) }}</strong> other lawmakers received more valuable gifts.</p>   
+    </div>
+    <div class="all-time stats">
+        <h3>{{ COPY.legislator.all_time_headline }}</h3>
+        <p>{{ legislator.short_display_name() }} received <strong>{{ comma(total_expenditures) }}</strong> gift{% if total_expenditures != 1 %}s{% endif %} valued at <strong>{{ total_spending|format_currency_round }}</strong> from lobbyists.</p>  
     </div>
     <div class="leaderboard">
         <div class="leaderboard-wrapper">
