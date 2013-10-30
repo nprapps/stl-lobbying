@@ -1,3 +1,5 @@
+var GEOLOCATE = Modernizr.geolocation;
+
 var $search_form = $('.search form');
 var $search_address = $('.search .address');
 var $did_you_mean = $('.search .did-you-mean');
@@ -18,6 +20,7 @@ var $gift_table = $('.gift-table table');
 var $gift_sort = $('#gift-sort');
 var $show_senate_map = $('#show-senate-map');
 var $show_house_map = $('#show-house-map');
+var $geolocate_button = $('.geolocate');
 
 var MISSOURI_EXTENTS = [-95.7747, 35.9957, -89.099, 40.6136];
 
@@ -234,11 +237,27 @@ function on_show_house_map_click() {
     return false;
 }
 
+function on_geolocate_button_click() {
+    navigator.geolocation.getCurrentPosition(function(position) {
+        $search_address.val('');
+    
+        search_map.setView([position.coords.latitude, position.coords.longitude], 10);
+        $results_modal.modal('show');
+    });
+
+    return false;
+}
+
 $(function() {
     $search_form.on('submit', on_search_submit);
     $did_you_mean.on('click', 'li', on_did_you_mean_click);
     $search_examples.on('click', on_example_click);
     $gift_sort.on('change', on_gift_sort_change);
+    $geolocate_button.on('click', on_geolocate_button_click);
+
+    if (GEOLOCATE) {
+        $geolocate_button.show();
+    }
 
     $.tablesorter.addParser({ 
         id: 'hidden-text', 
