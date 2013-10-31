@@ -1,5 +1,21 @@
 {% extends '_base.html' %}
 
+{% block social_head %}
+{# Twitter #}
+<meta name="twitter:card" content="summary">
+<meta name="twitter:site" content="@nprapps">
+<meta name="twitter:image" content="{{ TWITTER.IMAGE_URL }}" />
+
+{# Facebook #}
+<meta property="og:title" content="{{ COPY.content.headline }}: {{ legislator.display_name() }}" />
+<meta property="og:url" content="{{ legislator.url() }}" />
+<meta property="og:type" content="article" />
+<meta property="og:description" content="Within the last 24 months%2C {{ legislator.display_name() }} received {{ comma(total_expenditures_recent) }} gift{% if total_expenditures_recent != 1 %}s{% endif %} valued at {{ total_spending_recent|format_currency_round }} from lobbyists." />
+<meta property="og:image" content="{{ FACEBOOK.IMAGE_URL }}" />
+<meta property="og:site_name" content="NPR.org" />
+<meta property="fb:app_id" content="{{ FACEBOOK.APP_ID }}" />
+{% endblock social_head %}
+
 {% block body_class %}legislator-detail detail{% endblock body_class %}
 
 {% block header_content %}
@@ -42,7 +58,7 @@
         <h3>{{ COPY.legislator.recent_headline }}</h3>
         
         <p>{{ legislator.short_display_name() }} received <strong>{{ comma(total_expenditures_recent) }}</strong> gift{% if total_expenditures_recent != 1 %}s{% endif %} valued at <strong>{{ total_spending_recent|format_currency_round }}</strong> from lobbyists. {% if total_expenditures_recent != 0 %}During that time, <strong>{{ (legislator_rank - 1)|apnumber }}</strong> other lawmaker{% if (legislator_rank - 1) != 1 %}s{% endif %} received more valuable gifts.{% endif %}</p> 
-        <p><small>* {{ COPY.content.month_explainer }}</small></p>
+        <p class="ed-note"><small>* {{ COPY.content.month_explainer }}</small></p>
     </div>
     <div class="all-time stats">
         <h3>{{ COPY.legislator.all_time_headline }}</h3>

@@ -148,7 +148,6 @@ nav {
 
 		h1 {
 			font-weight: 700;
-			margin-top: 0;
 
 			.detail & {
 				font-size: @font-size-base * 2;
@@ -199,6 +198,41 @@ nav {
 		}
 	}
 	
+}
+
+.share {
+	font-size: @font-size-base * 1.5;
+	margin-top: @line-height-computed / 2;
+
+	.legislator-detail & {
+		margin-left: 115px;
+	}
+
+	@media screen and (max-width: @screen-xs-max){
+		margin-left: 0;
+	}
+
+	.organization-detail& {
+		margin-left: 0;
+	}
+
+	a {
+		margin-right: 10px;
+		display: inline-block;
+		width: 36px;
+		height: 36px;
+		border-radius: 18px;
+		text-align: center;
+		line-height: 36px;
+		color: #fff;
+		background: lighten(desaturate(@brand-red, 20%), 20%);
+
+		&:hover {
+			text-decoration: none;
+			background: @brand-red;
+		}
+
+	}
 }
 
 /* Global search module
@@ -588,30 +622,6 @@ nav {
 				font-size: @font-size-base * 1.9;
 			}
 		}
-
-		.share {
-			font-size: @font-size-base * 1.5;
-			margin-left: 115px;
-			margin-top: @line-height-computed / 2;
-
-			a {
-				margin-right: 10px;
-				display: inline-block;
-				width: 36px;
-				height: 36px;
-				border-radius: 18px;
-				text-align: center;
-				line-height: 36px;
-				color: #fff;
-				background: lighten(desaturate(@brand-red, 20%), 20%);
-
-				&:hover {
-					text-decoration: none;
-					background: @brand-red;
-				}
-
-			}
-		}
 	}
 
 
@@ -666,9 +676,11 @@ nav {
 		p {
 			font-size: @font-size-base * 1.3;
 
+			&.ed-note {
+				line-height: 1.1;
+			}
 			small {
 				color: @gray-light;
-				line-height: 1.1;
 			}
 		}
 

@@ -1,5 +1,21 @@
 {% extends '_base.html' %}
 
+{% block social_head %}
+{# Twitter #}
+<meta name="twitter:card" content="summary">
+<meta name="twitter:site" content="@nprapps">
+<meta name="twitter:image" content="{{ TWITTER.IMAGE_URL }}" />
+
+{# Facebook #}
+<meta property="og:title" content="{{ COPY.content.headline }}: {{ organization.name }}" />
+<meta property="og:url" content="{{ organization.url() }}" />
+<meta property="og:type" content="article" />
+<meta property="og:description" content="Within the last 24 months%2C {{ organization.name }} gave legislators {{ comma(total_expenditures_recent) }} gift{% if total_expenditures_recent != 1 %}s{% endif %} valued at {{ total_spending_recent|format_currency_round }}." />
+<meta property="og:image" content="{{ FACEBOOK.IMAGE_URL }}" />
+<meta property="og:site_name" content="NPR.org" />
+<meta property="fb:app_id" content="{{ FACEBOOK.APP_ID }}" />
+{% endblock social_head %}
+
 {% block body_class %}organization-detail detail{% endblock body_class %}
 
 {% block header_content %}
@@ -15,6 +31,7 @@
 <div class="detail-header organization-header">
     <h1>{{ organization.name }}</h1>
     <p class="info">{{ COPY.organization.industry_label }}: <strong>{{ organization.category }}</strong></p>
+    <p class="share"><a href="https://twitter.com/share?text=Within the last 24 months%2C {{ organization.name }} gave legislators {{ comma(total_expenditures_recent)|urlencode }} gift{% if total_expenditures_recent != 1 %}s{% endif %} valued at {{ total_spending_recent|format_currency_round|urlencode }}." target="_blank"><i class="icon-twitter"></i></a><a href="https://www.facebook.com/sharer/sharer.php?u={{ organization.url() }}"><i class="icon-facebook"></i></a></p>
 </div>
 {% endblock %}
 
@@ -24,7 +41,7 @@
     <div class="two-year stats">
         <h3>{{ COPY.organization.recent_headline }}</h3>
         <p>{{ organization.name }} gave <strong>{{ comma(total_expenditures_recent) or 0  }}</strong> gift{% if total_expenditures_recent != 1 %}s{% endif %} valued at <strong>{{ total_spending_recent|format_currency_round }}</strong> to state legislators and their staffs. During that time, <strong>{{ (organization_rank - 1)|apnumber }}</strong> organization{% if (organization_rank - 1) != 1 %}s{% endif %} spent more money on lobbying.</p>
-        <p>* {{ COPY.content.month_explainer }}</p>
+        <p class="ed-note"><small>* {{ COPY.content.month_explainer }}</small></p>
     </div>
     <div class="all-time stats">
         <h3>{{ COPY.organization.all_time_headline }}</h3>
@@ -75,7 +92,7 @@
                     <td class="expenditure"><span>{{ ex.cost }}</span>{{ ex.cost|format_currency }}</td>
                     <td class="description{% if not ex.description %} not-disclosed{% endif %}">{% if ex.description %}{{ ex.description }}{% else %}<em>{{ COPY.organization.not_disclosed }}</em>{% endif %}</td>
                     <td>{{ ex.category }}</td>
-                    <td class="share"><a href="https://twitter.com/share?text={% if ex.group %}{{ ex.group.name }}{% elif ex.legislator %}{{ ex.legislator.display_name() }}{% else %}{{ COPY.organization.no_longer_serving }}{% endif %} received a gift valued at {{ ex.cost|format_currency }} from {{ organization.name }} &url={{ organization.url() }}%23exp{{ ex.ethics_id }}" target="_blank"><i class="icon-twitter"></i></a><a href="https://www.facebook.com/sharer/sharer.php?u={{ organization.url() }}%23exp{{ ex.ethics_id }}"><i class="icon-facebook"></i></a></td>
+                    <td class="share"><a href="https://twitter.com/share?text={{ organization.name }} gave a gift valued at {{ ex.cost|format_currency }} to {% if ex.group %}{{ ex.group.name }}{% elif ex.legislator %}{{ ex.legislator.display_name() }}{% else %}{{ COPY.organization.no_longer_serving }}{% endif %}&url={{ organization.url() }}%23exp{{ ex.ethics_id }}" target="_blank"><i class="icon-twitter"></i></a><a href="https://www.facebook.com/sharer/sharer.php?u={{ organization.url() }}%23exp{{ ex.ethics_id }}"><i class="icon-facebook"></i></a></td>
                 </tr>
             {% endfor %}
             </tbody>
