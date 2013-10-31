@@ -83,11 +83,11 @@ LEGISLATOR_DEMOGRAPHICS_DOC_KEY = '0AlXMOHKxzQVRdFFQRzBuLUxhN0JubjlvRVA2SlpVVlE'
 """
 SHARING
 """
-PROJECT_DESCRIPTION = 'An opinionated project template for (mostly) server-less apps.'
-SHARE_URL = 'http://%s/' % (PRODUCTION_S3_BUCKETS[0])
+PROJECT_DESCRIPTION = 'See whose money is influencing your Missouri legislators. From St. Louis Public Radio and NPR.'
+SHARE_URL = 'http://lobbyingmissouri.org/'
 
 TWITTER = {
-    'TEXT': PROJECT_NAME,
+    'TEXT': PROJECT_DESCRIPTION,
     'URL': SHARE_URL,
     # Will be resized to 120x120, can't be larger than 1MB 
     'IMAGE_URL': ''
@@ -153,13 +153,13 @@ def configure_targets(deployment_target):
 
     if deployment_target == 'production':
         S3_BUCKETS = PRODUCTION_S3_BUCKETS
-        S3_BASE_URL = 'http://%s' % (S3_BUCKETS[0])
+        S3_BASE_URL = 'http://lobbyingmissouri.org'
         SERVERS = PRODUCTION_SERVERS
         SERVER_BASE_URL = 'http://%s' % (SERVERS[0])
         DEBUG = False
     elif deployment_target == 'staging':
         S3_BUCKETS = STAGING_S3_BUCKETS
-        S3_BASE_URL = 'http://%s' % (S3_BUCKETS[0])
+        S3_BASE_URL = 'http://staging.lobbyingmissouri.org'
         SERVERS = STAGING_SERVERS
         SERVER_BASE_URL = 'http://%s' % (SERVERS[0])
         DEBUG = True
