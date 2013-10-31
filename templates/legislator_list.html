@@ -6,6 +6,11 @@
 <div class="header-wrapper">
     <div class="project-header">
         <h1><a href="/">{{ PROJECT_NAME }}</a></h1>
+
+        <ul class="breadcrumbs list-unstyled">
+            <li><a href="{{ S3_BASE_URL }}">Home</a></li>
+            <li><a href="{{ S3_BASE_URL }}/legislators/">Legislators</a></li>
+        </ul>
     </div>
 </div>
 {% endblock %}

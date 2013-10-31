@@ -126,6 +126,37 @@ nav {
 					.rule-3px;
 				}
 			}
+
+			.breadcrumbs {
+				li {
+					display: inline-block;
+
+					a {
+						color: @gray-light;
+
+						&:hover {
+							color: @brand-red;
+						}
+					}
+
+					&:before {
+						content: "\f105";
+						font-family: 'FontAwesome';
+						font-weight: normal;
+						font-style: normal;
+						color: @gray-light;
+						text-decoration: inherit;
+						-webkit-font-smoothing: antialiased;
+						margin-right: 3px;
+					}
+
+					&:first-child {
+						&:before {
+							display: none;
+						}
+					}
+				}
+			}
 		}
 	}
 
