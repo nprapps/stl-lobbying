@@ -19,8 +19,15 @@ from render_utils import flatten_app_config, make_context
 app = Flask(app_config.PROJECT_NAME)
 
 def get_ago():
-    today = datetime.datetime.today()
-    return datetime.date(today.year - 2, today.month + 1, 1)
+    """
+    Generate a datetime that will include 24 reporting periods
+    for which we have data.
+    """
+    most_recent = Expenditure.select().order_by(Expenditure.report_period.desc()).limit(1)[0].report_period
+
+    ago = datetime.date(most_recent.year - 2, most_recent.month + 1, 1)
+
+    return ago
 
 @app.route('/')
 def index():
