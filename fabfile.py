@@ -604,6 +604,37 @@ def cron_test():
 
     local('echo $DEPLOYMENT_TARGET > /tmp/cron_test.txt')
 
+def cron_stories():
+    """
+    Build the story list fragment.
+    """
+    require('settings', provided_by=[production, staging])
+
+    update_copy()
+
+    import copytext
+    import json
+    import xlrd
+
+    book = xlrd.open_workbook(copytext.COPY_XLS)
+    
+    sheet = book.sheet_by_name('promo')
+    stories = []
+
+    for n in range(1, sheet.nrows):
+        row = sheet.row_values(n)
+
+        stories.append({
+            'date': row[0],
+            'title': row[1],
+            'url': row[2],
+            'text': row[3],
+            'img': row[4]
+        })
+
+    with open('www/live-data/stories.json', 'w') as f:
+        f.write(json.dumps(stories))
+
 """
 Destruction
 
