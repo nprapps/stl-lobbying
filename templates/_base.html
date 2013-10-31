@@ -20,7 +20,7 @@
         {{ CSS.render('css/app.min.css') }}
 
          <!--[if lte IE 8]>
-            <link href='{{ BASE_S3_URL }}/css/mapbox.ie.css' rel='stylesheet' />
+            <link href='/css/mapbox.ie.css' rel='stylesheet' />
         <![endif]-->
 
         <!-- AD CODE -->
@@ -180,6 +180,9 @@
         {% block modal_content %}
         {% endblock modal_content %}
 
+        <script type="text/javascript" src="/js/lib/jquery.tablesorter.js"></script>
+        <script type="text/javascript" src="/js/lib/mapbox.js"></script>
+
         {{ JS.push('js/lib/underscore.js') }}
         {{ JS.push('js/lib/moment.js') }}
         {{ JS.push('js/lib/bootstrap.js') }}
@@ -187,9 +190,6 @@
         {{ JS.push('js/templates.js') }}
         {{ JS.push('js/app.js') }}
         {{ JS.render('js/app-footer.min.js') }}
-
-        <script type="text/javascript" src="{{ S3_BASE_URL }}/js/lib/jquery.tablesorter.js"></script>
-        <script type="text/javascript" src="{{ S3_BASE_URL }}/js/lib/mapbox.js"></script>
 
         {% block extra_foot %}
         {% endblock extra_foot %}
