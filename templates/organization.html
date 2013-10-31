@@ -31,7 +31,7 @@
 <div class="detail-header organization-header">
     <h1>{{ organization.name }}</h1>
     <p class="info">{{ COPY.organization.industry_label }}: <strong>{{ organization.category }}</strong></p>
-    <p class="share"><a href="https://twitter.com/share?text=Within the last 24 months%2C {{ organization.name }} gave legislators {{ comma(total_expenditures_recent)|urlencode }} gift{% if total_expenditures_recent != 1 %}s{% endif %} valued at {{ total_spending_recent|format_currency_round|urlencode }}." target="_blank"><i class="icon-twitter"></i></a><a href="https://www.facebook.com/sharer/sharer.php?u={{ organization.url() }}"><i class="icon-facebook"></i></a></p>
+    <p class="share"><a href="https://twitter.com/share?text=Within the last 24 months%2C {{ organization.name }} gave legislators {{ comma(total_expenditures_recent)|urlencode }} gift{% if total_expenditures_recent != 1 %}s{% endif %} valued at {{ total_spending_recent|format_currency_round|urlencode }}. %23MoLeg" target="_blank"><i class="icon-twitter"></i></a><a href="https://www.facebook.com/sharer/sharer.php?u={{ organization.url() }}"><i class="icon-facebook"></i></a></p>
 </div>
 {% endblock %}
 
