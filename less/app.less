@@ -148,6 +148,7 @@ nav {
 
 		h1 {
 			font-weight: 700;
+			margin-top: 0;
 
 			.detail & {
 				font-size: @font-size-base * 2;
@@ -163,6 +164,11 @@ nav {
 		}
 		.story-meta {
 
+			.date,
+			.byline {
+				font-size: 13px;
+			}
+
 			.byline {
 				span {
 					text-transform: uppercase;
@@ -171,6 +177,10 @@ nav {
 						text-transform: lowercase;
 					}
 				}
+			}
+
+			.intro {
+				font-size: 16px;
 			}
 		}
 
@@ -195,6 +205,33 @@ nav {
 =================================================*/
 
 .search {
+	// border-top: 1px solid @gray-light;
+	// padding: 0 @grid-gutter-width / 2;
+	// background: lighten(@gray-lighter, 2%);
+
+	@media screen and (min-width: @screen-sm){
+		display: table;
+		width: 100%;
+
+		.form-group {
+			display: table-cell;
+
+			.input-group {
+				width: 100%;
+			}
+
+			&.search-form {
+				width: 80%;
+			}
+
+			&.locate {
+				width: 20%;
+				padding-left: @grid-gutter-width / 2;
+			}
+		}
+	}
+
+
 
 }
 
@@ -203,15 +240,35 @@ nav {
 =================================================*/
 .homepage {
 
-	.story-meta {
-		.search {
-			label {
-				font-size: 24px; 
-				font-weight: 500;
-				margin-top: @line-height-computed;
+	.partnership {
+		font-size: 13px;
+		font-weight: normal;
+		color: @gray-light;
+		line-height: 35px;
+
+		.npr-logo {
+			display: inline-block;
+			height: 17px;
+
+			img {
+				margin-top: -2px;
+				display: inline-block;
 			}
 		}
 	}
+
+	.story-meta {
+
+	}
+
+	.search {
+		label {
+			font-size: 24px; 
+			font-weight: 500;
+			margin-top: @line-height-computed;
+		}
+	}
+
 	.totals {
 		&:before {
 			.rule-3px;

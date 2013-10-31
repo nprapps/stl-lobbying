@@ -5,19 +5,24 @@
 {% block header_content %}
 <div class="header-wrapper">
     <div class="project-header">
+
         <h1>{{ COPY.content.headline }}</h1>
+       
         <div class="story-meta">
-            <p class="byline">by <span>{{ COPY.attribution.byline }}</span></p>
-            <p class="dateblock">
-                <span class="date">{{ COPY.attribution.pubdate }}</span>
-            </p>
+            <div class="story-meta-wrapper">
+                <p class="byline">by <span>{{ COPY.attribution.byline }}</span></p>
+                <p class="dateblock">
+                    <span class="date">{{ COPY.attribution.pubdate }}</span>
+                </p>
+            </div>
             <p class="intro">{{ COPY.content.intro }}</p>
 
             <ul id="stories">
             </ul>
-
-            {% include '_search.html' %}
         </div>
+        <h3 class="partnership">A reporting partnership with <a class="npr-logo" href="http://npr.org"><img src="{{ S3_BASE_URL }}/img/npr-transparent.png"></a></h3>
+        
+        {% include '_search.html' %}
     </div>
     <div class="bigbox">
             {# 300x250 ad #}

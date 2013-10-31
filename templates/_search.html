@@ -1,17 +1,21 @@
 <div class="search">
+    <h3>Search for your address to find your legislators</h3>
     <form role="form">
-        <div class="form-group">
-            <label for="address">Search for your address to find your legislators</label>
+        <div class="form-group search-form">
+            <label class="sr-only" for="address">Search for your address to find your legislators</label>
             <div class="input-group input-group-lg">
                 <input type="text" class="address form-control" placeholder="Enter your address" />
                 <span class="input-group-btn">
-                    <button type="submit" class="btn btn-primary">Search</button>
-                    <button type="button" class="btn btn-default geolocate">Geolocate</button>
+                    <button type="submit" class="btn btn-primary btn-search">Search</button>
                 </span>
             </div>
+
             <span class="help-block">For example, <a href="#" class="example">3651 Olive St. St. Louis, MO 63108</a> or <a href="#" class="example">Columbia, MO</a></span>
         </div>
         
+        <div class="form-group locate">
+            <button type="button" class="btn btn-primary btn-lg geolocate"><span>Locate Me</span> <i class="icon icon-screenshot"></i></button>
+        </div>
     </form>
 
     <div class="loading" style="display: none;">
