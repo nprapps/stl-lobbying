@@ -21,7 +21,7 @@
 {% block header_content %}
 <div class="header-wrapper">
     <div class="project-header">
-        <h1><a href="{{ S3_BASE_URL }}">{{ PROJECT_NAME }}</a></h1>
+        <h1><a href="/">{{ PROJECT_NAME }}</a></h1>
     </div>
 </div>
 {% endblock %}
@@ -45,7 +45,7 @@
             </div>
             
         </div>
-        <img class="district" src="{{ S3_BASE_URL }}/img/districts/{{ legislator.office|replace("Senator", "senate")|replace("Representative", "house") }}{{ legislator.district }}.png">
+        <img class="district" src="/img/districts/{{ legislator.office|replace("Senator", "senate")|replace("Representative", "house") }}{{ legislator.district }}.png">
     
 </div>
 
