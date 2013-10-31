@@ -15,17 +15,20 @@
     </div>
 
     <form role="form">
-        <div class="form-group">
-            <label for="address">Search for another address</label>
-            <div class="input-group">
+        <h4>Search for your address to find your legislators</h4>
+        <div class="form-group search-form">
+            <label class="sr-only" for="address">Search for your address to find your legislators</label>
+            <div class="input-group input-group-lg">
                 <input type="text" class="address form-control" placeholder="Enter your address" />
                 <span class="input-group-btn">
-                    <button type="submit" class="btn btn-primary">Search</button>
-                    <button type="button" class="btn btn-default geolocate">Geolocate</button>
+                    <button type="submit" class="btn btn-primary btn-search">Search</button>
                 </span>
             </div>
         </div>
         
+        <div class="form-group locate">
+            <button type="button" class="btn btn-primary btn-lg geolocate"><span>Locate Me</span> <i class="icon icon-screenshot"></i></button>
+        </div>
     </form>
 
     <div class="loading" style="display: none;">
