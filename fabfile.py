@@ -635,6 +635,11 @@ def cron_stories():
     with open('www/live-data/stories.json', 'w') as f:
         f.write(json.dumps(stories))
 
+    s3cmd = 's3cmd -P --add-header=Cache-Control:max-age=5 --guess-mime-type --recursive --exclude-from gzip_types.txt sync %s/ %s'
+
+    for bucket in app_config.S3_BUCKETS:
+        local(s3cmd % ('www/live-data/stories.json', 's3://%s/live-data/stories.json' % (bucket)))
+
 """
 Destruction
 
