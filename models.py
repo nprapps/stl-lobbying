@@ -98,7 +98,7 @@ class Legislator(SlugModel):
         database = database
 
     def url(self):
-        return '%s/legislators/%s/' % (app_config.S3_BASE_URL, self.slug)
+        return '/legislators/%s/' % self.slug
 
     def display_name(self):
         office = self.OFFICE_SHORT_NAMES[self.office] 
@@ -111,7 +111,7 @@ class Legislator(SlugModel):
         return '%s %s' % (office, self.last_name)
 
     def mugshot_url(self):
-        return '%s/img/mugs/%s' % (app_config.S3_BASE_URL, self.photo_filename)
+        return '/img/mugs/%s' % self.photo_filename
 
 class Group(SlugModel):
     slug_fields = ['name']
@@ -131,7 +131,7 @@ class Organization(SlugModel):
         database = database
 
     def url(self):
-        return '%s/organizations/%s/' % (app_config.S3_BASE_URL, self.slug)
+        return '/organizations/%s/' % self.slug
 
 class Expenditure(Model):
     """

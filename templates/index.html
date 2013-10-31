@@ -22,7 +22,7 @@
             <ul id="stories">
             </ul>
         </div>
-        <h3 class="partnership">A reporting partnership with <a class="npr-logo" href="http://npr.org"><img src="{{ S3_BASE_URL }}/img/npr-transparent.png"></a></h3>
+        <h3 class="partnership">A reporting partnership with <a class="npr-logo" href="http://npr.org"><img src="/img/npr-transparent.png"></a></h3>
         
         {% include '_search.html' %}
     </div>
@@ -74,7 +74,7 @@
                 </tbody>
             </table>
             
-            <p><a href="{{ S3_BASE_URL }}/organizations/">View all organizations &raquo;</a></p>
+            <p><a href="/organizations/">View all organizations &raquo;</a></p>
         </div>
         <div class="legislators">
             <h3>{{ COPY.content.leg_chart_headline }}</h3>
@@ -89,7 +89,7 @@
                 </tbody>
             </table>
 
-            <p><a href="{{ S3_BASE_URL }}/legislators/"><strong>View all legislators &raquo;</strong></a></p>
+            <p><a href="/legislators/"><strong>View all legislators &raquo;</strong></a></p>
         </div>
     </div>
     <div class="categories">
@@ -117,7 +117,7 @@ window.SENATORS = {
     {% for senator in senators %}
     '{{ senator.district }}': {
         'display_name': '{{ senator.display_name() }}',
-        'mug_url': '{{ S3_BASE_URL }}/img/mugs/{{ senator.office|lower }}_{{ senator.first_name|lower|replace(".", "")|replace(" ", "_") }}_{{ senator.last_name|lower|replace(".", "")|replace(" ", "_") }}.gif',
+        'mug_url': '/img/mugs/{{ senator.office|lower }}_{{ senator.first_name|lower|replace(".", "")|replace(" ", "_") }}_{{ senator.last_name|lower|replace(".", "")|replace(" ", "_") }}.gif',
         'slug': '{{ senator.slug }}',
         'district': '{{ senator.district }}',
         'vacant': {{ senator.vacant|lower }}
@@ -129,7 +129,7 @@ window.REPRESENTATIVES = {
     {% for rep in representatives %}
     '{{ rep.district }}': {
         'display_name': '{{ rep.display_name() }}',
-        'mug_url': '{{ S3_BASE_URL }}/img/mugs/{{ rep.office|lower }}_{{ rep.first_name|lower|replace(".", "")|replace(" ", "_") }}_{{ rep.last_name|lower|replace(".", "")|replace(" ", "_") }}.png',
+        'mug_url': '/img/mugs/{{ rep.office|lower }}_{{ rep.first_name|lower|replace(".", "")|replace(" ", "_") }}_{{ rep.last_name|lower|replace(".", "")|replace(" ", "_") }}.png',
         'slug': '{{ rep.slug }}',
         'district': '{{ rep.district }}',
         'vacant': {{ rep.vacant|lower }}
