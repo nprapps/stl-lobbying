@@ -23,13 +23,14 @@
 <div class="row">
     <div class="two-year stats">
         <h3>{{ COPY.organization.recent_headline }}</h3>
-        <p>{{ organization.name }} gave <strong>{{ comma(total_expenditures_recent) }}</strong> gift{% if total_expenditures_recent != 1 %}s{% endif %} valued at <strong>{{ total_spending_recent|format_currency_round }}</strong> to state legislators and their staffs. During that time, <strong>{{ (organization_rank - 1)|apnumber }}</strong> organization{% if (organization_rank - 1) != 1 %}s{% endif %} spent more money on lobbying.</p>
+        <p>{{ organization.name }} gave <strong>{{ comma(total_expenditures_recent) or 0  }}</strong> gift{% if total_expenditures_recent != 1 %}s{% endif %} valued at <strong>{{ total_spending_recent|format_currency_round }}</strong> to state legislators and their staffs. During that time, <strong>{{ (organization_rank - 1)|apnumber }}</strong> organization{% if (organization_rank - 1) != 1 %}s{% endif %} spent more money on lobbying.</p>
         <p>* {{ COPY.content.month_explainer }}</p>
     </div>
     <div class="all-time stats">
         <h3>{{ COPY.organization.all_time_headline }}</h3>
         <p>{{ organization.name }} gave <strong>{{ comma(total_expenditures) }} gift{% if total_expenditures != 1 %}s{% endif %}</strong> valued at <strong>{{ total_spending|format_currency_round }}</strong> to state legislators and their staffs.</p>
     </div>
+    {% if top_legislators|length > 0 %}
     <div class="leaderboard">
         <div class="leaderboard-wrapper">
             <div class="top-legislators">
@@ -45,7 +46,9 @@
             </div>
         </div>
     </div>
+    {% endif %}
 
+    {% if expenditures_recent.count() > 0 %}
     <div class="table-responsive gift-table">
         <label for="gift-sort">Sort by: </label>
         <select id="gift-sort">
@@ -78,5 +81,6 @@
             </tbody>
         </table>
     </div>
+    {% endif %}
 </div>
 {% endblock %}
