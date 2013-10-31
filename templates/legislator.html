@@ -41,7 +41,7 @@
                     {% if legislator.phone %}<p><strong>{{ COPY.legislator.phone }}</strong> <span>{{ legislator.phone }}</span></p>{% endif %}
                     <p><strong>{{ COPY.legislator.website }}</strong> <span>{% if legislator.office == 'Representative' %}<a href="http://www.house.mo.gov/member.aspx?year={{ year }}&district={{ legislator.district }}">{{ COPY.legislator.website_house }}</a>{% else %}<a href="http://www.senate.mo.gov/13info/members/mem{{ legislator.district }}.htm">{{ COPY.legislator.website_senate }}</a>{% endif %}</span></p>
                 </div>
-                <p class="share"><a href="https://twitter.com/share?text=Within the last 24 months%2C {{ legislator.display_name() }} received {{ comma(total_expenditures_recent)|urlencode }} gift{% if total_expenditures_recent != 1 %}s{% endif %} valued at {{ total_spending_recent|format_currency_round|urlencode }} from lobbyists. %23MoLeg" target="_blank"><i class="icon-twitter"></i></a><a href="https://www.facebook.com/sharer/sharer.php?u={{ legislator.url() }}"><i class="icon-facebook"></i></a></p>
+                <p class="share"><a class="twitter" href="https://twitter.com/share?text=Within the last 24 months%2C {{ legislator.display_name() }} received {{ comma(total_expenditures_recent)|urlencode }} gift{% if total_expenditures_recent != 1 %}s{% endif %} valued at {{ total_spending_recent|format_currency_round|urlencode }} from lobbyists. %23MoLeg" target="_blank"><i class="icon-twitter"></i></a><a class="facebook" href="https://www.facebook.com/sharer/sharer.php?u={{ legislator.url() }}"><i class="icon-facebook"></i></a></p>
             </div>
             
         </div>
