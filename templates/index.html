@@ -8,7 +8,7 @@
 
         <h1>{{ COPY.content.headline }}</h1>
         <h3 class="partnership">A reporting partnership with <a class="npr-logo" href="http://npr.org"><img src="/img/npr-transparent.png"></a></h3>
-        
+
        
         <div class="story-meta">
             <div class="story-meta-wrapper">
@@ -84,7 +84,7 @@
                 {% for legislator in legislators_total_spending %}
                 <tr>
                     <td class="legislator"><a href="{{ legislator.url() }}">{{ legislator.display_name() }} <small>{{ legislator.party }} | {{ ordinal(legislator.district) }} district</a></td>
-                    <td class="spending"><div class="bar" style="width: {{ legislator.total_spending / (legislators_total_spending|first).total_spending * 100 }}%">{{ legislator.total_spending|format_currency_round }}</div> </td>
+                    <td class="spending"><div class="bar" style="width: {{ legislator.total_spending / (legislators_total_spending|first).total_spending * 100 }}%"><span>{{ legislator.total_spending|format_currency_round }}</span></div> </td>
                 </tr>
                 {% endfor %}
                 </tbody>
@@ -100,7 +100,7 @@
             {% for category, total_spending in categories_total_spending %}
             <tr>
                 <td class="category">{{ category }}</td>
-                <td class="spending"><div class="bar" style="width: {{ total_spending / (categories_total_spending|first).1 * 100 }}%">{{ total_spending|format_currency_round }}</div> </td>
+                <td class="spending"><div class="bar" style="width: {{ total_spending / (categories_total_spending|first).1 * 100 }}%"><span>{{ total_spending|format_currency_round }}</span></div> </td>
             </tr>
             {% endfor %}
             </tbody>

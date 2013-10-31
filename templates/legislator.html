@@ -73,7 +73,7 @@
                     {% for org in top_organizations %}
                     <tr>
                         <td class="organization"><a href="{{ org.url() }}">{{ org.name }}</a></td>
-                        <td class="spending"><div class="bar" style="width: {{ org.total_spending / (top_organizations|first).total_spending * 100 }}%">{{ org.total_spending|format_currency_round }}</div></td>
+                        <td class="spending"><div class="bar" style="width: {{ org.total_spending / (top_organizations|first).total_spending * 100 }}%"><span>{{ org.total_spending|format_currency_round }}</span></div></td>
                     </tr>
                     {% endfor %}
                 </table>
@@ -84,7 +84,7 @@
                     {% for category, total_spending in top_categories %}
                     <tr>
                         <td class="category">{{ category }}</td>
-                        <td class="spending"><div class="bar" style="width: {{ total_spending / (top_categories|first).1 * 100 }}%">{{ total_spending|format_currency_round }}</div></td>
+                        <td class="spending"><div class="bar" style="width: {{ total_spending / (top_categories|first).1 * 100 }}%"><span>{{ total_spending|format_currency_round }}</span></div></td>
                     </tr>
                     {% endfor %}
                 </table>

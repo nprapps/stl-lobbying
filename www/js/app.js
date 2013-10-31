@@ -22,6 +22,7 @@ var $show_senate_map = $('#show-senate-map');
 var $show_house_map = $('#show-house-map');
 var $geolocate_button = $('.geolocate');
 var $stories = $('#stories');
+var $bars = $('.bar');
 
 var MISSOURI_EXTENTS = [-95.7747, 35.9957, -89.099, 40.6136];
 
@@ -249,6 +250,18 @@ function on_geolocate_button_click() {
     return false;
 }
 
+function position_bar_labels(){
+    $bars.each(function(){
+        $this = $(this);
+        $text = $this.find('span');
+
+        $text.attr('style', '');
+        if($this.width() < $text.width() + 10){
+            $text.css('margin-left', $this.width());
+        }
+    });
+}
+
 $(function() {
     $search_form.on('submit', on_search_submit);
     $did_you_mean.on('click', 'li', on_did_you_mean_click);
@@ -330,5 +343,11 @@ $(function() {
             });
         });
     }
+
+    position_bar_labels();
+    var reposition_bar_labels = _.debounce(position_bar_labels, 300);
+    $(window).resize(reposition_bar_labels);
+
+    
 });
 

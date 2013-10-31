@@ -318,7 +318,7 @@ nav {
 	.search {
 		border-top: 1px solid @gray-lighter; 
 		margin-top: @line-height-computed;
-		
+
 		label {
 			font-size: 24px; 
 			font-weight: 500;
@@ -336,7 +336,7 @@ nav {
 			display: block;
 			content: ' ';
 			border-bottom: 1px solid @gray-light;
-			margin-bottom: @line-height-computed / 2;
+			margin: 0 @grid-gutter-width / 2 @line-height-computed / 2;
 		}
 
 		.total-spending,
@@ -895,6 +895,28 @@ nav {
 		.spending {
 			.bar {
 				height: 36px;
+			}
+		}
+	}
+}
+
+.organization-detail {
+	.leaderboard {
+		.leaderboard-wrapper {
+			.top-legislators{
+				.make-sm-column(12);
+				.make-md-column(8);
+				.make-lg-column(12);
+
+				@media screen and (min-width: @screen-sm) and (max-width: @screen-md-max){
+					.legislator{
+						width: 33.33333%;
+					}
+				}
+
+				@media screen and (max-width: @screen-md-max){
+					margin-bottom: @line-height-computed;
+				}
 			}
 		}
 	}
