@@ -295,6 +295,10 @@ nav {
 		font-weight: normal;
 		color: @gray-light;
 		line-height: 35px;
+		margin-top: 0;
+		border-bottom: 1px solid @gray-lighter;
+		padding-bottom: @line-height-computed / 2;
+		margin-bottom: @line-height-computed;
 
 		.npr-logo {
 			display: inline-block;
@@ -312,6 +316,9 @@ nav {
 	}
 
 	.search {
+		border-top: 1px solid @gray-lighter; 
+		margin-top: @line-height-computed;
+		
 		label {
 			font-size: 24px; 
 			font-weight: 500;
