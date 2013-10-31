@@ -256,7 +256,7 @@ function position_bar_labels(){
         $text = $this.find('span');
 
         $text.attr('style', '');
-        if($this.width() < $text.width() + 10){
+        if(($this.parent().width() - $this.width()) > $text.width() + 10){
             $text.css('margin-left', $this.width());
         }
     });
