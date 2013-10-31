@@ -21,6 +21,7 @@ var $gift_sort = $('#gift-sort');
 var $show_senate_map = $('#show-senate-map');
 var $show_house_map = $('#show-house-map');
 var $geolocate_button = $('.geolocate');
+var $stories = $('#stories');
 
 var MISSOURI_EXTENTS = [-95.7747, 35.9957, -89.099, 40.6136];
 
@@ -259,41 +260,43 @@ $(function() {
         $geolocate_button.show();
     }
 
-    $.tablesorter.addParser({ 
-        id: 'hidden-text', 
-        is: function(s) { 
-            return false; 
-        }, 
-        format: function(s, table, cell, cellIndex) { 
-            return $(cell).find('span').text();
-        }, 
-        type: 'text' 
-    }); 
+    if ($gift_table.length > 0) {
+        $.tablesorter.addParser({ 
+            id: 'hidden-text', 
+            is: function(s) { 
+                return false; 
+            }, 
+            format: function(s, table, cell, cellIndex) { 
+                return $(cell).find('span').text();
+            }, 
+            type: 'text' 
+        }); 
 
-    $.tablesorter.addParser({ 
-        id: 'hidden-number', 
-        is: function(s) { 
-            return false; 
-        }, 
-        format: function(s, table, cell, cellIndex) { 
-            return parseFloat($(cell).find('span').text());
-        }, 
-        type: 'numeric' 
-    }); 
+        $.tablesorter.addParser({ 
+            id: 'hidden-number', 
+            is: function(s) { 
+                return false; 
+            }, 
+            format: function(s, table, cell, cellIndex) { 
+                return parseFloat($(cell).find('span').text());
+            }, 
+            type: 'numeric' 
+        }); 
 
 
-    $gift_table.tablesorter({
-        headers: {
-            0: { sorter: 'hidden-text' },
-            2: { sorter: 'hidden-number' }
-        }
-    });
+        $gift_table.tablesorter({
+            headers: {
+                0: { sorter: 'hidden-text' },
+                2: { sorter: 'hidden-number' }
+            }
+        });
 
-    // Disable default sort events
-    $gift_table.find('th').off();
+        // Disable default sort events
+        $gift_table.find('th').off();
 
-    // make the header fixed on scroll
-    $('.table-fixed-header').fixedHeader();
+        // make the header fixed on scroll
+        $('.table-fixed-header').fixedHeader();
+    }
 
     // Load maps
     if ($('#search-map').length > 0) {
@@ -317,6 +320,15 @@ $(function() {
         search_map.on('moveend', on_search_map_moveend);
         $show_senate_map.on('click', on_show_senate_map_click);
         $show_house_map.on('click', on_show_house_map_click);
+    }
+
+    // Load stories
+    if ($stories.length > 0) {
+        $.getJSON('/live-data/stories.json', function(stories) {
+            _.each(stories, function(story) {
+                $stories.append(JST.story(story));
+            });
+        });
     }
 });
 
