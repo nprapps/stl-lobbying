@@ -24,13 +24,13 @@
         <![endif]-->
 
         <!-- AD CODE -->
-        <script>
+        <!--<script>
                 NPR = {};
                 NPR.PageInfo = {};
                 NPR.PageInfo.getUrlParameter = function (param) {
                         return false;
                 };
-        </script>
+        </script>-->
 
         <!-- JS -->
         {{ JS.push('js/app_config.js') }}
@@ -40,11 +40,11 @@
         {{ JS.push('js/lib/jquery.table-fixed-header.js') }}
         {{ JS.push('js/lib/html5.js') }}
         {{ JS.push('js/lib/modernizr.js') }}
-        {{ JS.push('js/responsive-ad.js') }}
+        {# JS.push('js/responsive-ad.js') #}
         {% block extra_head_js %}{% endblock extra_head_js %}
         {{ JS.render('js/app-header.min.js') }}
 
-        <script>
+        <!--<script>
                 googletag.cmd.push(function() {
                         try {
                                 
@@ -104,7 +104,7 @@
                                 NPR.messaging.exception(e, 'Define Google Publisher Tags', NPR.messaging.constants.SPONSORSHIP_ERROR);
                         }              
                 }); 
-        </script>
+        </script>-->
 
         {% block social_head %}
         {# Twitter #}
