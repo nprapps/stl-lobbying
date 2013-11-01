@@ -51,8 +51,8 @@
         {{ organization.name }} ranks <strong>{{ ordinal(organization_rank) }}</strong>  amongst lobbying organizations, having given <strong>{{ comma(total_expenditures_recent) or 0  }}</strong> gift{% if total_expenditures_recent != 1 %}s{% endif %} to legislators and their staffs, valued at <strong>{{ total_spending_recent|format_currency_round }}</strong>.</p>
         {% else %}
         {{ organization.name }} gave <strong>{{ comma(total_expenditures_recent) or 0  }}</strong> gift{% if total_expenditures_recent != 1 %}s{% endif %} to legislators and their staffs, valued at <strong>{{ total_spending_recent|format_currency_round }}</strong>.</p>
-        <p class="ed-note"><small>* {{ COPY.content.month_explainer }}</small></p>
         {% endif %}
+        <p class="ed-note"><small>* {{ COPY.content.month_explainer }}</small></p>
     </div>
     <div class="all-time stats">
         <h3>{{ COPY.organization.all_time_headline }}</h3>
