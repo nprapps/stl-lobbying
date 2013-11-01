@@ -430,9 +430,11 @@ body > footer {
 
 			&.search-form {
 				width: 80%;
+				vertical-align: top;
 			}
 
 			&.locate {
+				vertical-align: top;
 				width: 20%;
 				padding-left: @grid-gutter-width / 2;
 			}
@@ -974,10 +976,6 @@ body > footer {
 	.gift-table {
 		-webkit-overflow-scrolling: touch;
 
-		@media screen and (max-width: @screen-sm-max){
-			max-width: @screen-md;
-		}
-
 		label {
 			margin-top: @line-height-computed;
 		}
@@ -1017,6 +1015,21 @@ body > footer {
 
 				i {
 					margin: 0 5px;
+				}
+			}
+		}
+
+		@media screen and (max-width: @screen-sm-max){
+			.table.table-fixed-header {
+				width: @screen-lg;
+
+				th,
+				td {
+					white-space: normal;
+
+					&.date{
+						white-space: normal;
+					}
 				}
 			}
 		}
