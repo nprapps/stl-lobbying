@@ -240,8 +240,19 @@ function on_show_house_map_click() {
 }
 
 function on_geolocate_button_click() {
+    $search_address.val('');
+    $did_you_mean.hide();
+    $not_found.hide();
+    $search_results.hide();
+
+    if (modal_is_visible()) {
+        $modal_search_loading.show();
+    } else {
+            $search_loading.show();
+    }
+
     navigator.geolocation.getCurrentPosition(function(position) {
-        $search_address.val('');
+        $search_loading.hide();
     
         search_map.setView([position.coords.latitude, position.coords.longitude], 10);
         $results_modal.modal('show');
