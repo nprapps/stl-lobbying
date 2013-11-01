@@ -196,6 +196,8 @@ nav {
 		}
 		.story-meta {
 
+			.make-row();
+
 			.date,
 			.byline {
 				font-size: 13px;
@@ -211,8 +213,21 @@ nav {
 				}
 			}
 
+			.story-meta-wrapper {
+				.make-sm-column(12);
+			}
+
 			.intro {
+				.make-sm-column(10);
 				font-size: 16px;
+			}
+
+			.share {
+				.make-sm-column(2);
+				a {
+					// display: block;
+					// margin: 0 auto @line-height-computed / 2;
+				}
 			}
 		}
 	}
