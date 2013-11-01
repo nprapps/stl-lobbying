@@ -197,6 +197,16 @@ def sitemap():
 
     return (sitemap, 200, { 'content-type': 'application/xml' })
 
+@app.route('/promo.html')
+def promo():
+    """
+    Promo page.
+    """
+    context = make_context()
+
+    return render_template('promo.html', **context)
+
+
 @app.route('/legislators/<string:slug>/')
 def _legislator(slug):
     """
