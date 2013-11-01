@@ -1,0 +1,37 @@
+<html>
+<head>
+
+<style type="text/css">
+#lobbying-series-promo { border-top: 2px solid #eee; border-bottom: 1px solid #eee; padding: 10px 0; margin: 20px 0; }
+#lobbying-series-promo h2, #lobbying-series-promo h2 a { font: bold 18px/1.3 Arial, serif; color: #000; }
+#lobbying-series-promo h2 { padding-bottom: 10px; border-bottom: 1px solid #eee; margin: 0 0 10px 0; }
+#lobbying-series-promo ul { width: 50%; float: left; margin-bottom: 0; }
+#lobbying-series-promo img { border: 2px solid #ccc; float: left; }
+#lobbying-series-promo h3, #lobbying-series-promo h3 a { font: bold 13px/1.3 Arial, serif; color: #b74028; }
+#lobbying-series-promo h3 { margin: 10px 20px 3px 80px; }
+#lobbying-series-promo p { color: #515151; font-size: 12px; margin: 0 20px 0 80px; }
+#lobbying-series-promo ul li { margin-top: 2px; }
+#lobbying-series-promo ul li:first-child { margin-top: 0; }
+</style>
+
+</head>
+
+<body>
+<div id="lobbying-series-promo">
+    <h2><a href="http://www.lobbyingmissouri.org">Full Series: Lobbying in Missouri</a></h2>
+    <div class="dbase">
+        <a href="http://www.lobbyingmissouri.org"><img src="http://www.lobbyingmissouri.org/img/promo.png" alt="chart" /></a>
+        <h3><a href="http://www.lobbyingmissouri.org">Explore the Data</a></h3>
+        <p>How much is your state lawmakers receiving in gifts from lobbyists? Use our interactive to find out.</p>
+    </div>
+    <ul>   
+        {% for legislator in house_list %}
+        <li><a href="{{ COPY.promo.promo_url }}">{{ COPY.promo.promo_title }}</a></li>
+        <li><a href="{{ COPY.promo.promo_url }}">{{ COPY.promo.promo_title }}</a></li>
+        <li><a href="{{ COPY.promo.promo_url }}">{{ COPY.promo.promo_title }}</a></li>
+        {% endfor %}
+    </ul>
+</div>
+
+</body>
+<html>
