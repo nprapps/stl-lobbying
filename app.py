@@ -276,7 +276,7 @@ def _organization(slug):
     ago = get_ago()
     
     organization = Organization.get(Organization.slug==slug)
-    organizations = Organization.select()
+    organizations = Organization.select().join(Expenditure).where(Expenditure.report_period >= ago).distinct()
 
     for o in organizations:
         o.total_spending = o.expenditures.where(Expenditure.report_period >= ago).aggregate(fn.Sum(Expenditure.cost))

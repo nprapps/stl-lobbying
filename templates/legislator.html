@@ -62,13 +62,18 @@
 <div class="row">
     <div class="two-year stats">
         <h3>{{ COPY.legislator.recent_headline }}</h3>
-        
-        <p>{{ legislator.short_display_name() }} received <strong>{{ comma(total_expenditures_recent) }}</strong> gift{% if total_expenditures_recent != 1 %}s{% endif %} valued at <strong>{{ total_spending_recent|format_currency_round }}</strong> from lobbyists. {% if total_expenditures_recent != 0 %}During that time, <strong>{{ (legislator_rank - 1)|apnumber }}</strong> other lawmaker{% if (legislator_rank - 1) != 1 %}s{% endif %} received more valuable gifts.{% endif %}</p> 
+        <p>
+        {% if total_expenditures_recent > 0 %}
+            {{ legislator.short_display_name() }} ranks <strong>{{ ordinal(legislator_rank) }}</strong> (out of <strong>197</strong> legislators) in lobbyist spending, having received <strong>{{ comma(total_expenditures_recent) }}</strong> gift{% if total_expenditures_recent != 1 %}s{% endif %}, valued at <strong>{{ total_spending_recent|format_currency_round }}</strong>.
+        {% else %}
+            {{ legislator.short_display_name() }} received <strong>{{ comma(total_expenditures_recent) }}</strong> gift{% if total_expenditures_recent != 1 %}s{% endif %} valued at <strong>{{ total_spending_recent|format_currency_round }}</strong> from lobbyists. 
+        {% endif %}
+        </p>
         <p class="ed-note"><small>* {{ COPY.content.month_explainer }}</small></p>
     </div>
     <div class="all-time stats">
         <h3>{{ COPY.legislator.all_time_headline }}</h3>
-        <p>{{ legislator.short_display_name() }} received <strong>{{ comma(total_expenditures) }}</strong> gift{% if total_expenditures != 1 %}s{% endif %} valued at <strong>{{ total_spending|format_currency_round }}</strong> from lobbyists.</p>  
+        <p>{{ legislator.short_display_name() }} received <strong>{{ comma(total_expenditures) }}</strong> gift{% if total_expenditures != 1 %}s{% endif %} from lobbyists, valued at <strong>{{ total_spending|format_currency_round }}</strong>.</p>  
     </div>
     {% if total_spending != 0 %}
     <div class="leaderboard">
