@@ -83,14 +83,14 @@ LEGISLATOR_DEMOGRAPHICS_DOC_KEY = '0AlXMOHKxzQVRdFFQRzBuLUxhN0JubjlvRVA2SlpVVlE'
 """
 SHARING
 """
-PROJECT_DESCRIPTION = 'Tracking lobbyist gifts to Missouri lawmakers. How much did yours accept? http://lobbyingmissouri.org #MoLeg via @stlpublicradio and @npr'
-SHARE_URL = 'http://lobbyingmissouri.org/'
+PROJECT_DESCRIPTION = 'Tracking lobbyist gifts to Missouri lawmakers. How much did yours accept? http://www.lobbyingmissouri.org #MoLeg via @stlpublicradio and @npr'
+SHARE_URL = 'http://www.lobbyingmissouri.org/'
 
 TWITTER = {
     'TEXT': '%s #MoLeg' % PROJECT_DESCRIPTION,
     'URL': SHARE_URL,
     # Will be resized to 120x120, can't be larger than 1MB 
-    'IMAGE_URL': 'http://lobbyingmissouri.org/img/promo.png'
+    'IMAGE_URL': 'http://www.lobbyingmissouri.org/img/promo.png'
 }
 
 FACEBOOK = {
@@ -147,7 +147,7 @@ def configure_targets(deployment_target):
 
     if deployment_target == 'production':
         S3_BUCKETS = PRODUCTION_S3_BUCKETS
-        S3_BASE_URL = 'http://lobbyingmissouri.org'
+        S3_BASE_URL = 'http://www.lobbyingmissouri.org'
         SERVERS = PRODUCTION_SERVERS
         SERVER_BASE_URL = 'http://%s' % (SERVERS[0])
         DEBUG = False
