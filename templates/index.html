@@ -19,7 +19,7 @@
             </div>
             <p class="intro">{{ COPY.content.intro }}</p>
 
-            <p class="share"><a class="twitter" href="https://twitter.com/share?text={{ TWITTER.TEXT }} %23MoLeg" target="_blank"><i class="icon-twitter"></i></a><a class="facebook" href="https://www.facebook.com/sharer/sharer.php?u={{ FACEBOOK.URL }}"><i class="icon-facebook"></i></a></p>
+            <p class="share"><a class="twitter" href="https://twitter.com/share?text={{ TWITTER.TEXT|urlencode }}&url={{ TWITTER.URL|urlencode }}" target="_blank"><i class="icon-twitter"></i></a><a class="facebook" href="https://www.facebook.com/sharer/sharer.php?u={{ FACEBOOK.URL|urlencode }}"><i class="icon-facebook"></i></a></p>
 
             <ul id="stories">
             </ul>

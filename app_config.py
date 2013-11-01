@@ -87,7 +87,7 @@ PROJECT_DESCRIPTION = 'See whose money is influencing your Missouri legislators.
 SHARE_URL = 'http://lobbyingmissouri.org/'
 
 TWITTER = {
-    'TEXT': PROJECT_DESCRIPTION,
+    'TEXT': '%s #MoLeg' % PROJECT_DESCRIPTION,
     'URL': SHARE_URL,
     # Will be resized to 120x120, can't be larger than 1MB 
     'IMAGE_URL': ''
