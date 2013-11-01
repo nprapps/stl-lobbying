@@ -983,6 +983,11 @@ nav {
 		margin-bottom: @line-height-computed / 2;
 	}
 
+	.search {
+		border-top: 0;
+		margin-top: 0;
+	}
+
 	#search-map {
 		position: relative;
 		margin-bottom: @line-height-computed / 2;
@@ -1067,8 +1072,13 @@ nav {
 				padding: 10px;
 			}
 
+			#search-map {
+				height: 250px !important;
+			}
+
 			.results {
 				min-height: 60px;
+				line-height: 1;
 
 				.sen,
 				.rep {
