@@ -1,4 +1,5 @@
 var GEOLOCATE = Modernizr.geolocation;
+var MOBILE = Modernizr.touch;
 
 var $search_form = $('.search form');
 var $search_address = $('.search .address');
@@ -23,6 +24,7 @@ var $show_house_map = $('#show-house-map');
 var $geolocate_button = $('.geolocate');
 var $stories = $('#stories');
 var $bars = $('.bar');
+var $gift_sort_wrapper = $('.gift-sort-wrapper');
 
 var MISSOURI_EXTENTS = [-95.7747, 35.9957, -89.099, 40.6136];
 
@@ -302,7 +304,7 @@ $(function() {
         $geolocate_button.show();
     }
 
-    if ($gift_table.length > 0) {
+    if (!MOBILE && $gift_table.length > 0) {
         $.tablesorter.addParser({ 
             id: 'hidden-text', 
             is: function(s) { 
@@ -338,6 +340,8 @@ $(function() {
 
         // make the header fixed on scroll
         $('.table-fixed-header').fixedHeader();
+        
+        $gift_sort_wrapper.show();
     }
 
     // Load maps
