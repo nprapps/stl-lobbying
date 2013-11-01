@@ -20,20 +20,23 @@
             <p class="intro">{{ COPY.content.intro }}</p>
 
             <p class="share"><a class="twitter" href="https://twitter.com/share?text={{ TWITTER.TEXT }} %23MoLeg" target="_blank"><i class="icon-twitter"></i></a><a class="facebook" href="https://www.facebook.com/sharer/sharer.php?u={{ FACEBOOK.URL }}"><i class="icon-facebook"></i></a></p>
-
-            <ul id="stories">
-            </ul>
         </div>
         
         {% include '_search.html' %}
     </div>
-    <div class="bigbox">
-        {# 300x250 ad #}
-        <div class="adwrapper">
-            <div class="sponsor300">
-                <a href="http://news.stlpublicradio.org/programs/politically-speaking"><img src="/img/politically-speaking.jpg"></a>
+    <div class="latest-stories">
+        <div class="bigbox">
+            {# 300x250 ad #}
+            <div class="adwrapper">
+                <div class="sponsor300">
+                    <a href="http://news.stlpublicradio.org/programs/politically-speaking"><img src="/img/politically-speaking.jpg"></a>
+                </div>
             </div>
         </div>
+
+        <h3>Latest Stories</h3>
+        <ul id="stories" class="list-unstyled">
+        </ul>
     </div>
 </div>
 

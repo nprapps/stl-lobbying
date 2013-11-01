@@ -214,9 +214,12 @@ nav {
 				font-size: 16px;
 			}
 		}
+	}
 
-		+ .bigbox {
-			.make-md-column(4);
+	.latest-stories {
+		.make-md-column(4);
+
+		.bigbox {
 			font-size: 12px;
 
 			.sponsor300 {
@@ -226,6 +229,23 @@ nav {
 
 			@media screen and (max-width: @screen-xs-max){
 				margin-left: -5px;
+			}
+		}
+
+		h3 {
+			&:before {
+				.rule-3px;
+				margin: 0 0 @line-height-computed;
+			}
+			padding-top: @line-height-computed / 2;
+		}
+
+		#stories {
+			li {
+				font-size: @font-size-base * 1.142857143;
+				font-weight: bold;
+				padding: @line-height-computed / 4 0;
+				border-top: 1px solid @gray-lighter;
 			}
 		}
 	}
@@ -835,7 +855,11 @@ nav {
 
 	.gift-table {
 		-webkit-overflow-scrolling: touch;
-		
+
+		@media screen and (max-width: @screen-sm-max){
+			max-width: @screen-md;
+		}
+
 		label {
 			margin-top: @line-height-computed;
 		}
