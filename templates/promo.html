@@ -31,7 +31,24 @@
         <li><a href="{{ COPY.promo.promo_url }}">{{ COPY.promo.promo_title }}</a></li>
         {% endfor %}
     </ul>
+    <ul id="stories">
+    </ul>
 </div>
+
+<script type="text/javascript" src="/js/lib/jquery-1.8.3.js"></script>
+<script type="text/javascript">
+    var $stories = $('#stories');
+
+    // Load stories
+    if ($stories.length > 0) {
+        $.getJSON('/live-data/stories.json', function(stories) {
+            for (var i = 0; i < stories.length; i++) {
+                var story = stories[i];
+                $stories.append('<li><a href="' + story.url + '">' + story.title + '</a></li>');
+            };
+        });
+    }
+</script>
 
 </body>
 <html>
