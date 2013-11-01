@@ -219,8 +219,8 @@ function on_search_map_moveend(e) {
 
 function on_show_senate_map_click() {
     if ($show_senate_map.hasClass('btn-default')){
-        $show_senate_map.toggleClass('btn-default btn-primary');
-        $show_house_map.toggleClass('btn-default btn-primary');
+        $show_senate_map.toggleClass('btn-default btn-info');
+        $show_house_map.toggleClass('btn-default btn-info');
     }
     search_map.removeLayer(house_layer);
     search_map.addLayer(senate_layer);
@@ -230,8 +230,8 @@ function on_show_senate_map_click() {
 
 function on_show_house_map_click() {
     if ($show_house_map.hasClass('btn-default')){
-        $show_senate_map.toggleClass('btn-default btn-primary');
-        $show_house_map.toggleClass('btn-default btn-primary');
+        $show_senate_map.toggleClass('btn-default btn-info');
+        $show_house_map.toggleClass('btn-default btn-info');
     }
     search_map.removeLayer(senate_layer);
     search_map.addLayer(house_layer);
