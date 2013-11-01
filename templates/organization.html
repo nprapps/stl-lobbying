@@ -73,12 +73,14 @@
 
     {% if expenditures_recent.count() > 0 %}
     <div class="table-responsive gift-table">
-        <label for="gift-sort">Sort by: </label>
-        <select id="gift-sort">
-            <option value="cost" selected="selected">{{ COPY.organization.most_expensive }}</option>
-            <option value="date">{{ COPY.organization.most_recent }}</option>
-            <option value="organization">{{ COPY.organization.name_of_org }}</option>
-        </select>
+        <div class="gift-sort-wrapper">
+            <label for="gift-sort">Sort by: </label>
+            <select id="gift-sort">
+                <option value="cost" selected="selected">{{ COPY.organization.most_expensive }}</option>
+                <option value="date">{{ COPY.organization.most_recent }}</option>
+                <option value="organization">{{ COPY.organization.name_of_org }}</option>
+            </select>
+        </div>
         <table class="table table-striped table-fixed-header">
             <thead class="header">
                 <tr>
