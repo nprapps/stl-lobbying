@@ -256,6 +256,24 @@ function on_geolocate_button_click() {
     
         search_map.setView([position.coords.latitude, position.coords.longitude], 10);
         $results_modal.modal('show');
+    }, function(error) {
+        $search_loading.hide();
+
+        switch(error.code) 
+        {
+            case error.PERMISSION_DENIED:
+                alert('Geolocation error: permission denied.');
+                break;
+            case error.POSITION_UNAVAILABLE:
+                alert('Geolocation error: location information is unavailable.');
+                break;
+            case error.TIMEOUT:
+                alert('Geolocation error: location request timed out.');
+                break;
+            default:
+                alert('Geolocation error: unknown cause.');
+                break;
+        }
     });
 
     return false;
