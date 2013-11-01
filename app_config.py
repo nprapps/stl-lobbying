@@ -83,14 +83,14 @@ LEGISLATOR_DEMOGRAPHICS_DOC_KEY = '0AlXMOHKxzQVRdFFQRzBuLUxhN0JubjlvRVA2SlpVVlE'
 """
 SHARING
 """
-PROJECT_DESCRIPTION = 'See whose money is influencing your Missouri legislators. From St. Louis Public Radio and NPR.'
+PROJECT_DESCRIPTION = 'Tracking lobbyist gifts to Missouri lawmakers. How much did yours accept? http://lobbyingmissouri.org #MoLeg via @stlpublicradio and @npr'
 SHARE_URL = 'http://lobbyingmissouri.org/'
 
 TWITTER = {
-    'TEXT': PROJECT_DESCRIPTION,
+    'TEXT': '%s #MoLeg' % PROJECT_DESCRIPTION,
     'URL': SHARE_URL,
     # Will be resized to 120x120, can't be larger than 1MB 
-    'IMAGE_URL': ''
+    'IMAGE_URL': 'http://lobbyingmissouri.org/img/promo.png'
 }
 
 FACEBOOK = {
@@ -112,7 +112,7 @@ GOOGLE = {
 SERVICES
 """
 SLPR_GOOGLE_ANALYTICS_ID = 'UA-45354605-1'
-OUR_GOOGLE_ANALYTICS_ID = 'UA-5828686-4'
+OUR_GOOGLE_ANALYTICS_ID = 'UA-5828686-58'
 
 """
 Utilities
