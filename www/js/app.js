@@ -53,8 +53,8 @@ function on_did_you_mean_click() {
 
     $did_you_mean.hide();
 
-    move_search_map(latitude, longitude);
     $results_modal.modal('show');
+    move_search_map(latitude, longitude);
 
     return false;
 }
@@ -130,10 +130,9 @@ function on_search_submit() {
 
                     var display_name = locale['display_name'].replace(', United States of America', '');
 
+                    $results_modal.modal('show');
                     move_search_map(locale['lat'], locale['lon']);
                     on_show_senate_map_click();
-                    
-                    $results_modal.modal('show');
                     on_search_map_moveend();
                 } else {
                     // If there are many resulits,
@@ -195,7 +194,7 @@ function on_search_map_moveend(e) {
     senate_grid.getData(center, function(senate_data) {
         if (_.isUndefined(senate_data)) {
             $search_results.hide();
-            return;
+            return false;
         }
 
         var sen_district = senate_data.DISTRICT;
@@ -205,7 +204,7 @@ function on_search_map_moveend(e) {
         house_grid.getData(center, function(house_data) {
             if (_.isUndefined(house_data)) {
                 $search_results.hide();
-                return;
+                return false;
             }
 
             var house_district = house_data.DISTRICT;
@@ -250,14 +249,14 @@ function on_geolocate_button_click() {
     if (modal_is_visible()) {
         $modal_search_loading.show();
     } else {
-            $search_loading.show();
+        $search_loading.show();
     }
 
     navigator.geolocation.getCurrentPosition(function(position) {
         $search_loading.hide();
     
-        search_map.setView([position.coords.latitude, position.coords.longitude], 10);
         $results_modal.modal('show');
+        search_map.setView([position.coords.latitude, position.coords.longitude], 10);
     }, function(error) {
         $search_loading.hide();
 
