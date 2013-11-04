@@ -1020,15 +1020,86 @@ body > footer {
 		}
 
 		@media screen and (max-width: @screen-sm-max){
+
+			&.table-responsive {
+				width: 100%;
+				overflow: hidden;
+				border: none;
+			}
+
 			.table.table-fixed-header {
-				width: @screen-lg;
+				width: 100%;
+
+				thead,
+				.header-copy {
+					display: none !important;
+				}
 
 				th,
 				td {
 					white-space: normal;
+					display: block;
+					width: 100%;
+					border: none;
+					background: transparent;
+					padding: 0 0 0 110px;
+					position: relative;
+
+					&:before {
+						font-weight: bold;
+						display: inline-block;
+						margin-right: 0.5em;
+						width: 100px;
+						text-align: right;
+						position: absolute;
+						top: 0;
+						left: 0;
+						color: @text-color;
+					}
 
 					&.date{
 						white-space: normal;
+						font-weight: bold;
+						border-top: 1px solid @gray-lighter;
+						padding-top: @line-height-computed / 2;
+						padding-left: 0;
+						padding-bottom: @line-height-computed / 2;
+					}
+
+					&.recipient {
+						&:before {
+							content: 'Recipient: ';
+						}
+					}
+
+					&.organization {
+						&:before {
+							content: 'Organization: ';
+						}
+					}
+
+					&.expenditure {
+						text-align: left;
+						font-weight: normal; 
+						&:before {
+							content: 'Value: ';
+						}
+					}
+
+					&.description {
+						&:before {
+							content: 'Description: ';
+						}
+					}
+
+					&.category {
+						&:before {
+							content: 'Category: ';
+						}
+					}
+
+					&.share {
+						padding-bottom: @line-height-computed / 2;
 					}
 				}
 			}
