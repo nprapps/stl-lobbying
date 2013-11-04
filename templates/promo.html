@@ -3,20 +3,20 @@
 {{ CSS.render('css/app.min.css') }}
 
 <style>
-    #lobbying-series-promo { margin: 20px; width: 100%; } 
+    #lobbying-series-promo { margin: 20px 20px 20px 20px; width: 90%; } 
     li { font-size: 16px; line-height: 28px; font-weight: bold; }
     p { font-size: 16px; line-height: 28px; }
+    img { size: 100%; }
     @media (max-width: 480px) {
         #lobbying-series-promo  ul { width: auto; float: none; }
         #lobbying-series-promo { margin-bottom: 10px; }
-        #lobbying-series-promo { content: "."; display: block; height: 0; clear: both; visibility: hidden; }
-        #lobbying-series-promo img { width: 100%; }
-        #lobbying-series-promo  ul li, #lobbying-series-promo  ul li a { margin-left: 0; font-size: 13px; }
+        #lobbying-series-promo img { width: 90%; }
+        #lobbying-series-promo  ul li, #lobbying-series-promo  ul li a { margin-left: 0; }
 </style>
 
 {% block content %}
     <div id="lobbying-series-promo">
-            <a href="http://www.lobbyingmissouri.org"><img src="http://www.lobbyingmissouri.org/img/promom.png" alt="chart"/></a>
+            <a href="http://www.lobbyingmissouri.org"><img src="http://www.lobbyingmissouri.org/img/promo.png" alt="chart"/></a>
             <h3><a href="http://www.lobbyingmissouri.org">Explore the Data</a></h3>
             <p>How much is your state lawmakers receiving in gifts from lobbyists? Use <strong><a href="http://www.lobbyingmissouri.org">our interactive</a></strong> to find out.</p>
         <div class="latest-stories">
