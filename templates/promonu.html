@@ -1,0 +1,69 @@
+{{ CSS.push('less/app.less') }}
+{% block extra_css %}{% endblock extra_css %}
+{{ CSS.render('css/app.min.css') }}
+
+<style type="text/css">
+#promo { border-top: 2px solid #eee; border-bottom: 1px solid #eee; padding: 10px 0; margin: 20px 0; }
+#promo h2, #promo h2 a { font: bold 13px/1.3 Georgia, serif; color: #000; }
+#promo h2 { padding-bottom: 10px; border-bottom: 1px solid #eee; margin: 0 0 10px 0; }
+#promo .dbase, #promo ul { width: 50%; float: left; margin-bottom: 0; }
+#promo img { border: 3px solid #ccc; float: left; }
+#promo h3, #promo h3 a { font: bold 13px/1.3 Georgia, serif; color: #0484ce; }
+#promo h3 { margin: 10px 20px 3px 80px; }
+#promo p { color: #515151; font-size: 12px; margin: 0 20px 0 80px; }
+.onecol .article #promo ul li { margin-top: 2px; }
+.onecol .article #promo ul li:first-child { margin-top: 0; }
+#promo:after { content: "."; display: block; height: 0; clear: both; visibility: hidden; }
+@media (max-width: 480px) {
+    #promo .dbase, #promo ul { width: auto; float: none; }
+    #promo .dbase { margin-bottom: 10px; }
+    #promo .dbase:after { content: "."; display: block; height: 0; clear: both; visibility: hidden; }
+    #promo ul li, #promo ul li a { margin-left: 0; font-size: 13px; }
+}
+</style>
+
+{% block content %}
+<div id="promo">
+    <h2><a href="LINK-TO-PAGE">Full Series: Deals For Developers &rsaquo;</a></h2>
+    <div class="dbase">
+        <a href="LINK-TO-PAGE"><img src="http://stage-apps.npr.org/wamu-developers/img/thumb-documents.gif" alt="chart" /></a>
+        <h3><a href="LINK-TO-PAGE">Explore Donations</a></h3>
+        <p>See the projects, developers and public officials involved.</p>
+    </div>
+    <ul>
+        <li><a href="LINK-TO-PAGE">Tax Breaks, Campaign Cash</a></li>
+        <li><a href="LINK-TO-PAGE">Tax Breaks, Campaign Cash</a></li>
+        <li><a href="LINK-TO-PAGE">Tax Breaks, Campaign Cash</a></li>
+        <li><a href="LINK-TO-PAGE">Tax Breaks, Campaign Cash</a></li>
+    </ul>
+</div>
+
+<div id="lobbying-series-promo">
+        <a href="http://www.lobbyingmissouri.org"><img src="http://www.lobbyingmissouri.org/img/promo.png" alt="chart"/></a>
+        <h3><a href="http://www.lobbyingmissouri.org">Explore the Data</a></h3>
+        <p>How much is your state lawmakers receiving in gifts from lobbyists? Use <strong><a href="http://www.lobbyingmissouri.org">our interactive</a></strong> to find out.</p>
+    <div class="latest-stories">
+        <h3>Latest Stories</h3>
+    <ul id="stories" class="list-unstyled">
+    </ul>
+    </div>
+</div>
+{% endblock %}
+
+
+<script type="text/javascript" src="/js/lib/jquery-1.8.3.js"></script>
+<script type="text/javascript">
+    var $stories = $('#stories');
+
+    // Load stories
+    if ($stories.length > 0) {
+        $.getJSON('/live-data/stories.json', function(stories) {
+            for (var i = 0; i < stories.length; i++) {
+                var story = stories[i];
+                $stories.append('<li><a href="' + story.url + '">' + story.title + '</a></li>');
+            };
+        });
+    }
+</script>
+
+
