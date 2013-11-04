@@ -83,7 +83,7 @@ LEGISLATOR_DEMOGRAPHICS_DOC_KEY = '0AlXMOHKxzQVRdFFQRzBuLUxhN0JubjlvRVA2SlpVVlE'
 """
 SHARING
 """
-PROJECT_DESCRIPTION = 'Tracking lobbyist gifts to Missouri lawmakers. How much did yours accept? http://www.lobbyingmissouri.org #MoLeg via @stlpublicradio and @npr'
+PROJECT_DESCRIPTION = 'Tracking lobbyist gifts to Missouri lawmakers. How much did yours accept? #MoLeg via @stlpublicradio and @npr'
 SHARE_URL = 'http://www.lobbyingmissouri.org/'
 
 TWITTER = {
