@@ -8,12 +8,11 @@
 
 {# Facebook #}
 <meta property="og:title" content="{{ COPY.content.headline }}: {{ legislator.display_name() }}" />
-<meta property="og:url" content="{{ legislator.url() }}" />
+<meta property="og:url" content="{{ S3_BASE_URL}}{{ legislator.url() }}" />
 <meta property="og:type" content="article" />
 <meta property="og:description" content="Within the last 24 months%2C {{ legislator.display_name() }} received {{ comma(total_expenditures_recent) }} gift{% if total_expenditures_recent != 1 %}s{% endif %} valued at {{ total_spending_recent|format_currency_round }} from lobbyists." />
 <meta property="og:image" content="{{ FACEBOOK.IMAGE_URL }}" />
-<meta property="og:site_name" content="NPR.org" />
-<meta property="fb:app_id" content="{{ FACEBOOK.APP_ID }}" />
+<meta property="og:site_name" content="www.lobbyingmissouri.org" />
 {% endblock social_head %}
 
 {% block body_class %}legislator-detail detail{% endblock body_class %}
