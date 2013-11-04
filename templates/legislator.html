@@ -8,7 +8,7 @@
 
 {# Facebook #}
 <meta property="og:title" content="{{ COPY.content.headline }}: {{ legislator.display_name() }}" />
-<meta property="og:url" content="{{ S3_BASE_URL}}{{ legislator.url() }}" />
+<meta property="og:url" content="{{ S3_BASE_URL }}{{ legislator.url() }}" />
 <meta property="og:type" content="article" />
 <meta property="og:description" content="Within the last 24 months%2C {{ legislator.display_name() }} received {{ comma(total_expenditures_recent) }} gift{% if total_expenditures_recent != 1 %}s{% endif %} valued at {{ total_spending_recent|format_currency_round }} from lobbyists." />
 <meta property="og:image" content="{{ FACEBOOK.IMAGE_URL }}" />
@@ -45,7 +45,7 @@
                     {% if legislator.phone %}<p><strong>{{ COPY.legislator.phone }}</strong> <span>{{ legislator.phone }}</span></p>{% endif %}
                     <p><strong>{{ COPY.legislator.website }}</strong> <span>{% if legislator.office == 'Representative' %}<a href="{{ legislator.official_url() }}">{{ COPY.legislator.website_house }}</a>{% else %}<a href="{{ legislator.official_url() }}">{{ COPY.legislator.website_senate }}</a>{% endif %}</span></p>
                 </div>
-                <p class="share"><a class="twitter" href="https://twitter.com/share?text=Within the last 24 months%2C {{ legislator.display_name()|urlencode }} received {{ comma(total_expenditures_recent)|urlencode }} gift{% if total_expenditures_recent != 1 %}s{% endif %} valued at {{ total_spending_recent|format_currency_round|urlencode }} from lobbyists. %23MoLeg&url={{ S3_BASE_URL|urlencode }}{{ legislator.url()|urlencode }}" target="_blank"><i class="icon-twitter"></i></a><a class="facebook" href="https://www.facebook.com/sharer/sharer.php?u={{ legislator.url()|urlencode }}"><i class="icon-facebook"></i></a></p>
+                <p class="share"><a class="twitter" href="https://twitter.com/share?text=Within the last 24 months%2C {{ legislator.display_name()|urlencode }} received {{ comma(total_expenditures_recent)|urlencode }} gift{% if total_expenditures_recent != 1 %}s{% endif %} valued at {{ total_spending_recent|format_currency_round|urlencode }} from lobbyists. %23MoLeg&url={{ S3_BASE_URL|urlencode }}{{ legislator.url()|urlencode }}" target="_blank"><i class="icon-twitter"></i></a><a class="facebook" href="https://www.facebook.com/sharer/sharer.php?u={{ S3_BASE_URL|urlencode }}{{ legislator.url()|urlencode }}"><i class="icon-facebook"></i></a></p>
             </div>
             
         </div>
