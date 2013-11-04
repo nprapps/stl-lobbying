@@ -9,8 +9,6 @@ from peewee import *
 from playhouse.sqlite_ext import SqliteExtDatabase
 import xlrd
 
-import app_config
-
 database = SqliteExtDatabase('stl-lobbying.db')
 
 class SlugModel(Model):
@@ -99,6 +97,16 @@ class Legislator(SlugModel):
 
     def url(self):
         return '/legislators/%s/' % self.slug
+
+    def official_url(self):
+        if self.office == 'Representative':
+            year = datetime.date.today().year
+
+            return 'http://www.house.mo.gov/member.aspx?year=%i&district=%s' % (year, self.district)
+        elif self.office == 'Senator':
+            return 'http://www.senate.mo.gov/13info/members/mem%s.htm' % (self.district.zfill(2) if int(self.district) < 10 else self.district)
+
+        return None
 
     def display_name(self):
         office = self.OFFICE_SHORT_NAMES[self.office] 

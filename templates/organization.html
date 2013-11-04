@@ -57,6 +57,7 @@
     <div class="all-time stats">
         <h3>{{ COPY.organization.all_time_headline }}</h3>
         <p>{{ organization.name }} gave <strong>{{ comma(total_expenditures) }} gift{% if total_expenditures != 1 %}s{% endif %}</strong> to state legislators and their staffs, valued at <strong>{{ total_spending|format_currency_round }}</strong>.</p>
+        <p class="ed-note"><small>{{ COPY.content.all_the_data }}</small></p>
     </div>
     {% if top_legislators|length > 0 %}
     <div class="leaderboard">

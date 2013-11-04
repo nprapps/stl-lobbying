@@ -35,7 +35,6 @@
 
 {% block content %}
 <div class="legislator-header detail-header">
-        
         <div class="legislator-info">
             <img class="img-responsive mug" src="{{ legislator.mugshot_url() }}">
             <div class="info-wrapper">
@@ -45,7 +44,7 @@
                     {% if legislator.hometown %}<p><strong>{{ COPY.legislator.hometown }}</strong> <span>{{ legislator.hometown }}</span></p>{% endif %}
                     <p><strong>{{ COPY.legislator.phone }}</strong> <span>{{ legislator.year_elected }}</span></p>
                     {% if legislator.phone %}<p><strong>{{ COPY.legislator.phone }}</strong> <span>{{ legislator.phone }}</span></p>{% endif %}
-                    <p><strong>{{ COPY.legislator.website }}</strong> <span>{% if legislator.office == 'Representative' %}<a href="http://www.house.mo.gov/member.aspx?year={{ year }}&district={{ legislator.district }}">{{ COPY.legislator.website_house }}</a>{% else %}<a href="http://www.senate.mo.gov/13info/members/mem{{ legislator.district }}.htm">{{ COPY.legislator.website_senate }}</a>{% endif %}</span></p>
+                    <p><strong>{{ COPY.legislator.website }}</strong> <span>{% if legislator.office == 'Representative' %}<a href="{{ legislator.official_url() }}">{{ COPY.legislator.website_house }}</a>{% else %}<a href="{{ legislator.official_url() }}">{{ COPY.legislator.website_senate }}</a>{% endif %}</span></p>
                 </div>
                 <p class="share"><a class="twitter" href="https://twitter.com/share?text=Within the last 24 months%2C {{ legislator.display_name()|urlencode }} received {{ comma(total_expenditures_recent)|urlencode }} gift{% if total_expenditures_recent != 1 %}s{% endif %} valued at {{ total_spending_recent|format_currency_round|urlencode }} from lobbyists. %23MoLeg&url={{ S3_BASE_URL|urlencode }}{{ legislator.url()|urlencode }}" target="_blank"><i class="icon-twitter"></i></a><a class="facebook" href="https://www.facebook.com/sharer/sharer.php?u={{ legislator.url()|urlencode }}"><i class="icon-facebook"></i></a></p>
             </div>
@@ -74,6 +73,7 @@
     <div class="all-time stats">
         <h3>{{ COPY.legislator.all_time_headline }}</h3>
         <p>{{ legislator.short_display_name() }} received <strong>{{ comma(total_expenditures) }}</strong> gift{% if total_expenditures != 1 %}s{% endif %} from lobbyists, valued at <strong>{{ total_spending|format_currency_round }}</strong>.</p>  
+        <p class="ed-note"><small>{{ COPY.content.all_the_data }}</small></p>
     </div>
     {% if total_spending != 0 %}
     <div class="leaderboard">
@@ -105,6 +105,7 @@
     {% endif %}
     {% if total_expenditures_recent != 0 %}
     <div class="table-responsive gift-table">
+        
         <div class="gift-sort-wrapper">
             <label for="gift-sort">Sort by: </label>
             <select id="gift-sort">
