@@ -10,9 +10,9 @@
 
 {# Facebook #}
 <meta property="og:title" content="{{ COPY.content.headline }}: {{ organization.name }}" />
-<meta property="og:url" content="{{ S3_BASE_URL}}{{ organization.url() }}" />
+<meta property="og:url" content="{{ S3_BASE_URL }}{{ organization.url() }}" />
 <meta property="og:type" content="article" />
-<meta property="og:description" content="Within the last 24 months%2C {{ organization.name }} gave legislators {{ comma(total_expenditures_recent) }} gift{% if total_expenditures_recent != 1 %}s{% endif %} valued at {{ total_spending_recent|format_currency_round }}." />
+<meta property="og:description" content="Within the last 24 months, {{ organization.name }} gave legislators {{ comma(total_expenditures_recent) }} gift{% if total_expenditures_recent != 1 %}s{% endif %} valued at {{ total_spending_recent|format_currency_round }}." />
 <meta property="og:image" content="{{ FACEBOOK.IMAGE_URL }}" />
 <meta property="og:site_name" content="www.lobbyingmissouri.org" />
 {% endblock social_head %}
@@ -38,7 +38,7 @@
 <div class="detail-header organization-header">
     <h1>{{ organization.name }}</h1>
     <p class="info">{{ COPY.organization.industry_label }}: <strong>{{ organization.category }}</strong></p>
-    <p class="share"><a class="twitter" href="https://twitter.com/share?text=Within the last 24 months%2C {{ organization.name|urlencode }} gave legislators {{ comma(total_expenditures_recent)|urlencode }} gift{% if total_expenditures_recent != 1 %}s{% endif %} valued at {{ total_spending_recent|format_currency_round|urlencode }}. %23MoLeg&url={{ S3_BASE_URL|urlencode }}{{ organization.url()|urlencode }}" target="_blank"><i class="icon-twitter"></i></a><a class="facebook" href="https://www.facebook.com/sharer/sharer.php?u={{ organization.url()|urlencode }}"><i class="icon-facebook"></i></a></p>
+    <p class="share"><a class="twitter" href="https://twitter.com/share?text=Within the last 24 months%2C {{ organization.name|urlencode }} gave legislators {{ comma(total_expenditures_recent)|urlencode }} gift{% if total_expenditures_recent != 1 %}s{% endif %} valued at {{ total_spending_recent|format_currency_round|urlencode }}. %23MoLeg&url={{ S3_BASE_URL|urlencode }}{{ organization.url()|urlencode }}" target="_blank"><i class="icon-twitter"></i></a><a class="facebook" href="https://www.facebook.com/sharer/sharer.php?u={{ S3_BASE_URL|urlencode }}{{ organization.url()|urlencode }}"><i class="icon-facebook"></i></a></p>
 </div>
 {% endblock %}
 
