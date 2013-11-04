@@ -380,7 +380,7 @@ class LobbyLoader:
             legislator.save()
 
             if not os.path.exists('www/%s' % legislator.mugshot_url()):
-                os.error('No mugshot for legislator: %s' % legislator.display_name())
+                self.error('No mugshot for legislator: %s' % legislator.display_name())
 
             self.legislators_created += 1
 
