@@ -42,7 +42,7 @@
                 <h3>{{ legislator.party }} &ndash; {{ ordinal(legislator.district) }} district</h3>
                 <div class="info">
                     {% if legislator.hometown %}<p><strong>{{ COPY.legislator.hometown }}</strong> <span>{{ legislator.hometown }}</span></p>{% endif %}
-                    <p><strong>{{ COPY.legislator.phone }}</strong> <span>{{ legislator.year_elected }}</span></p>
+                    <p><strong>{{ COPY.legislator.elected_in }}</strong> <span>{{ legislator.year_elected }}</span></p>
                     {% if legislator.phone %}<p><strong>{{ COPY.legislator.phone }}</strong> <span>{{ legislator.phone }}</span></p>{% endif %}
                     <p><strong>{{ COPY.legislator.website }}</strong> <span>{% if legislator.office == 'Representative' %}<a href="{{ legislator.official_url() }}">{{ COPY.legislator.website_house }}</a>{% else %}<a href="{{ legislator.official_url() }}">{{ COPY.legislator.website_senate }}</a>{% endif %}</span></p>
                 </div>
