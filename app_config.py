@@ -14,7 +14,7 @@ import os
 NAMES
 """
 # Project name used for display
-PROJECT_NAME = 'Capitol Spending'
+PROJECT_NAME = 'Lobbying Missouri'
 
 # Use dashes, not underscores!
 #PROJECT_SLUG = 'stl-lobbying'
