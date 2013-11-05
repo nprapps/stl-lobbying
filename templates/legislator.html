@@ -134,7 +134,7 @@
                     <td class="expenditure"><span>{{ ex.cost }}</span>{{ ex.cost|format_currency }}</td>
                     <td class="description{% if not ex.description %} not-disclosed{% endif %}">{% if ex.description %}{{ ex.description }}{% else %}<em>{{ COPY.legislator.not_disclosed }}</em>{% endif %}</td>
                     <td class="category">{{ ex.category }}</td>
-                    <td class="share"><a href="https://twitter.com/share?text={{ ex.legislator.display_name() }} received a gift valued at {{ ex.cost|format_currency }} from {{ ex.organization.name }} &url={{ legislator.url() }}%23exp{{ ex.ethics_id }}" target="_blank"><i class="icon-twitter"></i></a><a href="https://www.facebook.com/sharer/sharer.php?u={{ legislator.url() }}%23exp{{ ex.ethics_id }}"><i class="icon-facebook"></i></a></td>
+                    <td class="share"><a href="https://twitter.com/share?text={{ ex.legislator.display_name()|urlencode }} received a gift valued at {{ ex.cost|format_currency }} from {{ ex.organization.name|urlencode }} &url={{ S3_BASE_URL|urlencode }}{{ legislator.url()|urlencode }}%23exp{{ ex.ethics_id }}" target="_blank"><i class="icon-twitter"></i></a><a href="https://www.facebook.com/sharer/sharer.php?u={{ S3_BASE_URL|urlencode }}{{ legislator.url()|urlencode }}%23exp{{ ex.ethics_id }}"><i class="icon-facebook"></i></a></td>
                 </tr>
             {% endfor %}
             </tbody>
