@@ -76,9 +76,9 @@
         <p>{{ legislator.short_display_name() }} received <strong>{{ comma(total_expenditures) }}</strong> gift{% if total_expenditures != 1 %}s{% endif %} from lobbyists, valued at <strong>{{ total_spending|format_currency_round }}</strong>.</p>  
         <p class="ed-note"><small>{{ COPY.content.all_the_data }}</small></p>
     </div>
-    {% if total_spending != 0 %}
     <div class="leaderboard">
         <div class="leaderboard-wrapper">
+            {% if total_spending != 0 %}
             <div class="top-organizations">
                 <h4>{{ COPY.legislator.org_chart_hed }}</h4>
                 <table>
@@ -101,9 +101,9 @@
                     {% endfor %}
                 </table>
             </div>
+            {% endif %}
         </div>
     </div>
-    {% endif %}
     {% if total_expenditures_recent != 0 %}
     <div class="table-responsive gift-table">
         
