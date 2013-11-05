@@ -37,7 +37,7 @@
         $.getJSON('/live-data/stories.json', function(stories) {
             for (var i = 0; i < stories.length; i++) {
                 var story = stories[i];
-                $stories.append('<li><a href="' + story.url + '">' + story.title + '</a></li>');
+                $stories.append('<li><a target="_blank" href="' + story.url + '">' + story.title + '</a></li>');
             };
         });
     }
