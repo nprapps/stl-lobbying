@@ -184,7 +184,7 @@ function on_gift_sort_change() {
 }
 
 function move_search_map(lat, lng) {
-    search_map.setView([lat, lng], 10);
+    search_map.setView([lat, lng], 12);
     //on_search_map_click({ latlng: new L.LatLng(lat, lng) });
 }
 
@@ -256,7 +256,7 @@ function on_geolocate_button_click() {
         $search_loading.hide();
     
         $results_modal.modal('show');
-        search_map.setView([position.coords.latitude, position.coords.longitude], 10);
+        search_map.setView([position.coords.latitude, position.coords.longitude], 12);
     }, function(error) {
         $search_loading.hide();
 
