@@ -132,7 +132,7 @@ function on_search_submit() {
 
                     $results_modal.modal('show');
                     move_search_map(locale['lat'], locale['lon']);
-                    on_show_senate_map_click();
+                    on_show_house_map_click();
                     on_search_map_moveend();
                 } else {
                     // If there are many resulits,
@@ -350,13 +350,13 @@ $(function() {
             maxZoom: 15
         });
         
-        senate_layer = L.mapbox.tileLayer('http://a.tiles.mapbox.com/v3/npr.map-d0jcwmbw.json?3');
-        senate_grid = L.mapbox.gridLayer('http://a.tiles.mapbox.com/v3/npr.map-d0jcwmbw.json?3');
+        senate_layer = L.mapbox.tileLayer('http://a.tiles.mapbox.com/v3/npr.map-d0jcwmbw.json?4');
+        senate_grid = L.mapbox.gridLayer('http://a.tiles.mapbox.com/v3/npr.map-d0jcwmbw.json?4');
         
-        house_layer = L.mapbox.tileLayer('http://a.tiles.mapbox.com/v3/npr.map-bjum1mub.json?3');
-        house_grid = L.mapbox.gridLayer('http://a.tiles.mapbox.com/v3/npr.map-bjum1mub.json?3');
+        house_layer = L.mapbox.tileLayer('http://a.tiles.mapbox.com/v3/npr.map-bjum1mub.json?4');
+        house_grid = L.mapbox.gridLayer('http://a.tiles.mapbox.com/v3/npr.map-bjum1mub.json?4');
 
-        search_map.addLayer(senate_layer);
+        search_map.addLayer(house_layer);
         search_map.addLayer(senate_grid);
         search_map.addLayer(house_grid);
         search_map.setView([36.46, -92.1], 7);
@@ -379,7 +379,5 @@ $(function() {
     position_bar_labels();
     var reposition_bar_labels = _.debounce(position_bar_labels, 300);
     $(window).resize(reposition_bar_labels);
-
-    
 });
 
