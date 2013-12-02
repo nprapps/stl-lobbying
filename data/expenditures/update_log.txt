@@ -1,0 +1,88 @@
+UPDATE LOG
+
+** January-September, 2013 (Updated November 4)
+
+NO ERRORS
+
+SUMMARY
+-------
+Processed 97362 individual rows
+Processed 20908 group rows
+
+Encountered 34 warnings
+Encountered 0 errors
+Skipped 11530 amended rows
+
+Imported 88435 expenditures
+Created 958 lobbyists
+Created 197 legislators
+
+** January-October, 2013 (Updated December 2)
+
+ERRORS
+------
+2013 -- 09614 -- Organization name "IBEW1/ST. LOUIS NECA" not in lookup table
+2013 -- 09645 -- Organization name "HALLMARK CARDS" not in lookup table
+2013 -- 09646 -- Organization name "HALLMARK CARDS" not in lookup table
+2013 -- 09704 -- Organization name "ORACLE AMERICA, INC." not in lookup table
+2013 -- 09705 -- Organization name "ORACLE AMERICA, INC." not in lookup table
+2013 -- 09706 -- Organization name "ORACLE AMERICA, INC." not in lookup table
+2013 -- 09707 -- Organization name "ORACLE AMERICA, INC." not in lookup table
+2013 -- 09709 -- Organization name "VMWARE, INC." not in lookup table
+2013 -- 09710 -- Organization name "VMWARE, INC." not in lookup table
+2013 -- 09711 -- Organization name "VMWARE, INC." not in lookup table
+2013 -- 09712 -- Organization name "ORACLE AMERICA, INC." not in lookup table
+2013 -- 09713 -- Organization name "ORACLE AMERICA, INC." not in lookup table
+2013 -- 09714 -- Organization name "ORACLE AMERICA, INC." not in lookup table
+2013 -- 09715 -- Organization name "ORACLE AMERICA, INC." not in lookup table
+2013 -- 09740 -- Organization name "EMC CORPORATION" not in lookup table
+2013 -- 09741 -- Organization name "EMC CORPORATION" not in lookup table
+2013 -- 09742 -- Organization name "EMC CORPORATION" not in lookup table
+2013 -- 09743 -- Organization name "EMC CORPORATION" not in lookup table
+2013 -- 09744 -- Organization name "EMC CORPORATION" not in lookup table
+2013 -- 09745 -- Organization name "EMC CORPORATION" not in lookup table
+2013 -- 09746 -- Organization name "EMC CORPORATION" not in lookup table
+2013 -- 09747 -- Organization name "EMC CORPORATION" not in lookup table
+2013 -- 09767 -- Organization name "EMC CORPORATION" not in lookup table
+2013 -- 09768 -- Organization name "EMC CORPORATION" not in lookup table
+2013 -- 09769 -- Organization name "EMC CORPORATION" not in lookup table
+2013 -- 09770 -- Organization name "EMC CORPORATION" not in lookup table
+2013 -- 09771 -- Organization name "EMC CORPORATION" not in lookup table
+2013 -- 09772 -- Organization name "EMC CORPORATION" not in lookup table
+2013 -- 09773 -- Organization name "EMC CORPORATION" not in lookup table
+2013 -- 09926 -- Organization name "MISSOURI FAMILY HEALTH COUNCIL, INC." not in lookup table
+2013 -- 10022 -- Organization name "ALLIANCE FOR CHILDHOOD EDUCATION" not in lookup table
+2013 -- 10029 -- Organization name "UGAS, INC" not in lookup table
+2013 -- 10032 -- Organization name "ST. LOUIS REGIONAL CONVENTION AND SPORTS COMPLEX AUTHORITY" not in lookup table
+
+SUMMARY
+-------
+Processed 98177 individual rows
+Processed 20934 group rows
+
+Encountered 35 warnings
+Encountered 33 errors
+Skipped 11704 amended rows
+
+Imported 88989 expenditures
+Created 959 lobbyists
+Created 197 legislators
+
+Done.
+
+** January-October, 2013 (Added new orgs, Updated December 2)
+
+SUMMARY
+-------
+Processed 98177 individual rows
+Processed 20934 group rows
+
+Encountered 35 warnings
+Encountered 0 errors
+Skipped 11704 amended rows
+
+Imported 89022 expenditures
+Created 959 lobbyists
+Created 197 legislators
+
+Done.
