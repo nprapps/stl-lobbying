@@ -60,9 +60,9 @@
         <p>{{ organization.name }} gave <strong>{{ comma(total_expenditures) }} gift{% if total_expenditures != 1 %}s{% endif %}</strong> to state legislators and their staffs, valued at <strong>{{ total_spending|format_currency_round }}</strong>.</p>
         <p class="ed-note"><small>{{ COPY.content.all_the_data }}</small></p>
     </div>
-    {% if top_legislators|length > 0 %}
     <div class="leaderboard">
         <div class="leaderboard-wrapper">
+            {% if top_legislators|length > 0 %}
             <div class="top-legislators">
                 <h4>{{ COPY.organization.legislator_chart_hed }}</h4>
                 <table>
@@ -74,9 +74,9 @@
                     {% endfor %}
                 </table>
             </div>
+            {% endif %}
         </div>
     </div>
-    {% endif %}
 
     {% if expenditures_recent.count() > 0 %}
     <div class="table-responsive gift-table">
@@ -103,16 +103,16 @@
             {% for ex in expenditures_recent %}
                 <tr id="exp{{ ex.ethics_id }}">
                     <td class="date"><span>{{ ex.event_date.isoformat() }}</span>{{ ex.event_date.strftime('%B %e, %Y') }}</td>
-                    <td class="recipient">{% if ex.group %}{{ ex.group.name }}{% elif ex.legislator %}<a href="{{ ex.legislator.url() }}">{{ ex.legislator.display_name() }}</a>{% else %}{{ COPY.organization.no_longer_serving }}{% endif %}</td>
+                    <td class="recipient">{% if ex.group %}{{ ex.group.name }}*{% elif ex.legislator %}<a href="{{ ex.legislator.url() }}">{{ ex.legislator.display_name() }}</a>{% else %}{{ COPY.organization.no_longer_serving }}{% endif %}</td>
                     <td class="expenditure"><span>{{ ex.cost }}</span>{{ ex.cost|format_currency }}</td>
                     <td class="description{% if not ex.description %} not-disclosed{% endif %}">{% if ex.description %}{{ ex.description }}{% else %}<em>{{ COPY.organization.not_disclosed }}</em>{% endif %}</td>
                     <td class="category">{{ ex.category }}</td>
-                    <td class="share"><a href="https://twitter.com/share?text={{ organization.name }} gave a gift valued at {{ ex.cost|format_currency }} to {% if ex.group %}{{ ex.group.name }}{% elif ex.legislator %}{{ ex.legislator.display_name() }}{% else %}{{ COPY.organization.no_longer_serving }}{% endif %}&url={{ organization.url() }}%23exp{{ ex.ethics_id }}" target="_blank"><i class="icon-twitter"></i></a><a href="https://www.facebook.com/sharer/sharer.php?u={{ organization.url() }}%23exp{{ ex.ethics_id }}"><i class="icon-facebook"></i></a></td>
+                    <td class="share"><a href="https://twitter.com/share?text={{ organization.name|urlencode }} gave a gift valued at {{ ex.cost|format_currency }} to {% if ex.group %}{{ ex.group.name }}{% elif ex.legislator %}{{ ex.legislator.display_name()|urlencode }}{% else %}{{ COPY.organization.no_longer_serving|urlencode }}{% endif %}&url={{ S3_BASE_URL|urlencode }}{{ organization.url()|urlencode }}%23exp{{ ex.ethics_id }}" target="_blank"><i class="icon-twitter"></i></a><a href="https://www.facebook.com/sharer/sharer.php?u={{ S3_BASE_URL|urlencode }}{{ organization.url()|urlencode }}%23exp{{ ex.ethics_id }}"><i class="icon-facebook"></i></a></td>
                 </tr>
             {% endfor %}
             </tbody>
         </table>
-        <p class="ed-note"><small>{{ COPY.organization.groups_explainer }}</small></p>
+        <p class="ed-note"><small>* {{ COPY.organization.groups_explainer }}</small></p>
     </div>
     {% endif %}
 </div>
