@@ -615,6 +615,11 @@ class LobbyLoader:
         print ''
 
         for year in range(self.first_year, datetime.datetime.today().year + 1):
+            # We're always two months behind, so we won't have current year data until March
+            if year == datetime.datetime.today().year:
+                if datetime.datetime.today().month < 3:
+                    continue
+
             print year
             print '----'
             print ''
