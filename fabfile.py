@@ -589,7 +589,7 @@ def local_bootstrap_sample():
     update_data_files()
     delete_tables()
     create_tables()
-    load_data(2011)
+    load_data(2013)
 
 
 """

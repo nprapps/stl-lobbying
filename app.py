@@ -25,7 +25,12 @@ def get_ago():
     """
     most_recent = Expenditure.select().order_by(Expenditure.report_period.desc()).limit(1)[0].report_period
 
-    ago = datetime.date(most_recent.year - 2, most_recent.month + 1, 1)
+    # Get the previous month. If previous month is December, set to 12. 
+    month = most_recent.month + 1
+    if month > 12: 
+        month = 12
+
+    ago = datetime.date(most_recent.year - 2, month, 1)
 
     return ago
 
