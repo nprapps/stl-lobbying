@@ -186,7 +186,7 @@ class LobbyLoader:
     """
     Load expenditures from files.
     """
-    SKIP_TYPES = ['Local Government Official', 'Public Official', 'ATTORNEY GENERAL', 'STATE TREASURER', 'GOVERNOR', 'STATE AUDITOR', 'LIEUTENANT GOVERNOR', 'SECRETARY OF STATE', 'JUDGE', 'GOVERNOR ELECT', 'CHIEF JUSTICE']
+    SKIP_TYPES = ['Local Government Official', 'Public Official', 'Secretary of State', 'ATTORNEY GENERAL', 'STATE TREASURER', 'GOVERNOR', 'STATE AUDITOR', 'LIEUTENANT GOVERNOR', 'SECRETARY OF STATE', 'JUDGE', 'GOVERNOR ELECT', 'CHIEF JUSTICE']
     ERROR_DATE_MIN = datetime.date(2003, 1, 1)
     ERROR_DATE_MAX = datetime.datetime.today().date()
     MO_GOV_DATA_TYPES = {
@@ -197,6 +197,7 @@ class LobbyLoader:
 
     organization_name_lookup = {}
     expenditures = []
+    amendments = []
     datemode = None
 
     warnings = []
@@ -438,7 +439,10 @@ class LobbyLoader:
             row = stripped_row
 
             # Amended?
-            if (row['Amend Sol ID'] if solicitations else row['Amend Indv ID']) != '0':
+            amended = (row['Amend Sol ID'] if solicitations else row['Amend Indv ID'])
+
+            if (amended) != '0':
+                self.amendments.append(int(amended))
                 self.amended_rows += 1
                 continue
 
@@ -576,6 +580,7 @@ class LobbyLoader:
 
             # Amended?
             if row['Amend Grp ID'] != '0':
+                self.amendments.append(int(row['Amend Grp ID']))
                 self.amended_rows += 1
                 continue
 
@@ -712,7 +717,13 @@ class LobbyLoader:
 
             # return
 
+        print 'Removing %i amended expenditures' % self.amended_rows
+        print ''
+
         for expenditure in self.expenditures:
+            if expenditure.ethics_id in self.amendments:
+                continue
+
             expenditure.save()
 
         print 'SUMMARY'
