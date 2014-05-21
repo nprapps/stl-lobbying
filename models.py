@@ -12,7 +12,7 @@ from playhouse.sqlite_ext import SqliteExtDatabase
 
 import app_config
 
-database = SqliteExtDatabase('stl-lobbying.db')
+database = SqliteExtDatabase('stl-lobbying.sqlite')
 
 class SlugModel(Model):
     """
@@ -438,7 +438,7 @@ class LobbyLoader:
             row = stripped_row
 
             # Amended?
-            if (row['Amend Sol ID'] if solicitations else row['Amend Indv ID']):
+            if (row['Amend Sol ID'] if solicitations else row['Amend Indv ID']) != '0':
                 self.amended_rows += 1
                 continue
 
@@ -483,7 +483,7 @@ class LobbyLoader:
                     self.info('Not a current legislator: %s %s' % (recipient_type, recipient), year, i)
             elif recipient_type in ['Employee or Staff', 'Spouse or Child']:
                 try:
-                    legislator_name, legislator_type = map(unicode.strip, row['Pub Off'].rsplit(' - ', 1))
+                    legislator_name, legislator_type = map(unicode.strip, row['Pub Official'].rsplit(' - ', 1))
                 except ValueError:
                     self.warn('Skipping "%s", no recipient type' % (legislator_name), year, i)
                     continue
@@ -575,7 +575,7 @@ class LobbyLoader:
             row = stripped_row
 
             # Amended?
-            if row['Amend Grp ID']:
+            if row['Amend Grp ID'] != '0':
                 self.amended_rows += 1
                 continue
 
@@ -666,31 +666,28 @@ class LobbyLoader:
             print '----'
             print ''
 
+            print 'Loading individual expenditures'
             path = '%s/%s_individual.csv' % (app_config.LOBBYING_DATA_PATH, year)
 
-            print 'Reading %s' % path
             with open(path) as f:
                 table = list(csvkit.CSVKitDictReader(f))
 
-            print 'Loading individual expenditures'
             self.load_individual_expenditures(year, table, False)
 
+            print 'Loading solicitation expenditures'
             path = '%s/%s_solicitation.csv' % (app_config.LOBBYING_DATA_PATH, year)
 
-            print 'Reading %s' % path
             with open(path) as f:
                 table = list(csvkit.CSVKitDictReader(f))
 
-            print 'Loading solicitation expenditures'
             self.load_individual_expenditures(year, table, True)
 
+            print 'Loading group expenditures'
             path = '%s/%s_group.csv' % (app_config.LOBBYING_DATA_PATH, year)
 
-            print 'Reading %s' % path
             with open(path) as f:
                 table = list(csvkit.CSVKitDictReader(f))
 
-            print 'Loading group expenditures'
             self.load_group_expenditures(year, table)
 
             print ''
@@ -714,7 +711,6 @@ class LobbyLoader:
             print ''
 
             # return
-
 
         for expenditure in self.expenditures:
             expenditure.save()

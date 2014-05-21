@@ -568,10 +568,10 @@ def load_data(first_year=2004):
     """
     Execute the data loader.
     """
-    loader = models.LobbyLoader(first_year)
+    loader = models.LobbyLoader(int(first_year))
     loader.run()
 
-def local_bootstrap():
+def local_bootstrap(first_year=2004):
     """
     Destroy and rebuild the local database.
     """
@@ -579,7 +579,7 @@ def local_bootstrap():
     update_data_files()
     delete_tables()
     create_tables()
-    loader = models.LobbyLoader(first_year)
+    loader = models.LobbyLoader(int(first_year))
     loader.scrape_lobbying_data()
     loader.run()
 
