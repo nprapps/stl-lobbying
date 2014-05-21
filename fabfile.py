@@ -579,7 +579,9 @@ def local_bootstrap():
     update_data_files()
     delete_tables()
     create_tables()
-    load_data()
+    loader = models.LobbyLoader(first_year)
+    loader.scrape_lobbying_data()
+    loader.run()
 
 def local_bootstrap_sample():
     """

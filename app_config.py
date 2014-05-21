@@ -114,6 +114,11 @@ SLPR_GOOGLE_ANALYTICS_ID = 'UA-45354605-1'
 OUR_GOOGLE_ANALYTICS_ID = 'UA-5828686-58'
 
 """
+APP SPECIFIC
+"""
+LOBBYING_DATA_PATH = '.lobbying_data'
+
+"""
 Utilities
 """
 def get_secrets():

@@ -14,3 +14,5 @@ xlrd==0.9.0
 dulwich==0.8.7
 csvkit==0.6.1
 peewee==2.1.4
+python-dateutil==1.5
+mechanize==0.2.5

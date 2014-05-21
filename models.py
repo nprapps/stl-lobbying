@@ -5,9 +5,12 @@ import os
 import re
 
 import csvkit
+from dateutil.parser import parse
+import mechanize
 from peewee import *
 from playhouse.sqlite_ext import SqliteExtDatabase
-import xlrd
+
+import app_config
 
 database = SqliteExtDatabase('stl-lobbying.db')
 
@@ -186,6 +189,11 @@ class LobbyLoader:
     SKIP_TYPES = ['Local Government Official', 'Public Official', 'ATTORNEY GENERAL', 'STATE TREASURER', 'GOVERNOR', 'STATE AUDITOR', 'LIEUTENANT GOVERNOR', 'SECRETARY OF STATE', 'JUDGE', 'GOVERNOR ELECT', 'CHIEF JUSTICE']
     ERROR_DATE_MIN = datetime.date(2003, 1, 1)
     ERROR_DATE_MAX = datetime.datetime.today().date()
+    MO_GOV_DATA_TYPES = {
+        '1': 'individual',
+        '2': 'group',
+        '3': 'solicitation'
+    }
 
     organization_name_lookup = {}
     expenditures = []
@@ -205,7 +213,6 @@ class LobbyLoader:
     def __init__(self, first_year=2004):
         self.first_year = first_year
 
-        self.expenditures_xlsx = 'data/expenditures/%i.xlsx'
         self.legislators_demographics_filename = 'data/legislator_demographics.csv'
         self.organization_name_lookup_filename = 'data/organization_name_lookup.csv'
 
@@ -226,6 +233,35 @@ class LobbyLoader:
 
     def error(self, msg, year=None, line=None):
         self.errors.append(self._format_log(msg, year, line))
+
+    def parse_date(self, d):
+        return parse(d).date()
+
+    def scrape_lobbying_data(self):
+        try:
+            os.mkdir(app_config.LOBBYING_DATA_PATH)
+        except OSError:
+            pass
+
+        mech = mechanize.Browser()
+
+        for year in range(self.first_year, datetime.datetime.today().year + 1):
+            print year
+
+            for i, data_type in self.MO_GOV_DATA_TYPES.items():
+                print '\t', data_type
+
+                mech.open('http://mec.mo.gov/EthicsWeb/Lobbying/Lob_ExpCSV.aspx')
+                mech.select_form(name='aspnetForm')
+
+                mech['ctl00$ContentPlaceHolder$ddYear'] = [str(year)]
+                mech['ctl00$ContentPlaceHolder$ddExpType'] = [i]
+
+                response = mech.submit(name="ctl00$ContentPlaceHolder$btnExport")
+
+                with open('%s/%s_%s.csv' % (app_config.LOBBYING_DATA_PATH, year, data_type), 'w') as f:
+                    f.write(response.read())
+
 
     def load_organization_name_lookup(self):
         """
@@ -393,13 +429,16 @@ class LobbyLoader:
         for row in rows:
             i += 1
 
+            stripped_row = {}
+
             # Strip whitespace
             for k, v in row.items():
-                if type(row[k]) is unicode:
-                    row[k] = v.strip()
+                stripped_row[k.strip()] = v.strip()
+
+            row = stripped_row
 
             # Amended?
-            if row['If Amended'] == 'Amended':
+            if (row['Amend Sol ID'] if solicitations else row['Amend Indv ID']):
                 self.amended_rows += 1
                 continue
 
@@ -414,7 +453,7 @@ class LobbyLoader:
                 self.warn('Skipping row with no report date!', year, i)
                 continue
 
-            report_period = datetime.datetime(*xlrd.xldate_as_tuple(row['Report'], self.datemode)).date()
+            report_period = self.parse_date(row['Report'])
 
             if report_period < self.ERROR_DATE_MIN:
                 self.warn('Skipping: report date too old, %s' % (report_period), year, i)
@@ -469,7 +508,7 @@ class LobbyLoader:
                 continue
 
             # Event date
-            event_date = datetime.datetime(*xlrd.xldate_as_tuple(row['Date'], self.datemode)).date()
+            event_date = self.parse_date(row['Date'])
 
             if event_date < self.ERROR_DATE_MIN:
                 self.warn('Skipping, event date too old: %s' % (event_date), year, i)
@@ -479,7 +518,7 @@ class LobbyLoader:
                 continue
 
             # Cost
-            cost = row['Cost']
+            cost = row['Amount']
 
             if cost < 0:
                 self.error('Negative cost outside an amendment!' % i, year, i)
@@ -512,7 +551,7 @@ class LobbyLoader:
                 cost=cost,
                 organization=organization,
                 group=None,
-                ethics_id=int(row['Sol ID'] if solicitations else row['Indv ID']),
+                ethics_id=int(row['Sol ID'] if solicitations else row['Indiv ID']),
                 is_solicitation=solicitations
             ))
 
@@ -527,13 +566,16 @@ class LobbyLoader:
         for row in rows:
             i += 1
 
+            stripped_row = {}
+
             # Strip whitespace
             for k, v in row.items():
-                if type(row[k]) is unicode:
-                    row[k] = v.strip()
+                stripped_row[k.strip()] = v.strip()
+
+            row = stripped_row
 
             # Amended?
-            if row['If Amended'] == 'Amended':
+            if row['Amend Grp ID']:
                 self.amended_rows += 1
                 continue
 
@@ -544,7 +586,7 @@ class LobbyLoader:
                 self.lobbyists_created += 1 
 
             # Report period
-            report_period = datetime.datetime(*xlrd.xldate_as_tuple(row['Report'], self.datemode)).date()
+            report_period = self.parse_date(row['Report'])
 
             if report_period < self.ERROR_DATE_MIN:
                 self.warn('Skipping, report date too old: %s' % (report_period), year, i)
@@ -560,7 +602,7 @@ class LobbyLoader:
                 self.groups_created += 1
 
             # Event date
-            event_date = datetime.datetime(*xlrd.xldate_as_tuple(row['Date'], self.datemode)).date()
+            event_date = self.parse_date(row['Date'])
 
             if event_date < self.ERROR_DATE_MIN:
                 self.warn('Skipping, event date too old: %s' % (event_date), year, i)
@@ -570,7 +612,7 @@ class LobbyLoader:
                 continue
 
             # Cost
-            cost = row['Cost']
+            cost = row['Amount']
 
             if cost < 0:
                 self.error('Negative cost outside an amendment!' % i, year, i)
@@ -624,32 +666,32 @@ class LobbyLoader:
             print '----'
             print ''
 
-            path = self.expenditures_xlsx % year
+            path = '%s/%s_individual.csv' % (app_config.LOBBYING_DATA_PATH, year)
 
-            print 'Opening %s' % path
-
-            book = xlrd.open_workbook(path)
-            self.datemode = book.datemode
-
-            tables = []
-
-            for sheet in book.sheets():
-                columns = sheet.row_values(0)
-                rows = []
-
-                for n in range(1, sheet.nrows):
-                    rows.append(dict(zip(columns, sheet.row_values(n))))
-
-                tables.append(rows)
+            print 'Reading %s' % path
+            with open(path) as f:
+                table = list(csvkit.CSVKitDictReader(f))
 
             print 'Loading individual expenditures'
-            self.load_individual_expenditures(year, tables[0], False)
+            self.load_individual_expenditures(year, table, False)
 
-            print 'Loading soliciation expenditures'
-            self.load_individual_expenditures(year, tables[1], True)
+            path = '%s/%s_solicitation.csv' % (app_config.LOBBYING_DATA_PATH, year)
+
+            print 'Reading %s' % path
+            with open(path) as f:
+                table = list(csvkit.CSVKitDictReader(f))
+
+            print 'Loading solicitation expenditures'
+            self.load_individual_expenditures(year, table, True)
+
+            path = '%s/%s_group.csv' % (app_config.LOBBYING_DATA_PATH, year)
+
+            print 'Reading %s' % path
+            with open(path) as f:
+                table = list(csvkit.CSVKitDictReader(f))
 
             print 'Loading group expenditures'
-            self.load_group_expenditures(year, tables[2])
+            self.load_group_expenditures(year, table)
 
             print ''
 
