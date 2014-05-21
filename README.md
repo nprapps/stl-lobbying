@@ -192,10 +192,6 @@ fab staging master deploy
 Update the data
 ---------------
 
-**Getting it**
-
-Data will be emailed to us from the Missouri State Board of Ethics each month. They will send us an `.xlsx` file with three tabs: individual expenditures, solicitations, and group expenditures. This file should be renamed for the current year (e.g. `2013.xlsx`) and placed in the directory `data/expenditures/`. If we already have a partial data file for the current year, simply replace it.
-
 **Updating other datasets**
 
 * The canonical representation of the legislators is the [legislator demographics Google document](https://docs.google.com/spreadsheet/ccc?key=0AlXMOHKxzQVRdFFQRzBuLUxhN0JubjlvRVA2SlpVVlE&usp=drive_web#gid=0). This document should only ever contain the current legislators. If a district is vacant you should include a row for it with the word `VACANT` in the `last_name` column. This will cause the `vacant` flag to be set on the correct `Legislator` database entry (other fields will be set to blank). 
@@ -207,7 +203,7 @@ Be sure to republish these spreadsheets by going to `File`, `Publish to the web.
 
 `fab local_bootstrap`
 
-This will fetch the two documents mentioned above. Any warnings or errors will be printed to the console once the loader is finished.
+This will fetch the two documents mentioned above and scrape the latest data from the Missouri website. Any warnings or errors will be printed to the console once the loader is finished.
 
 Errors **must** be resolved before you complete the update process. If an error refers to an unknown organization name then it should be added to the [organization name lookup Google document](https://docs.google.com/spreadsheet/ccc?key=0AlXMOHKxzQVRdFJNMlZTXy1pSFNRUHJIR3RVSWhJSGc&usp=drive_web#gid=0).
 
@@ -223,4 +219,4 @@ Rerun the loader until all errors have been successfully resolved. (If doing a l
 
 Finally rerender and deploy the site to production:
 
-`fab production stable deploy deploy_pages`
+`fab production master deploy deploy_pages`
