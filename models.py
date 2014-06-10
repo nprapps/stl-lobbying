@@ -197,7 +197,11 @@ class LobbyLoader:
 
     organization_name_lookup = {}
     expenditures = []
-    amendments = []
+    amendments = {
+        'individual': [],
+        'group': [],
+        'solicitation': [],
+    }
     datemode = None
 
     warnings = []
@@ -442,7 +446,12 @@ class LobbyLoader:
             amended = (row['Amend Sol ID'] if solicitations else row['Amend Indv ID'])
 
             if (amended) != '0':
-                self.amendments.append(int(amended))
+                if solicitations:
+                    t = 'solicitation'
+                else:
+                    t = 'individual'
+
+                self.amendments[t].append(int(amended))
                 self.amended_rows += 1
                 continue
 
@@ -580,7 +589,7 @@ class LobbyLoader:
 
             # Amended?
             if row['Amend Grp ID'] != '0':
-                self.amendments.append(int(row['Amend Grp ID']))
+                self.amendments['group'].append(int(row['Amend Grp ID']))
                 self.amended_rows += 1
                 continue
 
@@ -717,14 +726,28 @@ class LobbyLoader:
 
             # return
 
-        print 'Removing %i amended expenditures' % self.amended_rows
-        print ''
+        print 'Removing %i amended IDs' % self.amended_rows
+
+        removed = 0
 
         for expenditure in self.expenditures:
-            if expenditure.ethics_id in self.amendments:
-                continue
+            if expenditure.is_solicitation:
+                if expenditure.ethics_id in self.amendments['solicitation']:
+                    removed += 1
+                    continue
+            elif expenditure.group:
+                if expenditure.ethics_id in self.amendments['group']:
+                    removed += 1
+                    continue
+            else:
+                if expenditure.ethics_id in self.amendments['individual']:
+                    removed += 1
+                    continue
 
             expenditure.save()
+
+        print 'Removed %i rows' % removed
+        print ''
 
         print 'SUMMARY'
         print '-------'
@@ -734,7 +757,6 @@ class LobbyLoader:
         print ''
         print 'Encountered %i warnings' % len(self.warnings)
         print 'Encountered %i errors' % len(self.errors)
-        print 'Skipped %i amended rows' % self.amended_rows 
         print ''
         print 'Imported %i expenditures' % len(self.expenditures)
         print 'Created %i lobbyists' % self.lobbyists_created
