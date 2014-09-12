@@ -498,7 +498,7 @@ class LobbyLoader:
                 try:
                     legislator_name, legislator_type = map(unicode.strip, row['Pub Official'].rsplit(' - ', 1))
                 except ValueError:
-                    self.warn('Skipping "%s", no recipient type' % (legislator_name), year, i)
+                    self.warn('Skipping "%s", no recipient type' % (row['Pub Official']), year, i)
                     continue
 
                 # NB: Brute force correction for name mispelling in one state dropdown
