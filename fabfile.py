@@ -112,7 +112,7 @@ def _download_google_doc(key, data_format, path):
     """
     Download a spreadsheet from Google.
     """
-    url = 'https://docs.google.com/spreadsheet/pub?key=%s&output=%s' % (key, data_format)
+    url = 'https://docs.google.com/spreadsheets/d/%s/pub?output=%s' % (key, data_format)
     local('curl -o %s "%s"' % (path, url))
 
 def _download_copy():
@@ -207,7 +207,7 @@ def render():
             content = view()
 
             if type(content) is tuple:
-                content = content[0] 
+                content = content[0]
 
             compiled_includes = g.compiled_includes
 
@@ -251,7 +251,7 @@ def _render_slug_pages(models, view_name, output_path, compiled_includes):
         with open(path, 'w') as f:
             f.write(content.encode('utf-8'))
 
-    return compiled_includes 
+    return compiled_includes
 
 def render_pages():
     """
@@ -396,7 +396,7 @@ def _deploy_to_s3(path='.gzip'):
     """
     # Clear files that should never be deployed
     local('rm -rf %s/live-data' % path)
-    
+
     s3cmd = 's3cmd -P --add-header=Cache-Control:max-age=5 --guess-mime-type --recursive --exclude-from gzip_types.txt sync %s/ %s'
     s3cmd_gzip = 's3cmd -P --add-header=Cache-Control:max-age=5 --add-header=Content-encoding:gzip --guess-mime-type --recursive --exclude "*" --include-from gzip_types.txt sync %s/ %s'
     s3cmd_download = 's3cmd -P --add-header=Cache-Control:max-age=5 --add-header=Content-encoding:gzip --add-header="Content-Disposition:attachment;filename=missouri-lobbying.csv;" --guess-mime-type --recursive sync %s/ %s'
@@ -525,7 +525,7 @@ def deploy(remote='origin'):
 
     render()
     _gzip('www', '.gzip')
-    
+
     local('rm -rf .download')
     local('mv .gzip/download .download')
 
@@ -624,7 +624,7 @@ def cron_stories():
     import xlrd
 
     book = xlrd.open_workbook(copytext.COPY_XLS)
-    
+
     sheet = book.sheet_by_name('promo')
     stories = []
 
@@ -672,7 +672,7 @@ def nuke_confs():
             installed_path = _get_installed_conf_path(service, remote_path, extension)
 
             sudo('rm -f %s' % installed_path)
-            
+
             if service == 'nginx':
                 sudo('service nginx reload')
             elif service == 'uwsgi':

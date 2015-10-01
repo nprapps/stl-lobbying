@@ -37,7 +37,7 @@ PRODUCTION_SERVERS = ['cron.nprapps.org']
 STAGING_SERVERS = ['50.112.92.131']
 
 # Should code be deployed to the web/cron servers?
-DEPLOY_TO_SERVERS = True 
+DEPLOY_TO_SERVERS = True
 
 SERVER_USER = 'ubuntu'
 SERVER_PYTHON = 'python2.7'
@@ -76,9 +76,9 @@ DEBUG = True
 """
 COPY EDITING
 """
-COPY_GOOGLE_DOC_KEY = '0AlXMOHKxzQVRdG45Ti1TYkNSOWR1cDI2V0x6WUt6S3c'
-ORGANIZATION_NAME_LOOKUP_DOC_KEY = '0AlXMOHKxzQVRdFJNMlZTXy1pSFNRUHJIR3RVSWhJSGc'
-LEGISLATOR_DEMOGRAPHICS_DOC_KEY = '0AlXMOHKxzQVRdFFQRzBuLUxhN0JubjlvRVA2SlpVVlE'
+COPY_GOOGLE_DOC_KEY = '1NA7jFWUC5E-wi835ZsGLcPBFS27icgRUKpUK2XMSxRE'
+ORGANIZATION_NAME_LOOKUP_DOC_KEY = '18uf6N2p9iOC-sDQ9sovr0O3NFQ5CJdruO4iSZyeZuo0'
+LEGISLATOR_DEMOGRAPHICS_DOC_KEY = '1YnbEteuov67UcwKBonmuG61Cb3cKbXgrAOho4rFHoZs'
 
 """
 SHARING
@@ -89,7 +89,7 @@ SHARE_URL = 'http://www.lobbyingmissouri.org/'
 TWITTER = {
     'TEXT': '%s' % PROJECT_DESCRIPTION,
     'URL': SHARE_URL,
-    # Will be resized to 120x120, can't be larger than 1MB 
+    # Will be resized to 120x120, can't be larger than 1MB
     'IMAGE_URL': 'http://www.lobbyingmissouri.org/img/promo.png'
 }
 
@@ -162,7 +162,7 @@ def configure_targets(deployment_target):
         SERVER_BASE_URL = 'http://%s' % (SERVERS[0])
         DEBUG = True
     else:
-        S3_BUCKETS = [] 
+        S3_BUCKETS = []
         S3_BASE_URL = 'http://127.0.0.1:8000'
         SERVERS = []
         SERVER_BASE_URL = 'http://127.0.0.1:8001'
@@ -176,4 +176,3 @@ Run automated configuration
 DEPLOYMENT_TARGET = os.environ.get('DEPLOYMENT_TARGET', None)
 
 configure_targets(DEPLOYMENT_TARGET)
-
